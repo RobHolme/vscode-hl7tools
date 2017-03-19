@@ -1,5 +1,5 @@
 # hl7tools for Visual Studio Code README
-This is a Visual Studio Code extension for working with HL7 v2.7 files. It provides basic syntax highlighting, and functions to:
+This is a Visual Studio Code extension for working with HL7 v2.x files. It provides basic syntax highlighting, and functions to:
 * mask identifiers in the message.
 * display fields from a segment in a list.
 
