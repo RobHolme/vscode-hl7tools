@@ -1,0 +1,61 @@
+{
+    "name": "hl7tools",
+    "displayName": "HL7Tools",
+    "description": "HL7 tools for Visual Studio Code",
+    "version": "1.0.0",
+    "publisher": "RobHolme",
+    "engines": {
+        "vscode": "^1.9.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onCommand:extension.DisplaySegmentFields",
+        "onCommand:extension.MaskIdentifiers"
+    ],
+    "main": "./extension",
+    "contributes": {
+        "commands": [
+            {
+                "command": "extension.DisplaySegmentFields",
+                "title": "HL7 Tools: Display Segment Fields"
+            },
+            {
+                "command": "extension.MaskIdentifiers",
+                "title": "HL7 Tools: Mask Identifiers"
+            }
+        ],
+        "languages": [
+            {
+                "id": "hl7",
+                "aliases": [
+                    "HL7",
+                    "hl7"
+                ],
+                "extensions": [
+                    ".hl7"
+                ]
+            }
+        ],
+        "grammars": [
+            {
+                "language": "hl7",
+                "scopeName": "text.hl7",
+                "path": "./syntax/hl7.tmLanguage"
+            }
+        ]
+    },
+    "scripts": {
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "node ./node_modules/vscode/bin/test"
+    },
+    "devDependencies": {
+        "typescript": "^2.0.3",
+        "vscode": "^1.0.0",
+        "mocha": "^2.3.3",
+        "eslint": "^3.6.0",
+        "@types/node": "^6.0.40",
+        "@types/mocha": "^2.2.32"
+    }
+}
