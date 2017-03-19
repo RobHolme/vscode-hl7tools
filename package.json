@@ -3,7 +3,16 @@
     "displayName": "HL7Tools",
     "description": "HL7 tools for Visual Studio Code",
     "version": "1.0.0",
+    "icon": "images/hl7tools-icon.png",
     "publisher": "RobHolme",
+    "bugs": {
+        "url": "https://github.com/RobHolme/vscode-hl7tools/issues"
+    },
+    "homepage": "https://github.com/RobHolme/vscode-hl7tools/blob/master/README.md",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/RobHolme/vscode-hl7tools.git"
+    },
     "engines": {
         "vscode": "^1.9.0"
     },
