@@ -7,9 +7,24 @@ This is a Visual Studio Code extension for working with HL7 v2.x files. It provi
 ### Syntax highlighting
 * Segment, field, component, subcomponent and repeat separators are highlighted. 
 
-![Syntax highlighting](images/syntax.jpg)
+![Syntax highlighting](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/syntax.jpg)
 
 > Note: The default dark and light themes don't highlight the field separators, I've found the Monkai theme works best.
+
+### Field highlighting
+This prompts the user to enter a HL7 field location (e.g. PID-3), the corresponding field is then highligted in the editor.
+
+* Press F1 --> HL7 Tools: Highlight Field
+
+![Field highlighting](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/highlightfield0.jpg)
+
+* Enter the reference to the segment and field location. e.g. PID-3
+
+![Field highlighting](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/highlightfield1.jpg)
+
+* The field will be highlighted. Selecting a new field will remove the previuosly highlighted field. Entering a blank value for a field location will remove all highlighting.
+
+![Field highlighting](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/highlightfield2.jpg)
 
 ### Display segment fields
 This function lists all fields from the currently selected segment in a list in the output window. Field components are indented. Any repeating field values are included.
@@ -17,16 +32,16 @@ This function lists all fields from the currently selected segment in a list in 
 * Press F1 --> HL7 Tools: Display Segment.
 * The selected segment's fields will be displayed in the output window. Repeating fields will be included. 
 
-![Syntax highlighting](images/DisplaySegmentFields.jpg)
+![Syntax highlighting](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/DisplaySegmentFields.jpg)
 
 ### Mask patient identifiers
 * Press F1 --> HL7 Tools: Mask Identifiers.
 
-![Mask Identifiers](images/MaskIdentifiers1.jpg)
+![Mask Identifiers](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/MaskIdentifiers1.jpg)
 
 * Common patient and next of kin identifiers will be masked with a '#' character. The masked message will be displayed in the output window, the original message will not be changed.
 
-![Mask Identifiers](images/MaskIdentifiers2.jpg)
+![Mask Identifiers](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/MaskIdentifiers2.jpg)
 
 > Note: The first identifier in the Patient Identifier List (PID-3) will remain, all additional identifiers in this list will be masked. It is assumed this ID isn't a named identifier and is still useful if messages need to be exchanged to troubleshoot issues. The aim is to mask common user identifiable fields such as name, address, etc. The full list of fields masked are:
 >* PID-3 (all repeats except for the first), PID-4 to PID-17, PID-19 to PID-23, PID-26 to PID-28
@@ -48,8 +63,14 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 
 ## Release Notes
 
+### Known issues
+* Display Segment fields function fails on custom 'Z' segments
+
 ### 1.0.0
-Initial release.
+* Initial release.
+### 1.1.0
+* Added function 'HL7 Tools: Highlight Field'. This prompts the user to enter a HL7 field location (e.g. PID-3), the corresponding field is then highligted in the editor.
+* Bugfix: Mask identifiers was failing on PID and NK1 segments if not all fields were present in the message.
 
 ## Credits
 * The HL7 syntax highlighting was sourced from https://github.com/craighurley/sublime-hl7-syntax

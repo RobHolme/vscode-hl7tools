@@ -6,8 +6,14 @@
 var vscode = require('vscode');
 
 // Load the segment descriptions from the HL7-Dictionary module
-//var hl7Schema = require('./modules/hl7-dictionary').definitions['2.7.1'];
 var hl7Schema = require('./segments.js')
+
+// the list of fields to highlight
+var fieldSelectionList = [];
+
+// stores the current highlighted field so that it can be cleared when selecting a new field.
+var currentDecoration;
+
 
 // add leading spaces to right pad a string
 function padRight(stringToPad, padLength) {
@@ -61,6 +67,21 @@ function maskField(fieldToMask, componentNumber) {
     return fieldRepeats;
 }
 
+// extract the segment name from the hl7 item location string
+function GetSegmentName(hl7ItemlocationString) {
+    return hl7ItemlocationString.substring(0, 3);
+}
+
+// extract the index of a field location from the hl7 item location string
+function GetFieldIndex(hl7ItemlocationString) {
+    var split1 = hl7ItemlocationString.split("-");
+    if (split1.length > 1) {
+        return split1[1].split(".")[0];
+    }
+    else {
+        return;
+    }
+}
 
 // this method is called when the extension is activated
 function activate(context) {
@@ -69,6 +90,99 @@ function activate(context) {
     // This line of code will only be executed once when your extension is activated
     console.log('The extension "hl7tools" is now active.');
 
+
+    //-------------------------------------------------------------------------------------------
+    // this function highlights HL7 items in the message based on item possition identified by user.
+    var highlightFieldCommand = vscode.commands.registerCommand('extension.HighlightHL7Item', function () {
+        console.log('In function Highlight Field');
+
+        // exit if the editor is not active
+        var activeEditor = vscode.window.activeTextEditor;
+        if (!activeEditor) {
+            return;
+        }
+        var currentDoc = activeEditor.document;
+
+        // create a decorator type that is used to decorate selected fields
+        // TO DO: make the background colour user configurable
+        var highlightDecorationType = vscode.window.createTextEditorDecorationType({
+            backgroundColor: 'rgba(0,255,0,0.3)'
+        });
+
+        // dispose of decorations for previously highlighted fields
+        console.log("clearing previous highlighted fields");
+        if (fieldSelectionList.length > 0) {
+            currentDecoration.dispose();
+            fieldSelectionList = [];
+        }
+
+        // prompt the user for the location of the HL7 field (e.g. PID-3). Validate the location via regex.
+        var itemLocationPromise = vscode.window.showInputBox({ prompt: "Enter HL7 item location (e.g. PID-3)" });
+        itemLocationPromise.then(function (itemLocation) {
+            var itemLocationRegex = new RegExp("^[A-Z]{2}([A-Z]|[0-9])[-]([0-9]{1,3})$", 'i');
+            // the regex matches, the location string appears to be valid.
+            if (itemLocationRegex.test(itemLocation)) {
+                // identify the segment name and field index from the location string
+                var segmentName = GetSegmentName(itemLocation);
+                var fieldIndex = parseInt(GetFieldIndex(itemLocation), 10);
+
+                var fieldLocated = false;
+                var regEx = /\|/g;
+                var text = activeEditor.document.getText();
+                // calculate the number of characters at the end of line (<CR>, or <CR><LF>)
+                var config = vscode.workspace.getConfiguration();
+                var endOfLineLength = config.files.eol.length;
+
+                // search each line in the message to locate a matching segment
+                var positionOffset = 0;
+                for (lineIndex = 0; lineIndex < currentDoc.lineCount; lineIndex++) {
+                    var startPos = null;
+                    var endPos = null;
+                    var currentLine = currentDoc.lineAt(lineIndex).text;
+                    var fields = currentLine.split('|');
+                    if ((fields[0]).toUpperCase() === segmentName.toUpperCase()) {
+                        var fieldCount = 1;
+                        // get the location of field delimiter characters
+                        while (match = regEx.exec(currentLine)) {
+                            if (fieldCount == fieldIndex) {
+                                startPos = activeEditor.document.positionAt(positionOffset + match.index + 1);
+                            }
+                            if (fieldCount == fieldIndex + 1) {
+                                endPos = activeEditor.document.positionAt(positionOffset + match.index);
+                                var decoration = { range: new vscode.Range(startPos, endPos), hoverMessage: 'Field' };
+                                fieldSelectionList.push(decoration);
+                                fieldLocated = true;
+                            }
+                            fieldCount++;
+                        }
+                        // check to see if the field requested was the last field in the segment (i.e. start of field delimiter found, but no further field delimiters).
+                        if ((startPos) && (!endPos)) {
+                            endPos = activeEditor.document.positionAt(positionOffset + currentLine.length);
+                            var decoration = { range: new vscode.Range(startPos, endPos), hoverMessage: 'Field' };
+                            fieldSelectionList.push(decoration);
+                            fieldLocated = true;
+                        }
+                    }
+                    // the field locations are relative to the current line, so calculate the offset of previous lines to identify the location within the file.
+                    positionOffset += currentLine.length + endOfLineLength;
+                }
+                // apply the decoration to highlight the field. 
+                activeEditor.setDecorations(highlightDecorationType, fieldSelectionList);
+                currentDecoration = highlightDecorationType;
+                // warn the user if the field selected does not exist in the message
+                if (!fieldLocated) {
+                    vscode.window.showWarningMessage("The field " + itemLocation + " could not be located in the message");
+                }
+            }
+            // the location entered doesn't match the format expected. Warn the user and exit.
+            else {
+                vscode.window.showWarningMessage("The location " + itemLocation + " does not appear to be a valid field location");
+            }
+        });
+    });
+    context.subscriptions.push(highlightFieldCommand);
+
+    //-------------------------------------------------------------------------------------------
     // This function masks out patient & next of kin identifiers
     var maskIdentifiersCommand = vscode.commands.registerCommand('extension.MaskIdentifiers', function () {
         console.log('In function MaskIdentifiers');
@@ -92,69 +206,80 @@ function activate(context) {
                 // mask out all patient IDs, except for the first one in the list
                 var patientIDList = fields[3].split('~')
                 for (i = 1; i < patientIDList.length; i++) {
-                    patientIDList[i] = maskComponent(patientIDList[i], 1);
+                    patientIDList[i] = maskComponent(patientIDList[i]);
                 }
                 fields[3] = patientIDList.join('~');
-
-                // mask out all repeats for the following fields
-                fields[4] = maskField(fields[4], 1) // alternate patient ID
-                fields[5] = maskField(fields[5]) // patient name
-                fields[6] = maskField(fields[6]) // mothers maiden name
-                fields[7] = maskField(fields[7]) // date of birth
-                fields[8] = maskField(fields[8]) // administrative sex
-                fields[9] = maskField(fields[9]) // patient alias
-                fields[10] = maskField(fields[10]) // race
-                fields[11] = maskField(fields[11]) // patient address
-                fields[12] = maskField(fields[12]) // country code
-                fields[13] = maskField(fields[13]) // phone number home
-                fields[14] = maskField(fields[14]) // phone number business
-                fields[15] = maskField(fields[15]) // primary language
-                fields[16] = maskField(fields[16]) // mariatial status
-                fields[17] = maskField(fields[17]) // religion
-                fields[19] = maskField(fields[19]) // SSN
-                fields[20] = maskField(fields[20]) // drivers license number
-                fields[21] = maskField(fields[21]) // mothers identifier
-                fields[22] = maskField(fields[22]) // ethnic group
-                fields[23] = maskField(fields[23]) // birth place
-                fields[26] = maskField(fields[26]) // citizenship
-                fields[27] = maskField(fields[27]) // veterens military status
-                fields[28] = maskField(fields[28]) // nationality
-
+                try {
+                    // mask out all repeats for the following fields
+                    fields[4] = maskField(fields[4], 1) // alternate patient ID
+                    fields[5] = maskField(fields[5]) // patient name
+                    fields[6] = maskField(fields[6]) // mothers maiden name
+                    fields[7] = maskField(fields[7]) // date of birth
+                    fields[8] = maskField(fields[8]) // administrative sex
+                    fields[9] = maskField(fields[9]) // patient alias
+                    fields[10] = maskField(fields[10]) // race
+                    fields[11] = maskField(fields[11]) // patient address
+                    fields[12] = maskField(fields[12]) // country code
+                    fields[13] = maskField(fields[13]) // phone number home
+                    fields[14] = maskField(fields[14]) // phone number business
+                    fields[15] = maskField(fields[15]) // primary language
+                    fields[16] = maskField(fields[16]) // mariatial status
+                    fields[17] = maskField(fields[17]) // religion
+                    fields[19] = maskField(fields[19]) // SSN
+                    fields[20] = maskField(fields[20]) // drivers license number
+                    fields[21] = maskField(fields[21]) // mothers identifier
+                    fields[22] = maskField(fields[22]) // ethnic group
+                    fields[23] = maskField(fields[23]) // birth place
+                    fields[26] = maskField(fields[26]) // citizenship
+                    fields[27] = maskField(fields[27]) // veterens military status
+                    fields[28] = maskField(fields[28]) // nationality
+                }
+                 // catch exceptions raised if the fields requested are out of range in the array of fields. 
+                catch (err) {
+                    // do nothing
+                }
                 // join all modified fields back into a segment
                 var maskedSegment = fields.join('|');
                 maskedMessage += maskedSegment + '\r';
             }
             // mask out specific next of kin fields
             else if ((fields[0]).toUpperCase() === "NK1") {
-                fields[2] = maskField(fields[2]); // name
-                fields[4] = maskField(fields[4]); // address
-                fields[5] = maskField(fields[5]); // phone number
-                fields[6] = maskField(fields[6]); // business phone number
-                fields[7] = maskField(fields[7]); // contact role
-                fields[10] = maskField(fields[10]); // job title
-                fields[11] = maskField(fields[11]); // job class
-                fields[12] = maskField(fields[12]); // employer code
-                fields[13] = maskField(fields[13]); // organisation name
-                fields[14] = maskField(fields[14]); // marital status
-                fields[15] = maskField(fields[15]); // administrative sex
-                fields[16] = maskField(fields[16]); // date of birth
-                fields[19] = maskField(fields[19]); // citizenship
-                fields[20] = maskField(fields[20]); // primary language
-                fields[25] = maskField(fields[25]); // religion
-                fields[26] = maskField(fields[26]); // mother maiden name
-                fields[27] = maskField(fields[27]); // nationality
-                fields[28] = maskField(fields[28]); // ethnic group
-                fields[29] = maskField(fields[29]); // contact reason
-                fields[30] = maskField(fields[30]); // contact name
-                fields[31] = maskField(fields[31]); // contact phone number
-                fields[32] = maskField(fields[32]); // contact address
-                fields[33] = maskField(fields[33]); // next of kin ID
-                fields[35] = maskField(fields[35]); // race
-                fields[37] = maskField(fields[37]); // SSN
-                fields[38] = maskField(fields[38]); // bith place
+                try {
+                    fields[2] = maskField(fields[2]); // name
+                    fields[4] = maskField(fields[4]); // address
+                    fields[5] = maskField(fields[5]); // phone number
+                    fields[6] = maskField(fields[6]); // business phone number
+                    fields[7] = maskField(fields[7]); // contact role
+                    fields[10] = maskField(fields[10]); // job title
+                    fields[11] = maskField(fields[11]); // job class
+                    fields[12] = maskField(fields[12]); // employer code
+                    fields[13] = maskField(fields[13]); // organisation name
+                    fields[14] = maskField(fields[14]); // marital status
+                    fields[15] = maskField(fields[15]); // administrative sex
+                    fields[16] = maskField(fields[16]); // date of birth
+                    fields[19] = maskField(fields[19]); // citizenship
+                    fields[20] = maskField(fields[20]); // primary language
+                    fields[25] = maskField(fields[25]); // religion
+                    fields[26] = maskField(fields[26]); // mother maiden name
+                    fields[27] = maskField(fields[27]); // nationality
+                    fields[28] = maskField(fields[28]); // ethnic group
+                    fields[29] = maskField(fields[29]); // contact reason
+                    fields[30] = maskField(fields[30]); // contact name
+                    fields[31] = maskField(fields[31]); // contact phone number
+                    fields[32] = maskField(fields[32]); // contact address
+                    fields[33] = maskField(fields[33]); // next of kin ID
+                    fields[35] = maskField(fields[35]); // race
+                    fields[37] = maskField(fields[37]); // SSN
+                    fields[38] = maskField(fields[38]); // bith place
+                }
+                // catch exceptions raised if the fields requested are out of range in the array of fields. 
+                catch (err) {
+                    // do nothing
+                }
                 // join all modified fields back into a segment
                 var maskedSegment = fields.join('|');
                 maskedMessage += maskedSegment + '\r'
+
             }
             // mask out all IN1 fields after IN1-2
             else if ((fields[0]).toUpperCase() === "IN1") {
@@ -167,7 +292,7 @@ function activate(context) {
             }
             // mask out all IN2 fields
             else if ((fields[0]).toUpperCase() === "IN2") {
-                for (in2Index = 1; in2Index < fields.length; in2Index++) {
+                for (in2Index = 2; in2Index < fields.length; in2Index++) {
                     fields[in2Index] = maskField(fields[in2Index]);
                 }
                 // join all modified fields back into a segment
@@ -190,6 +315,7 @@ function activate(context) {
     context.subscriptions.push(maskIdentifiersCommand);
 
 
+    //-------------------------------------------------------------------------------------------
     // This function outputs the field tokens that make up the segment.
     // The function is based on TokenizeLine from https://github.com/pagebrooks/vscode-hl7 . Modified to 
     // support repeating fields and make field indexes start at 1 (instead of 0) to match the HL7 field naming scheme. 
