@@ -2,7 +2,7 @@
 	"name": "hl7tools",
 	"displayName": "HL7Tools",
 	"description": "HL7 tools for Visual Studio Code",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"icon": "images/hl7tools-icon.png",
 	"publisher": "RobHolme",
 	"bugs": {
@@ -20,23 +20,30 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.DisplaySegmentFields",
-		"onCommand:extension.MaskIdentifiers",
-		"onCommand:extension.HighlightHL7Item"
+		"onCommand:hl7tools.DisplaySegmentFields",
+		"onCommand:hl7tools.MaskIdentifiers",
+		"onCommand:hl7tools.HighlightHL7Item"
 	],
 	"main": "./extension",
 	"contributes": {
+		"keybindings": [
+			{
+				"command": "hl7tools.HighlightHL7Item",
+				"key": "ctrl+alt+h",
+				"when": "editorLangId == hl7"
+			}
+		],
 		"commands": [
 			{
-				"command": "extension.DisplaySegmentFields",
+				"command": "hl7tools.DisplaySegmentFields",
 				"title": "HL7 Tools: Display Segment Fields"
 			},
 			{
-				"command": "extension.MaskIdentifiers",
+				"command": "hl7tools.MaskIdentifiers",
 				"title": "HL7 Tools: Mask Identifiers"
 			},
 			{
-				"command": "extension.HighlightHL7Item",
+				"command": "hl7tools.HighlightHL7Item",
 				"title": "HL7 Tools: Highlight Field"
 			}
 		],

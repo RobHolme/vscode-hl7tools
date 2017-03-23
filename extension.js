@@ -93,7 +93,7 @@ function activate(context) {
 
     //-------------------------------------------------------------------------------------------
     // this function highlights HL7 items in the message based on item possition identified by user.
-    var highlightFieldCommand = vscode.commands.registerCommand('extension.HighlightHL7Item', function () {
+    var highlightFieldCommand = vscode.commands.registerCommand('hl7tools.HighlightHL7Item', function () {
         console.log('In function Highlight Field');
 
         // exit if the editor is not active
@@ -184,7 +184,7 @@ function activate(context) {
 
     //-------------------------------------------------------------------------------------------
     // This function masks out patient & next of kin identifiers
-    var maskIdentifiersCommand = vscode.commands.registerCommand('extension.MaskIdentifiers', function () {
+    var maskIdentifiersCommand = vscode.commands.registerCommand('hl7tools.MaskIdentifiers', function () {
         console.log('In function MaskIdentifiers');
 
         // exit if the editor is not active
@@ -319,7 +319,7 @@ function activate(context) {
     // This function outputs the field tokens that make up the segment.
     // The function is based on TokenizeLine from https://github.com/pagebrooks/vscode-hl7 . Modified to 
     // support repeating fields and make field indexes start at 1 (instead of 0) to match the HL7 field naming scheme. 
-    var displaySegmentCommand = vscode.commands.registerCommand('extension.DisplaySegmentFields', function () {
+    var displaySegmentCommand = vscode.commands.registerCommand('hl7tools.DisplaySegmentFields', function () {
         console.log('In function DisplaySegmentFields');
 
         // exit if the editor is not active
