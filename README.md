@@ -32,11 +32,6 @@ This prompts the user to enter a HL7 field location (e.g. PID-3), the correspond
 
 ![Field highlighting](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/highlightfield2.jpg)
 
-### Field name tooltips
-This adds a tooltip description for each field when the mouse is hovered over the field.
-
-* Press F1 --> HL7 Tools: Identify Fields
- 
 ### Display segment fields
 This function lists all fields from the currently selected segment in a list in the output window. Field components are indented. Any repeating field values are included.
 * Select the segment in the message using the cursor.
