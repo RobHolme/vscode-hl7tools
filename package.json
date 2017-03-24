@@ -2,7 +2,7 @@
 	"name": "hl7tools",
 	"displayName": "HL7Tools",
 	"description": "HL7 tools for Visual Studio Code",
-	"version": "1.1.1",
+	"version": "1.2.0",
 	"icon": "images/hl7tools-icon.png",
 	"publisher": "RobHolme",
 	"bugs": {
@@ -20,9 +20,11 @@
 		"Other"
 	],
 	"activationEvents": [
+		"onLanguage:hl7",
 		"onCommand:hl7tools.DisplaySegmentFields",
 		"onCommand:hl7tools.MaskIdentifiers",
-		"onCommand:hl7tools.HighlightHL7Item"
+		"onCommand:hl7tools.HighlightHL7Item",
+		"onCommand:hl7tools.IdentifyFields"
 	],
 	"main": "./extension",
 	"contributes": {
@@ -30,6 +32,11 @@
 			{
 				"command": "hl7tools.HighlightHL7Item",
 				"key": "ctrl+alt+h",
+				"when": "editorLangId == hl7"
+			},
+			{
+				"command": "hl7tools.IdentifyFields",
+				"key": "ctrl+alt+i",
 				"when": "editorLangId == hl7"
 			}
 		],
@@ -45,6 +52,10 @@
 			{
 				"command": "hl7tools.HighlightHL7Item",
 				"title": "HL7 Tools: Highlight Field"
+			},
+			{
+				"command": "hl7tools.IdentifyFields",
+				"title": "HL7 Tools: Identify Fields"
 			}
 		],
 		"languages": [

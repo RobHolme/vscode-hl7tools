@@ -4,16 +4,18 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 var vscode = require('vscode');
-
+var window = vscode.window;
+var workspace = vscode.workspace;
 // Load the segment descriptions from the HL7-Dictionary module
 var hl7Schema = require('./segments.js')
-
 // the list of fields to highlight
 var fieldSelectionList = [];
-
+// the list of fields with hover decorations (displaying the field description);
+var hoverDecorationList = [];
 // stores the current highlighted field so that it can be cleared when selecting a new field.
 var currentDecoration;
-
+// stores the current hover decorations
+var currentHoverDecoration;
 
 // add leading spaces to right pad a string
 function padRight(stringToPad, padLength) {
@@ -83,6 +85,7 @@ function GetFieldIndex(hl7ItemlocationString) {
     }
 }
 
+
 // this method is called when the extension is activated
 function activate(context) {
 
@@ -90,6 +93,28 @@ function activate(context) {
     // This line of code will only be executed once when your extension is activated
     console.log('The extension "hl7tools" is now active.');
 
+    // exit if the editor is not active
+    var activeEditor = window.activeTextEditor
+
+    if (!activeEditor) {
+        return;
+    }
+    else {
+        UpdateFieldDescriptions();
+    }
+
+    window.onDidChangeActiveTextEditor(function (editor) {
+        activeEditor = editor;
+        if (editor) {
+            UpdateFieldDescriptions();
+        }
+    }, null, context.subscriptions);
+
+    workspace.onDidChangeTextDocument(function (event) {
+        if (activeEditor && event.document === activeEditor.document) {
+            UpdateFieldDescriptions();
+        }
+    }, null, context.subscriptions);
 
     //-------------------------------------------------------------------------------------------
     // this function highlights HL7 items in the message based on item possition identified by user.
@@ -149,7 +174,7 @@ function activate(context) {
                             }
                             if (fieldCount == fieldIndex + 1) {
                                 endPos = activeEditor.document.positionAt(positionOffset + match.index);
-                                var decoration = { range: new vscode.Range(startPos, endPos), hoverMessage: 'Field' };
+                                var decoration = { range: new vscode.Range(startPos, endPos) };
                                 fieldSelectionList.push(decoration);
                                 fieldLocated = true;
                             }
@@ -209,34 +234,12 @@ function activate(context) {
                     patientIDList[i] = maskComponent(patientIDList[i]);
                 }
                 fields[3] = patientIDList.join('~');
-                try {
-                    // mask out all repeats for the following fields
-                    fields[4] = maskField(fields[4], 1) // alternate patient ID
-                    fields[5] = maskField(fields[5]) // patient name
-                    fields[6] = maskField(fields[6]) // mothers maiden name
-                    fields[7] = maskField(fields[7]) // date of birth
-                    fields[8] = maskField(fields[8]) // administrative sex
-                    fields[9] = maskField(fields[9]) // patient alias
-                    fields[10] = maskField(fields[10]) // race
-                    fields[11] = maskField(fields[11]) // patient address
-                    fields[12] = maskField(fields[12]) // country code
-                    fields[13] = maskField(fields[13]) // phone number home
-                    fields[14] = maskField(fields[14]) // phone number business
-                    fields[15] = maskField(fields[15]) // primary language
-                    fields[16] = maskField(fields[16]) // mariatial status
-                    fields[17] = maskField(fields[17]) // religion
-                    fields[19] = maskField(fields[19]) // SSN
-                    fields[20] = maskField(fields[20]) // drivers license number
-                    fields[21] = maskField(fields[21]) // mothers identifier
-                    fields[22] = maskField(fields[22]) // ethnic group
-                    fields[23] = maskField(fields[23]) // birth place
-                    fields[26] = maskField(fields[26]) // citizenship
-                    fields[27] = maskField(fields[27]) // veterens military status
-                    fields[28] = maskField(fields[28]) // nationality
-                }
-                 // catch exceptions raised if the fields requested are out of range in the array of fields. 
-                catch (err) {
-                    // do nothing
+                // mask out specific PID fields contined in the array below (1 based index - e.g. 4 = PID-4). fields[0] is the segment name.
+                var pidFieldsToMask = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 26, 27, 28];
+                for (i = 0; i < pidFieldsToMask.length; i++) {
+                    if (pidFieldsToMask[i] < fields.length) {
+                        fields[pidFieldsToMask[i]] = maskField(fields[pidFieldsToMask[i]]);
+                    }
                 }
                 // join all modified fields back into a segment
                 var maskedSegment = fields.join('|');
@@ -244,37 +247,12 @@ function activate(context) {
             }
             // mask out specific next of kin fields
             else if ((fields[0]).toUpperCase() === "NK1") {
-                try {
-                    fields[2] = maskField(fields[2]); // name
-                    fields[4] = maskField(fields[4]); // address
-                    fields[5] = maskField(fields[5]); // phone number
-                    fields[6] = maskField(fields[6]); // business phone number
-                    fields[7] = maskField(fields[7]); // contact role
-                    fields[10] = maskField(fields[10]); // job title
-                    fields[11] = maskField(fields[11]); // job class
-                    fields[12] = maskField(fields[12]); // employer code
-                    fields[13] = maskField(fields[13]); // organisation name
-                    fields[14] = maskField(fields[14]); // marital status
-                    fields[15] = maskField(fields[15]); // administrative sex
-                    fields[16] = maskField(fields[16]); // date of birth
-                    fields[19] = maskField(fields[19]); // citizenship
-                    fields[20] = maskField(fields[20]); // primary language
-                    fields[25] = maskField(fields[25]); // religion
-                    fields[26] = maskField(fields[26]); // mother maiden name
-                    fields[27] = maskField(fields[27]); // nationality
-                    fields[28] = maskField(fields[28]); // ethnic group
-                    fields[29] = maskField(fields[29]); // contact reason
-                    fields[30] = maskField(fields[30]); // contact name
-                    fields[31] = maskField(fields[31]); // contact phone number
-                    fields[32] = maskField(fields[32]); // contact address
-                    fields[33] = maskField(fields[33]); // next of kin ID
-                    fields[35] = maskField(fields[35]); // race
-                    fields[37] = maskField(fields[37]); // SSN
-                    fields[38] = maskField(fields[38]); // bith place
-                }
-                // catch exceptions raised if the fields requested are out of range in the array of fields. 
-                catch (err) {
-                    // do nothing
+                // mask out specific PID fields contined in the array below (1 based index - e.g. 4 = PID-4). fields[0] is the segment name.
+                var nk1FieldsToMask = [2,4,5,6,7,10,11,12,13,14,15,16,19,20,25,26,27,28,29,30,31,32,33,35,37,38];
+                for (i = 0; i < nk1FieldsToMask.length; i++) {
+                    if (nk1FieldsToMask[i] < fields.length) {
+                        fields[nk1FieldsToMask[i]] = maskField(fields[nk1FieldsToMask[i]]);
+                    }
                 }
                 // join all modified fields back into a segment
                 var maskedSegment = fields.join('|');
@@ -290,7 +268,7 @@ function activate(context) {
                 var maskedSegment = fields.join('|');
                 maskedMessage += maskedSegment + '\r'
             }
-            // mask out all IN2 fields
+            // mask out all IN2 fields after IN2-2
             else if ((fields[0]).toUpperCase() === "IN2") {
                 for (in2Index = 2; in2Index < fields.length; in2Index++) {
                     fields[in2Index] = maskField(fields[in2Index]);
@@ -314,6 +292,13 @@ function activate(context) {
     });
     context.subscriptions.push(maskIdentifiersCommand);
 
+    //-------------------------------------------------------------------------------------------
+    // Command to update the field descriptions (as a hover decoration over the field in the editor window)
+    var identifyFieldsCommand = vscode.commands.registerCommand('hl7tools.IdentifyFields', function () {
+        console.log('Running command hl7tools.IdentifyFields');
+        UpdateFieldDescriptions();
+    });
+    context.subscriptions.push(identifyFieldsCommand);
 
     //-------------------------------------------------------------------------------------------
     // This function outputs the field tokens that make up the segment.
@@ -333,16 +318,26 @@ function activate(context) {
         var currentLineNum = selection.start.line;
         var tokens = currentDoc.lineAt(currentLineNum).text.split('|');
         var segment = tokens[0];
-        var segmentDef = hl7Schema[segment];
         var repeatNum = 0;
+
+        // if a custom segment ('Z' segment) is found, the segment name will not exist in hl7Schema. 
+        var segmentDef = hl7Schema[segment];
+
+        // if the segment isn;t defined in the HL7 schema, warn user and exit function.
+        if (!segmentDef) {
+            vscode.window.showWarningMessage("Custom segments are not supported.");
+            return;
+        }
 
         if (segment === 'MSH') {
             tokens.splice(1, 0, '|');
         }
 
+
         var output = [{ segment: segment + '-0', desc: segment, repeat: repeatNum, values: [segment] }];
         var maxLength = 0;
         for (var i = 1; i <= segmentDef.fields.length; i++) {
+            // trap exceptions generated when getting descritions for custom segments. These won't be defined in the HL7Schema so will trigger exception
             var desc = segmentDef.fields[i - 1].desc;
             maxLength = Math.max(maxLength, desc.length);
 
@@ -415,12 +410,99 @@ function activate(context) {
         channel.show(vscode.ViewColumn.Two);
 
     });
-
     context.subscriptions.push(displaySegmentCommand);
+
+    // apply descriptions to each field as a hover decoration (tooltip)
+    function UpdateFieldDescriptions() {
+        // exit if the editor is not active
+
+        var activeEditor = vscode.window.activeTextEditor;
+        if (!activeEditor) {
+            return;
+        }
+        console.log("updating field hover descriptions");
+        var hoverDecorationType = vscode.window.createTextEditorDecorationType({
+        });
+        var regEx = /\|/g;
+        var validSegmentRegEx = /^[a-z][a-z]([a-z]|[0-9])\|/i;
+        var currentDoc = activeEditor.document;
+        var text = currentDoc.getText();
+        // calculate the number of characters at the end of line (<CR>, or <CR><LF>)
+        var config = vscode.workspace.getConfiguration();
+        var endOfLineLength = config.files.eol.length;
+
+        // dispose of decorations for previously highlighted fields
+        if (hoverDecorationList.length > 0) {
+            currentHoverDecoration.dispose();
+            hoverDecorationList = [];
+        }
+        // search each line in the message to locate a matching segment
+        var positionOffset = 0;
+        for (lineIndex = 0; lineIndex < currentDoc.lineCount; lineIndex++) {
+            var startPos = null;
+            var endPos = null;
+            var currentLine = currentDoc.lineAt(lineIndex).text;
+            var fields = currentLine.split('|');
+            var segmentName = fields[0];
+            var segmentDef = hl7Schema[segmentName];
+            var fieldCount = -1;
+            var previousEndPos = null;
+            var fieldDescription = "";
+            // ignore all lines that do not at least contain a segmentname and field delimeter. This should be the absolut minimum for a segment
+            if (!validSegmentRegEx.test(currentLine)) {
+                positionOffset += currentLine.length + endOfLineLength;
+                continue;
+            }
+            // the first delimeter is a field for MSH segments
+            if (segmentName.toUpperCase() == "MSH") {
+                fieldCount++;
+            }
+            // get the location of field delimiter characters
+            while (match = regEx.exec(currentLine)) {
+                endPos = activeEditor.document.positionAt(positionOffset + match.index);
+                startPos = previousEndPos;
+                previousEndPos = activeEditor.document.positionAt(positionOffset + match.index + 1);
+                // when the next field is located, apply a hover tag decoration to the previous field
+                if (startPos) {
+                    // try/catch needed for custom 'Z' segments not listed in the HL7 data dictionary.
+                    try {
+                        fieldDescription = segmentDef.fields[fieldCount].desc;
+                    }
+                    catch (err) {
+                        fieldDescription = "";
+                    }
+                    var decoration = { range: new vscode.Range(startPos, endPos), hoverMessage: fieldDescription + " (" + segmentName + "-" + (fieldCount + 1) + ")" };
+                    hoverDecorationList.push(decoration);
+                }
+                fieldCount++;
+            }
+            // add a decoration for the last field in the segment (not bounded by a field delimeter) 
+            startPos = previousEndPos;
+            endPos = activeEditor.document.positionAt(positionOffset + (currentLine.length + 1));
+            try {
+                fieldDescription = segmentDef.fields[fieldCount].desc;
+            }
+            catch (err) {
+                fieldDescription = "";
+            }
+            var decoration = { range: new vscode.Range(startPos, endPos), hoverMessage: fieldDescription + " (" + segmentName + "-" + (fieldCount + 1) + ")" };
+            hoverDecorationList.push(decoration);
+
+            // the field locations are relative to the current line, so calculate the offset of previous lines to identify the location within the file.
+            positionOffset += currentLine.length + endOfLineLength;
+        }
+
+        // apply the decoration to highlight the field. 
+        activeEditor.setDecorations(hoverDecorationType, hoverDecorationList);
+        currentHoverDecoration = hoverDecorationType;
+    }
+
 }
 exports.activate = activate;
 
 // this method is called when your extension is deactivated
 function deactivate() {
+    console.log("deactivating HL7Tools extension");
+    exports.deactivate = deactivate;
 }
-exports.deactivate = deactivate;
+

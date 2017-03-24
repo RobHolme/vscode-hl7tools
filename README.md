@@ -11,6 +11,12 @@ This is a Visual Studio Code extension for working with HL7 v2.x files. It provi
 
 > Note: The default dark and light themes don't highlight the field separators, I've found the Monkai theme works best.
 
+### Field descriptions
+When the mouse is hovered over a field, the field name and location is displayed in a pop-up tooltip. If the file has a .hl7 extension this will be applied when the file loads, other wise it will need to be manually activated via:
+* Press F1 --> HL7 Tools: Identify Fields
+
+![Field descriptions](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/FieldDescription.jpg)
+
 ### Field highlighting
 This prompts the user to enter a HL7 field location (e.g. PID-3), the corresponding field is then highligted in the editor.
 
@@ -26,6 +32,11 @@ This prompts the user to enter a HL7 field location (e.g. PID-3), the correspond
 
 ![Field highlighting](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/highlightfield2.jpg)
 
+### Field name tooltips
+This adds a tooltip description for each field when the mouse is hovered over the field.
+
+* Press F1 --> HL7 Tools: Identify Fields
+ 
 ### Display segment fields
 This function lists all fields from the currently selected segment in a list in the output window. Field components are indented. Any repeating field values are included.
 * Select the segment in the message using the cursor.
@@ -73,6 +84,8 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 * Bugfix: Mask identifiers was failing on PID and NK1 segments if not all fields were present in the message.
 ### 1.1.1
 * Added keymap to bind 'HL7 Tools: Highlight Field' to ctrl+alt+h (only applies to hl7 files)
+### 1.2.0 - 2017-03-23
+* Added function 'HL7 Tools: Identify Fields' to add a tooltip description of the field when the mouse is hovered over the field. If the file has a '.hl7' file extension, this will apply when the file is loaded.
 
 ## Credits
 * The HL7 syntax highlighting was sourced from https://github.com/craighurley/sublime-hl7-syntax
