@@ -1,6 +1,8 @@
 # hl7tools for Visual Studio Code README
-This is a Visual Studio Code extension for working with HL7 v2.x files. It provides basic syntax highlighting, and functions to:
-* mask identifiers in the message.
+This is a Visual Studio Code extension for working with HL7 v2.x files. It provides basic syntax highlighting, and the following features:
+* display field description when mouse is hovered over a field
+* highlight user specified fields in the message.
+* mask out identifying fields in the message.
 * display fields from a segment in a list.
 
 ## Features
@@ -24,13 +26,15 @@ This prompts the user to enter a HL7 field location (e.g. PID-3), the correspond
 
 ![Field highlighting](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/highlightfield0.jpg)
 
-* Enter the reference to the segment and field location. e.g. PID-3
+* Enter the reference to the segment and field location (e.g. PID-3), or enter part of the field name (e.g. patient).
 
 ![Field highlighting](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/highlightfield1.jpg)
 
-* The field will be highlighted. Selecting a new field will remove the previuosly highlighted field. Entering a blank value for a field location will remove all highlighting.
+* The field will be highlighted. If part of the field name was entered, all matching fields will be highlighted. e.g. 'Patient' would match to 'Patient ID List', 'Patient Name', etc. Selecting a new field will remove the previuosly highlighted field. Entering a blank value for a field location will remove all highlighting.
 
 ![Field highlighting](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/highlightfield2.jpg)
+
+> Note: the field highlighting may be shifted by a character if the document end of line character is changed from the editor default.
 
 ### Display segment fields
 This function lists all fields from the currently selected segment in a list in the output window. Field components are indented. Any repeating field values are included.
@@ -74,13 +78,19 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 
 ### 1.0.0
 * Initial release.
+
 ### 1.1.0
 * Added function 'HL7 Tools: Highlight Field'. This prompts the user to enter a HL7 field location (e.g. PID-3), the corresponding field is then highligted in the editor.
 * Bugfix: Mask identifiers was failing on PID and NK1 segments if not all fields were present in the message.
+
 ### 1.1.1
 * Added keymap to bind 'HL7 Tools: Highlight Field' to ctrl+alt+h (only applies to hl7 files)
-### 1.2.0 - 2017-03-23
+
+### 1.2.0
 * Added function 'HL7 Tools: Identify Fields' to add a tooltip description of the field when the mouse is hovered over the field. If the file has a '.hl7' file extension, this will apply when the file is loaded.
+### 1.2.1
+* updated function 'HL7 Tools: Identify Fields' to search for matching fields based on field name (in addition to location). e.g. entering 'birth' would highlight all fields with 'birth' in the field name  (such as 'birth date', 'multiple birth indicator', 'country of birth').
+
 
 ## Credits
 * The HL7 syntax highlighting was sourced from https://github.com/craighurley/sublime-hl7-syntax

@@ -14,5 +14,8 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 * Added keymap to bind 'HL7 Tools: Highlight Field' to ctrl+alt+h (only applies to hl7 files)
 ### 1.2.0 - 2017-03-23
 * Added function 'HL7 Tools: Identify Fields' to add a tooltip description for each field. This is loaded on startup if the file has a .hl7 file extension.
+### 1.2.1 - 2017-03-25
+* updated function 'HL7 Tools: Identify Fields' to search for matching fields based on field name (in addition to location). e.g. entering 'birth' would highlight all fields with 'birth' in the field name  (such as 'birth date', 'multiple birth indicator', 'country of birth').
+
 
 ## [Unreleased]

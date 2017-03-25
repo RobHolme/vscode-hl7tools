@@ -2,7 +2,7 @@
 	"name": "hl7tools",
 	"displayName": "HL7Tools",
 	"description": "HL7 tools for Visual Studio Code",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"icon": "images/hl7tools-icon.png",
 	"publisher": "RobHolme",
 	"bugs": {
@@ -37,6 +37,11 @@
 			{
 				"command": "hl7tools.IdentifyFields",
 				"key": "ctrl+alt+i",
+				"when": "editorLangId == hl7"
+			},
+			{
+				"command": "hl7tools.MaskIdentifiers",
+				"key": "ctrl+alt+m",
 				"when": "editorLangId == hl7"
 			}
 		],

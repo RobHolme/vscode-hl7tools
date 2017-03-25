@@ -85,6 +85,22 @@ function GetFieldIndex(hl7ItemlocationString) {
     }
 }
 
+// return the unique names of all segments in the message. Return as a associative array indexed by segment name. key values are not consequential.
+function GetAllSegmentNames(document) {
+    var segmentHashtable = {};
+    var segmentRegex = new RegExp("^[A-Z]{2}([A-Z]|[0-9])\|", 'i');
+    for (var i = 0; i < document.lineCount; i++) {
+        var currentSegment = document.lineAt(i).text;
+        if (segmentRegex.test(currentSegment)) {
+            var segmentName = currentSegment.split("|")[0];
+            if (segmentHashtable[segmentName.toUpperCase()] === undefined) {
+                segmentHashtable[segmentName.toUpperCase()] = 1;
+            }
+        }
+    }
+    return segmentHashtable;
+}
+
 
 // this method is called when the extension is activated
 function activate(context) {
@@ -121,6 +137,9 @@ function activate(context) {
     var highlightFieldCommand = vscode.commands.registerCommand('hl7tools.HighlightHL7Item', function () {
         console.log('In function Highlight Field');
 
+        // associative array indexed by segmentname, with the field index as a value. 
+        var locationHashtable = {};
+
         // exit if the editor is not active
         var activeEditor = vscode.window.activeTextEditor;
         if (!activeEditor) {
@@ -142,66 +161,93 @@ function activate(context) {
         }
 
         // prompt the user for the location of the HL7 field (e.g. PID-3). Validate the location via regex.
-        var itemLocationPromise = vscode.window.showInputBox({ prompt: "Enter HL7 item location (e.g. PID-3)" });
+        var itemLocationPromise = vscode.window.showInputBox({ prompt: "Enter HL7 item location (e.g. 'PID-3'), or the partial field name (e.g. 'name')" });
         itemLocationPromise.then(function (itemLocation) {
+            // return if no location provided by the user;
+            if (!itemLocation) {
+                return;
+            }
             var itemLocationRegex = new RegExp("^[A-Z]{2}([A-Z]|[0-9])[-]([0-9]{1,3})$", 'i');
-            // the regex matches, the location string appears to be valid.
+            var nameRegEx = new RegExp(itemLocation, "i");
+            var fieldIndexArray = [];
+            // test to see if the user has provided a valid location string
             if (itemLocationRegex.test(itemLocation)) {
                 // identify the segment name and field index from the location string
                 var segmentName = GetSegmentName(itemLocation);
                 var fieldIndex = parseInt(GetFieldIndex(itemLocation), 10);
-
-                var fieldLocated = false;
-                var regEx = /\|/g;
-                var text = activeEditor.document.getText();
-                // calculate the number of characters at the end of line (<CR>, or <CR><LF>)
-                var config = vscode.workspace.getConfiguration();
-                var endOfLineLength = config.files.eol.length;
-
-                // search each line in the message to locate a matching segment
-                var positionOffset = 0;
-                for (lineIndex = 0; lineIndex < currentDoc.lineCount; lineIndex++) {
-                    var startPos = null;
-                    var endPos = null;
-                    var currentLine = currentDoc.lineAt(lineIndex).text;
-                    var fields = currentLine.split('|');
-                    if ((fields[0]).toUpperCase() === segmentName.toUpperCase()) {
-                        var fieldCount = 1;
-                        // get the location of field delimiter characters
-                        while (match = regEx.exec(currentLine)) {
-                            if (fieldCount == fieldIndex) {
-                                startPos = activeEditor.document.positionAt(positionOffset + match.index + 1);
+                fieldIndexArray.push(fieldIndex);
+                locationHashtable[segmentName] = fieldIndexArray;
+            }
+            // else assume the user has provided a field description to search for.
+            else {
+                // find mathcing field names for any segment present in the message
+                var segmentHash = GetAllSegmentNames(currentDoc);
+                for (var key in segmentHash) {
+                    var segmentDef = hl7Schema[key];
+                    // ignore segments not present in the hl7 scheme (i.e. custom Z segments)
+                    if (!(segmentDef === undefined)) {
+                        fieldIndexArray = [];
+                        for (var i = 0; i < segmentDef.fields.length; i++) {
+                            if (nameRegEx.test(segmentDef.fields[i].desc)) {
+                                fieldIndexArray.push(i + 1)
                             }
-                            if (fieldCount == fieldIndex + 1) {
-                                endPos = activeEditor.document.positionAt(positionOffset + match.index);
-                                var decoration = { range: new vscode.Range(startPos, endPos) };
-                                fieldSelectionList.push(decoration);
-                                fieldLocated = true;
-                            }
-                            fieldCount++;
                         }
-                        // check to see if the field requested was the last field in the segment (i.e. start of field delimiter found, but no further field delimiters).
-                        if ((startPos) && (!endPos)) {
-                            endPos = activeEditor.document.positionAt(positionOffset + currentLine.length);
-                            var decoration = { range: new vscode.Range(startPos, endPos), hoverMessage: 'Field' };
-                            fieldSelectionList.push(decoration);
-                            fieldLocated = true;
-                        }
+                        locationHashtable[key] = fieldIndexArray;
                     }
-                    // the field locations are relative to the current line, so calculate the offset of previous lines to identify the location within the file.
-                    positionOffset += currentLine.length + endOfLineLength;
-                }
-                // apply the decoration to highlight the field. 
-                activeEditor.setDecorations(highlightDecorationType, fieldSelectionList);
-                currentDecoration = highlightDecorationType;
-                // warn the user if the field selected does not exist in the message
-                if (!fieldLocated) {
-                    vscode.window.showWarningMessage("The field " + itemLocation + " could not be located in the message");
                 }
             }
-            // the location entered doesn't match the format expected. Warn the user and exit.
-            else {
-                vscode.window.showWarningMessage("The location " + itemLocation + " does not appear to be a valid field location");
+            var fieldLocated = false;
+            var regEx = /\|/g;
+            var text = activeEditor.document.getText();
+            // calculate the number of characters at the end of line (<CR>, or <CR><LF>)
+            var config = vscode.workspace.getConfiguration();
+            var endOfLineLength = config.files.eol.length;
+
+            // search each line in the message to locate a matching segment
+            var positionOffset = 0;
+            for (lineIndex = 0; lineIndex < currentDoc.lineCount; lineIndex++) {
+                var startPos = null;
+                var endPos = null;
+                var currentLine = currentDoc.lineAt(lineIndex).text;
+                var fields = currentLine.split('|');
+                if (!(locationHashtable[fields[0].toUpperCase()] === undefined)) {
+                    var fieldCount = 1;
+                    // get the location of field delimiter characters
+                    while (match = regEx.exec(currentLine)) {
+                        // if the start position was located in the previous iteration, then this must be the end posssition
+                        if (startPos) {
+                            endPos = activeEditor.document.positionAt(positionOffset + match.index);
+                            var decoration = { range: new vscode.Range(startPos, endPos) };
+                            fieldSelectionList.push(decoration);
+                            startPos = null;
+                            endPos = null;
+                            fieldLocated = true;
+                        }
+                        // if this field is in the list of fields to highlight, mark the start position in the message 
+                        if (locationHashtable[fields[0].toUpperCase()].includes(fieldCount)) {  
+                            startPos = activeEditor.document.positionAt(positionOffset + match.index + 1);
+                        }
+                        fieldCount++;
+                    }
+                    // check to see if the field requested was the last field in the segment (i.e. start of field delimiter found, but no further field delimiters).
+                    if (startPos) {
+                        endPos = activeEditor.document.positionAt(positionOffset + currentLine.length);
+                        var decoration = { range: new vscode.Range(startPos, endPos) };
+                        fieldSelectionList.push(decoration);
+                        fieldLocated = true;
+                    }
+                }
+                // the field locations are relative to the current line, so calculate the offset of previous lines to identify the location within the file.
+                positionOffset += currentLine.length + endOfLineLength;
+            }
+
+            // apply the decoration to highlight the field. 
+            activeEditor.setDecorations(highlightDecorationType, fieldSelectionList);
+            currentDecoration = highlightDecorationType;
+            // warn the user if the field selected does not exist in the message
+
+            if (!fieldLocated) {
+                vscode.window.showWarningMessage("A field matching " + itemLocation + " could not be located in the message");
             }
         });
     });
@@ -217,7 +263,6 @@ function activate(context) {
         if (!editor) {
             return;
         }
-
         var currentDoc = editor.document;
 
         // examine each line in the HL7 message
@@ -248,7 +293,7 @@ function activate(context) {
             // mask out specific next of kin fields
             else if ((fields[0]).toUpperCase() === "NK1") {
                 // mask out specific PID fields contined in the array below (1 based index - e.g. 4 = PID-4). fields[0] is the segment name.
-                var nk1FieldsToMask = [2,4,5,6,7,10,11,12,13,14,15,16,19,20,25,26,27,28,29,30,31,32,33,35,37,38];
+                var nk1FieldsToMask = [2, 4, 5, 6, 7, 10, 11, 12, 13, 14, 15, 16, 19, 20, 25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 37, 38];
                 for (i = 0; i < nk1FieldsToMask.length; i++) {
                     if (nk1FieldsToMask[i] < fields.length) {
                         fields[nk1FieldsToMask[i]] = maskField(fields[nk1FieldsToMask[i]]);
