@@ -322,6 +322,15 @@ function activate(context) {
                 var maskedSegment = fields.join('|');
                 maskedMessage += maskedSegment + '\r'
             }
+            // mask out all GT1 fields after GT1-2
+            else if ((fields[0]).toUpperCase() === "GT1") {
+                for (in2Index = 2; in2Index < fields.length; in2Index++) {
+                    fields[in2Index] = maskField(fields[in2Index]);
+                }
+                // join all modified fields back into a segment
+                var maskedSegment = fields.join('|');
+                maskedMessage += maskedSegment + '\r'
+            }
             // if the segment does not contain identifiable information, leave it unmodified
             else {
                 maskedMessage += currentLine + '\r';

@@ -1,4 +1,4 @@
-# hl7tools for Visual Studio Code README
+# HL7 Ttools for Visual Studio Code README
 This is a Visual Studio Code extension for working with HL7 v2.x files. It provides basic syntax highlighting, and the following features:
 * display field description when mouse is hovered over a field
 * highlight user specified fields in the message.
@@ -57,7 +57,8 @@ This function lists all fields from the currently selected segment in a list in 
 >* PID-3 (all repeats except for the first), PID-4 to PID-17, PID-19 to PID-23, PID-26 to PID-28
 >* NK1-2, NK1-4 to NK1-7, NK1-10 to NK1-16, NK1-19, NK1-20, NK1-25 to NK1-33, NK1-35, NK1-37, NK1-38
 >* All IN1 fields after IN1-2
->* All IN2 fields
+>* All IN2 fields after IN2-1
+>* All GT1 fields after GT1-2
 
 ## Installation
 ### Visual Studio Code 
@@ -90,7 +91,8 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 * Added function 'HL7 Tools: Identify Fields' to add a tooltip description of the field when the mouse is hovered over the field. If the file has a '.hl7' file extension, this will apply when the file is loaded.
 ### 1.2.1
 * updated function 'HL7 Tools: Identify Fields' to search for matching fields based on field name (in addition to location). e.g. entering 'birth' would highlight all fields with 'birth' in the field name  (such as 'birth date', 'multiple birth indicator', 'country of birth').
-
+### 1.2.2
+* When masking identifiable fields, the GT1 segmnt is now included.
 
 ## Credits
 * The HL7 syntax highlighting was sourced from https://github.com/craighurley/sublime-hl7-syntax
