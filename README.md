@@ -1,4 +1,4 @@
-# HL7 Ttools for Visual Studio Code README
+# HL7 Tools for Visual Studio Code README
 This is a Visual Studio Code extension for working with HL7 v2.x files. It provides basic syntax highlighting, and the following features:
 * display field description when mouse is hovered over a field
 * highlight user specified fields in the message.
@@ -89,8 +89,10 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 
 ### 1.2.0
 * Added function 'HL7 Tools: Identify Fields' to add a tooltip description of the field when the mouse is hovered over the field. If the file has a '.hl7' file extension, this will apply when the file is loaded.
+
 ### 1.2.1
 * updated function 'HL7 Tools: Identify Fields' to search for matching fields based on field name (in addition to location). e.g. entering 'birth' would highlight all fields with 'birth' in the field name  (such as 'birth date', 'multiple birth indicator', 'country of birth').
+
 ### 1.2.2
 * When masking identifiable fields, the GT1 segmnt is now included.
 
