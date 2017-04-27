@@ -59,7 +59,7 @@ function maskComponent(fieldToMask, componentNumber) {
     return returnField;
 }
 
-// Mask all items in a fields, including repeating components.
+// Mask all items in a single field, including repeating items.
 // optionally limit the mask to a specific compoent of the field
 function maskField(fieldToMask, componentNumber) {
     // mask out mother's maiden name
@@ -69,6 +69,17 @@ function maskField(fieldToMask, componentNumber) {
     }
     fieldRepeats = fieldRepeats.join('~');
     return fieldRepeats;
+}
+
+// Mask all fields in an array of fields. Optionaly start masking fields occuring from startingFieldPossition (1 based index of fields)  
+function maskFieldList(fieldListToMask, startingPosition) {
+    if (!startingPosition) {
+        startingPosition = 1;
+    }
+    for (fieldIndex = startingPosition; fieldIndex < fields.length; fieldIndex++) {
+        fieldListToMask[fieldIndex] = maskField(fieldListToMask[fieldIndex]);
+    }
+    return fieldListToMask;
 }
 
 // extract the segment name from the hl7 item location string
@@ -436,10 +447,10 @@ function activate(context) {
             var desc = segmentDef.fields[i - 1].desc;
             var dataType = segmentDef.fields[i - 1].datatype;
             // calculate the length of the longest description (include field and component descriptions). Used to calculate padding length when displaying output.
-            for (j=0; j < hl7Fields[dataType].subfields.length; j++) {
+            for (j = 0; j < hl7Fields[dataType].subfields.length; j++) {
                 maxLength = Math.max(maxLength, desc.length + 9, hl7Fields[dataType].subfields[j].desc.length + 14);
-        }
-            
+            }
+
             var values = [];
             if (i < tokens.length) {
                 if (segment === 'MSH' && i === 2) {
@@ -482,8 +493,8 @@ function activate(context) {
         // format the results for display.
         var channelOutput = 'HL7 Segment: ' + output[0].desc + '\n\n';
         for (var i = 1; i < output.length; i++) {
-              var prefix = padRight(output[i].segment + ' ' + output[i].desc + ':', maxLength) + ' ';
-  
+            var prefix = padRight(output[i].segment + ' ' + output[i].desc + ':', maxLength) + ' ';
+
             var value = '';
             if (output[i].values.length === 1) {
                 value += output[i].values[0];
@@ -491,8 +502,8 @@ function activate(context) {
             else {
                 for (var j = 0; j < output[i].values.length; j++) {
                     var componentDescription = "";
-                    // get the description of the component
-                    if (j <= (hl7Fields[output[i].datatype]).subfields.length) {
+                    // get the description of the component (if the data does not match the schema datatype leave unknown component descriptions blank)
+                    if (j < (hl7Fields[output[i].datatype]).subfields.length) {
                         componentDescription = hl7Fields[output[i].datatype].subfields[j].desc;
                     }
                     // if no repeats for the field exist, don't include the repeat number in the output
@@ -520,6 +531,7 @@ function activate(context) {
     });
     context.subscriptions.push(displaySegmentCommand);
 
+    //-------------------------------------------------------------------------------------------
     // apply descriptions to each field as a hover decoration (tooltip)
     function UpdateFieldDescriptions() {
         // exit if the editor is not active
