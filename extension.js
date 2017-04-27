@@ -6,8 +6,9 @@
 var vscode = require('vscode');
 var window = vscode.window;
 var workspace = vscode.workspace;
-// Load the segment descriptions from the HL7-Dictionary module
-var hl7Schema = require('./segments.js')
+var hl7Schema;
+var hl7Fields;
+
 // the list of fields to highlight
 var fieldSelectionList = [];
 // the list of fields with hover decorations (displaying the field description);
@@ -16,6 +17,7 @@ var hoverDecorationList = [];
 var currentDecoration;
 // stores the current hover decorations
 var currentHoverDecoration;
+
 
 // add leading spaces to right pad a string
 function padRight(stringToPad, padLength) {
@@ -101,6 +103,40 @@ function GetAllSegmentNames(document) {
     return segmentHashtable;
 }
 
+// load the appropriate hl7 schema based on the HL7 version (as defined in MSH-12) 
+function LoadHL7Schema() {
+    // exit if the editor is not active
+    var activeEditor = window.activeTextEditor;
+    var supportedSchemas = ["2.1", "2.2", "2.3", "2.3.1", "2.4", "2.5", "2.5.1", "2.6", "2.7", "2.7.1"];
+
+    if (!activeEditor) {
+        return;
+    }
+    else {
+        msh = activeEditor.document.lineAt(0).text;
+        if (msh.split('|')[0].toUpperCase() == "MSH") {
+            var hl7Version = msh.split('|')[11];
+            console.log("HL7 version detected as " + hl7Version);
+            if (supportedSchemas.includes(hl7Version)) {
+                // Load the segment descriptions from the HL7-Dictionary module
+                hl7Schema = require('./schema/' + hl7Version + '/segments.js');
+                hl7Fields = require('./schema/' + hl7Version + '/fields.js');
+            }
+            // default to the 2.7.1 schema if there is a not a schema available for the version reported (e.g. future releases)
+            else {
+                console.log("Schema for HL7 version " + hl7Version + " is not supported. Defaulting to v2.7.1 schema");
+                hl7Schema = require('./schema/2.7.1/segments.js');
+                hl7Fields = require('./schema/2.7.1/fields.js');
+            }
+        }
+        // if the first line is not a MSH segment (this would be unexpected), default to the 2.7.1 schema
+        else {
+            hl7Schema = require('./schema/2.7.1/segments.js');
+            hl7Fields = require('./schema/2.7.1/fields.js');
+            console.log("HL7 version could not be determined. Defaulting to v2.7.1 schema.");
+        }
+    }
+}
 
 // this method is called when the extension is activated
 function activate(context) {
@@ -111,21 +147,27 @@ function activate(context) {
 
     // exit if the editor is not active
     var activeEditor = window.activeTextEditor
-
     if (!activeEditor) {
         return;
     }
     else {
+        // load the HL7 schema based on the version reported by the MSH segment
+        LoadHL7Schema();
+        // apply the hover descriptions for each field
         UpdateFieldDescriptions();
     }
 
+    // the active document has changed. 
     window.onDidChangeActiveTextEditor(function (editor) {
         activeEditor = editor;
         if (editor) {
+            // the new document may be a different version of HL7, so load the approprate version of schema
+            LoadHL7Schema();
             UpdateFieldDescriptions();
         }
     }, null, context.subscriptions);
 
+    // document text has changed
     workspace.onDidChangeTextDocument(function (event) {
         if (activeEditor && event.document === activeEditor.document) {
             UpdateFieldDescriptions();
@@ -224,7 +266,7 @@ function activate(context) {
                             fieldLocated = true;
                         }
                         // if this field is in the list of fields to highlight, mark the start position in the message 
-                        if (locationHashtable[fields[0].toUpperCase()].includes(fieldCount)) {  
+                        if (locationHashtable[fields[0].toUpperCase()].includes(fieldCount)) {
                             startPos = activeEditor.document.positionAt(positionOffset + match.index + 1);
                         }
                         fieldCount++;
@@ -324,8 +366,8 @@ function activate(context) {
             }
             // mask out all GT1 fields after GT1-2
             else if ((fields[0]).toUpperCase() === "GT1") {
-                for (in2Index = 2; in2Index < fields.length; in2Index++) {
-                    fields[in2Index] = maskField(fields[in2Index]);
+                for (gt1Index = 2; gt1Index < fields.length; gt1Index++) {
+                    fields[gt1Index] = maskField(fields[gt1Index]);
                 }
                 // join all modified fields back into a segment
                 var maskedSegment = fields.join('|');
@@ -391,10 +433,13 @@ function activate(context) {
         var output = [{ segment: segment + '-0', desc: segment, repeat: repeatNum, values: [segment] }];
         var maxLength = 0;
         for (var i = 1; i <= segmentDef.fields.length; i++) {
-            // trap exceptions generated when getting descritions for custom segments. These won't be defined in the HL7Schema so will trigger exception
             var desc = segmentDef.fields[i - 1].desc;
-            maxLength = Math.max(maxLength, desc.length);
-
+            var dataType = segmentDef.fields[i - 1].datatype;
+            // calculate the length of the longest description (include field and component descriptions). Used to calculate padding length when displaying output.
+            for (j=0; j < hl7Fields[dataType].subfields.length; j++) {
+                maxLength = Math.max(maxLength, desc.length + 9, hl7Fields[dataType].subfields[j].desc.length + 14);
+        }
+            
             var values = [];
             if (i < tokens.length) {
                 if (segment === 'MSH' && i === 2) {
@@ -414,7 +459,8 @@ function activate(context) {
                                 segment: segment + '-' + i,
                                 desc: desc,
                                 repeat: k + 1,
-                                values: values
+                                values: values,
+                                datatype: dataType
                             })
                         }
                         // if the field does not repeat, use 0 as the repeat number. The output will be formatted differently for non repeating items (based on examining this value).
@@ -423,7 +469,8 @@ function activate(context) {
                                 segment: segment + '-' + i,
                                 desc: desc,
                                 repeat: 0,
-                                values: values
+                                values: values,
+                                datatype: dataType
                             })
                         }
                         var values = [];
@@ -435,21 +482,28 @@ function activate(context) {
         // format the results for display.
         var channelOutput = 'HL7 Segment: ' + output[0].desc + '\n\n';
         for (var i = 1; i < output.length; i++) {
-            var prefix = padRight(output[i].segment + ':', 8) + padRight(output[i].desc + ':', maxLength) + ' ';
+              var prefix = padRight(output[i].segment + ' ' + output[i].desc + ':', maxLength) + ' ';
+  
             var value = '';
             if (output[i].values.length === 1) {
                 value += output[i].values[0];
             }
             else {
                 for (var j = 0; j < output[i].values.length; j++) {
+                    var componentDescription = "";
+                    // get the description of the component
+                    if (j <= (hl7Fields[output[i].datatype]).subfields.length) {
+                        componentDescription = hl7Fields[output[i].datatype].subfields[j].desc;
+                    }
                     // if no repeats for the field exist, don't include the repeat number in the output
                     if (output[i].repeat == 0) {
-                        value += padRight('\n  ' + output[i].segment + '-' + (j + 1) + ': ', prefix.length + 1);
+
+                        value += padRight('\n   ' + output[i].segment + '-' + (j + 1) + ' (' + componentDescription + ') ', prefix.length + 1);
                         value += output[i].values[j];
                     }
                     // include the repeat number for repeating fields. e.g. PID-3[2].1 would be the first componennt of the second repeat of the PID-3 field. 
                     else {
-                        value += padRight('\n  ' + output[i].segment + '[' + output[i].repeat.toString() + ']-' + (j + 1) + ': ', prefix.length + 1);
+                        value += padRight('\n   ' + output[i].segment + '[' + output[i].repeat.toString() + ']-' + (j + 1) + ' (' + componentDescription + ') ', prefix.length + 1);
                         value += output[i].values[j];
                     }
                 }
@@ -474,7 +528,7 @@ function activate(context) {
         if (!activeEditor) {
             return;
         }
-        console.log("updating field hover descriptions");
+        console.log("Updating field hover descriptions");
         var hoverDecorationType = vscode.window.createTextEditorDecorationType({
         });
         var regEx = /\|/g;

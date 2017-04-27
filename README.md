@@ -39,7 +39,7 @@ This prompts the user to enter a HL7 field location (e.g. PID-3), the correspond
 ### Display segment fields
 This function lists all fields from the currently selected segment in a list in the output window. Field components are indented. Any repeating field values are included.
 * Select the segment in the message using the cursor.
-* Press F1 --> HL7 Tools: Display Segment.
+* Press F1 --> HL7 Tools: Display Segment Fields.
 * The selected segment's fields will be displayed in the output window. Repeating fields will be included. 
 
 ![Syntax highlighting](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/DisplaySegmentFields.jpg)
@@ -96,8 +96,12 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 ### 1.2.2
 * When masking identifiable fields, the GT1 segmnt is now included.
 
+### 1.2.3 - 2017-04-27
+* The message schema specific to the version of HL7 in the message is now used (as reported by MSH-12)
+* Component descriptions now included when running 'HL7 Tools: Display Segment Fields'
+
 ## Credits
 * The HL7 syntax highlighting was sourced from https://github.com/craighurley/sublime-hl7-syntax
 * The Display Segment Fields function was based on a function from https://github.com/pagebrooks/vscode-hl7 
-* the HL7 segment descriptions (segment.js) was extracted from http://github.com/fernandojsg/hl7-dictionary. To reduce disk footprint only the segment definitions were used, not the complete HL7 dictionary.
+* the HL7 segment descriptions (segment.js) was extracted from http://github.com/fernandojsg/hl7-dictionary. To reduce disk footprint only the segment and field definitions were used.
 
