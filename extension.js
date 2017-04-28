@@ -448,7 +448,7 @@ function activate(context) {
             var dataType = segmentDef.fields[i - 1].datatype;
             // calculate the length of the longest description (include field and component descriptions). Used to calculate padding length when displaying output.
             for (j = 0; j < hl7Fields[dataType].subfields.length; j++) {
-                maxLength = Math.max(maxLength, desc.length + 9, hl7Fields[dataType].subfields[j].desc.length + 14);
+                maxLength = Math.max(maxLength, (desc.length + 9), (hl7Fields[dataType].subfields[j].desc.length + 14));
             }
 
             var values = [];
@@ -509,12 +509,12 @@ function activate(context) {
                     // if no repeats for the field exist, don't include the repeat number in the output
                     if (output[i].repeat == 0) {
 
-                        value += padRight('\n   ' + output[i].segment + '-' + (j + 1) + ' (' + componentDescription + ') ', prefix.length + 1);
+                        value += padRight('\n   ' + output[i].segment + '.' + (j + 1) + ' (' + componentDescription + ') ', prefix.length + 1);
                         value += output[i].values[j];
                     }
                     // include the repeat number for repeating fields. e.g. PID-3[2].1 would be the first componennt of the second repeat of the PID-3 field. 
                     else {
-                        value += padRight('\n   ' + output[i].segment + '[' + output[i].repeat.toString() + ']-' + (j + 1) + ' (' + componentDescription + ') ', prefix.length + 1);
+                        value += padRight('\n   ' + output[i].segment + '[' + output[i].repeat.toString() + '].' + (j + 1) + ' (' + componentDescription + ') ', prefix.length + 1);
                         value += output[i].values[j];
                     }
                 }

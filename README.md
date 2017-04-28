@@ -96,9 +96,12 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 ### 1.2.2
 * When masking identifiable fields, the GT1 segmnt is now included.
 
-### 1.2.3 - 2017-04-27
+### 1.2.3
 * The message schema specific to the version of HL7 in the message is now used (as reported by MSH-12)
 * Component descriptions now included when running 'HL7 Tools: Display Segment Fields'
+
+### 1.2.4
+* Minor update to display of component numbers when displaying fields in a segment, uses '.' instead of '-' to match HL7 nomenclature.
 
 ## Credits
 * The HL7 syntax highlighting was sourced from https://github.com/craighurley/sublime-hl7-syntax
