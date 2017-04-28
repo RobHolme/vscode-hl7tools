@@ -4482,7 +4482,7 @@ var segments = {
         ]
     },
     "RQ1": {
-        "desc": "Requisition detail- ",
+        "desc": "Requisition detail",
         "fields": [
             {
                 "datatype": "SI",

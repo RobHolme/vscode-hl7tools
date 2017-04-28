@@ -44,7 +44,7 @@ var segments = {
             },
             {
                 "datatype": "DTM",
-                "desc": "Abstract Completion Date/Time ",
+                "desc": "Abstract Completion Date/Time",
                 "opt": 1,
                 "rep": 1
             },
@@ -289,7 +289,7 @@ var segments = {
             },
             {
                 "datatype": "XON",
-                "desc": "Responsible Organization ",
+                "desc": "Responsible Organization",
                 "opt": 1,
                 "rep": 1
             }
@@ -953,7 +953,7 @@ var segments = {
             },
             {
                 "datatype": "DR",
-                "desc": "Access Restriction Date Range ",
+                "desc": "Access Restriction Date Range",
                 "opt": 1,
                 "rep": 1
             }
@@ -1307,50 +1307,50 @@ var segments = {
             },
             {
                 "datatype": "EI",
-                "desc": "BC Donation ID ",
+                "desc": "BC Donation ID",
                 "opt": 3,
                 "rep": 1
             },
             {
                 "datatype": "CNE",
-                "desc": "BC Component ",
+                "desc": "BC Component",
                 "opt": 3,
                 "rep": 1
             },
             {
                 "datatype": "CNE",
-                "desc": "BC Donation Type / Intended Use ",
+                "desc": "BC Donation Type / Intended Use",
                 "opt": 1,
                 "rep": 1
             },
             {
                 "datatype": "CWE",
-                "desc": "CP Commercial Product ",
+                "desc": "CP Commercial Product",
                 "opt": 3,
                 "rep": 1,
                 "table": 512
             },
             {
                 "datatype": "XON",
-                "desc": "CP Manufacturer ",
+                "desc": "CP Manufacturer",
                 "opt": 3,
                 "rep": 1
             },
             {
                 "datatype": "EI",
-                "desc": "CP Lot Number ",
+                "desc": "CP Lot Number",
                 "opt": 3,
                 "rep": 1
             },
             {
                 "datatype": "CNE",
-                "desc": "BP Blood Group ",
+                "desc": "BP Blood Group",
                 "opt": 1,
                 "rep": 1
             },
             {
                 "datatype": "CNE",
-                "desc": "BC Special Testing ",
+                "desc": "BC Special Testing",
                 "opt": 1,
                 "rep": 0
             },
@@ -1445,13 +1445,13 @@ var segments = {
             },
             {
                 "datatype": "EI",
-                "desc": "BC Donation ID ",
+                "desc": "BC Donation ID",
                 "opt": 3,
                 "rep": 1
             },
             {
                 "datatype": "CNE",
-                "desc": "BC Component ",
+                "desc": "BC Component",
                 "opt": 3,
                 "rep": 1
             },
@@ -1463,14 +1463,14 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "CP Commercial Product ",
+                "desc": "CP Commercial Product",
                 "opt": 3,
                 "rep": 1,
                 "table": 512
             },
             {
                 "datatype": "XON",
-                "desc": "CP Manufacturer ",
+                "desc": "CP Manufacturer",
                 "opt": 3,
                 "rep": 1
             },
@@ -1527,7 +1527,7 @@ var segments = {
             },
             {
                 "datatype": "XCN",
-                "desc": "BP Transfusion Verifier ",
+                "desc": "BP Transfusion Verifier",
                 "opt": 1,
                 "rep": 1
             },
@@ -1688,7 +1688,7 @@ var segments = {
             },
             {
                 "datatype": "ED",
-                "desc": "Signature ",
+                "desc": "Signature",
                 "opt": 1,
                 "rep": 1
             },
@@ -2188,7 +2188,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Relationship to Subject ",
+                "desc": "Relationship to Subject",
                 "opt": 2,
                 "rep": 0,
                 "table": 548
@@ -2247,7 +2247,7 @@ var segments = {
             },
             {
                 "datatype": "CX",
-                "desc": "Sponsor Patient ID  ",
+                "desc": "Sponsor Patient ID",
                 "opt": 2,
                 "rep": 1
             },
@@ -2271,7 +2271,7 @@ var segments = {
             },
             {
                 "datatype": "XCN",
-                "desc": "Study Authorizing Provider ",
+                "desc": "Study Authorizing Provider",
                 "opt": 2,
                 "rep": 0
             },
@@ -2336,7 +2336,7 @@ var segments = {
             },
             {
                 "datatype": "DTM",
-                "desc": "Study Scheduled Patient Time Point ",
+                "desc": "Study Scheduled Patient Time Point",
                 "opt": 1,
                 "rep": 1
             },
@@ -2384,7 +2384,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Preferred Method of Contact ",
+                "desc": "Preferred Method of Contact",
                 "opt": 1,
                 "rep": 1,
                 "table": 185
@@ -2490,13 +2490,13 @@ var segments = {
             },
             {
                 "datatype": "ST",
-                "desc": "Diagnosis Coding Method ",
+                "desc": "Diagnosis Coding Method",
                 "opt": 4,
                 "rep": 1
             },
             {
                 "datatype": "CWE",
-                "desc": "Diagnosis Code - DG1 ",
+                "desc": "Diagnosis Code - DG1",
                 "opt": 2,
                 "rep": 1,
                 "table": 51
@@ -2509,7 +2509,7 @@ var segments = {
             },
             {
                 "datatype": "DTM",
-                "desc": "Diagnosis Date/Time ",
+                "desc": "Diagnosis Date/Time",
                 "opt": 1,
                 "rep": 1
             },
@@ -2528,13 +2528,13 @@ var segments = {
             },
             {
                 "datatype": "ST",
-                "desc": "Diagnostic Related Group ",
+                "desc": "Diagnostic Related Group",
                 "opt": 4,
                 "rep": 1
             },
             {
                 "datatype": "ST",
-                "desc": "DRG Approval Indicator ",
+                "desc": "DRG Approval Indicator",
                 "opt": 4,
                 "rep": 1
             },
@@ -2546,13 +2546,13 @@ var segments = {
             },
             {
                 "datatype": "ST",
-                "desc": "Outlier Type ",
+                "desc": "Outlier Type",
                 "opt": 4,
                 "rep": 1
             },
             {
                 "datatype": "ST",
-                "desc": "Outlier Days ",
+                "desc": "Outlier Days",
                 "opt": 4,
                 "rep": 1
             },
@@ -2658,7 +2658,7 @@ var segments = {
         "fields": [
             {
                 "datatype": "CNE",
-                "desc": "Diagnostic Related Group ",
+                "desc": "Diagnostic Related Group",
                 "opt": 1,
                 "rep": 1,
                 "table": 55
@@ -2695,20 +2695,20 @@ var segments = {
         "fields": [
             {
                 "datatype": "CNE",
-                "desc": "Diagnostic Related Group ",
+                "desc": "Diagnostic Related Group",
                 "opt": 1,
                 "rep": 1,
                 "table": 55
             },
             {
                 "datatype": "DTM",
-                "desc": "DRG Assigned Date/Time ",
+                "desc": "DRG Assigned Date/Time",
                 "opt": 1,
                 "rep": 1
             },
             {
                 "datatype": "ID",
-                "desc": "DRG Approval Indicator ",
+                "desc": "DRG Approval Indicator",
                 "opt": 1,
                 "rep": 1,
                 "len": 1,
@@ -2723,14 +2723,14 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Outlier Type ",
+                "desc": "Outlier Type",
                 "opt": 1,
                 "rep": 1,
                 "table": 83
             },
             {
                 "datatype": "NM",
-                "desc": "Outlier Days ",
+                "desc": "Outlier Days",
                 "opt": 1,
                 "rep": 1
             },
@@ -2809,7 +2809,7 @@ var segments = {
             },
             {
                 "datatype": "ST",
-                "desc": "Grouper Software Name ",
+                "desc": "Grouper Software Name",
                 "opt": 1,
                 "rep": 1
             },
@@ -3099,7 +3099,7 @@ var segments = {
         "fields": [
             {
                 "datatype": "CWE",
-                "desc": "Event type ",
+                "desc": "Event type",
                 "opt": 2,
                 "rep": 1,
                 "table": 450
@@ -3263,7 +3263,7 @@ var segments = {
             },
             {
                 "datatype": "DTM",
-                "desc": "Recorded Date/Time ",
+                "desc": "Recorded Date/Time",
                 "opt": 2,
                 "rep": 1
             },
@@ -3404,137 +3404,137 @@ var segments = {
             },
             {
                 "datatype": "ST",
-                "desc": "Transaction ID ",
+                "desc": "Transaction ID",
                 "opt": 1,
                 "rep": 1,
                 "len": 12
             },
             {
                 "datatype": "ST",
-                "desc": "Transaction Batch ID ",
+                "desc": "Transaction Batch ID",
                 "opt": 1,
                 "rep": 1,
                 "len": 10
             },
             {
                 "datatype": "DR",
-                "desc": "Transaction Date ",
+                "desc": "Transaction Date",
                 "opt": 2,
                 "rep": 1
             },
             {
                 "datatype": "DTM",
-                "desc": "Transaction Posting Date ",
+                "desc": "Transaction Posting Date",
                 "opt": 1,
                 "rep": 1
             },
             {
                 "datatype": "CWE",
-                "desc": "Transaction Type ",
+                "desc": "Transaction Type",
                 "opt": 2,
                 "rep": 1,
                 "table": 17
             },
             {
                 "datatype": "CWE",
-                "desc": "Transaction Code ",
+                "desc": "Transaction Code",
                 "opt": 2,
                 "rep": 1,
                 "table": 132
             },
             {
                 "datatype": "ST",
-                "desc": "Transaction Description ",
+                "desc": "Transaction Description",
                 "opt": 4,
                 "rep": 1
             },
             {
                 "datatype": "ST",
-                "desc": "Transaction Description   Alt ",
+                "desc": "Transaction Description   Alt",
                 "opt": 4,
                 "rep": 1
             },
             {
                 "datatype": "NM",
-                "desc": "Transaction Quantity ",
+                "desc": "Transaction Quantity",
                 "opt": 1,
                 "rep": 1
             },
             {
                 "datatype": "CP",
-                "desc": "Transaction Amount   Extended ",
+                "desc": "Transaction Amount   Extended",
                 "opt": 1,
                 "rep": 1
             },
             {
                 "datatype": "CP",
-                "desc": "Transaction Amount   Unit ",
+                "desc": "Transaction Amount   Unit",
                 "opt": 1,
                 "rep": 1
             },
             {
                 "datatype": "CWE",
-                "desc": "Department Code ",
+                "desc": "Department Code",
                 "opt": 1,
                 "rep": 1,
                 "table": 49
             },
             {
                 "datatype": "CWE",
-                "desc": "Health Plan ID ",
+                "desc": "Health Plan ID",
                 "opt": 1,
                 "rep": 1,
                 "table": 72
             },
             {
                 "datatype": "CP",
-                "desc": "Insurance Amount ",
+                "desc": "Insurance Amount",
                 "opt": 1,
                 "rep": 1
             },
             {
                 "datatype": "PL",
-                "desc": "Assigned Patient Location ",
+                "desc": "Assigned Patient Location",
                 "opt": 1,
                 "rep": 1
             },
             {
                 "datatype": "CWE",
-                "desc": "Fee Schedule ",
+                "desc": "Fee Schedule",
                 "opt": 1,
                 "rep": 1,
                 "table": 24
             },
             {
                 "datatype": "CWE",
-                "desc": "Patient Type ",
+                "desc": "Patient Type",
                 "opt": 1,
                 "rep": 1,
                 "table": 18
             },
             {
                 "datatype": "CWE",
-                "desc": "Diagnosis Code - FT1 ",
+                "desc": "Diagnosis Code - FT1",
                 "opt": 1,
                 "rep": 0,
                 "table": 51
             },
             {
                 "datatype": "XCN",
-                "desc": "Performed By Code ",
+                "desc": "Performed By Code",
                 "opt": 1,
                 "rep": 0,
                 "table": 84
             },
             {
                 "datatype": "XCN",
-                "desc": "Ordered By Code ",
+                "desc": "Ordered By Code",
                 "opt": 1,
                 "rep": 0
             },
             {
                 "datatype": "CP",
-                "desc": "Unit Cost ",
+                "desc": "Unit Cost",
                 "opt": 1,
                 "rep": 1
             },
@@ -3823,7 +3823,7 @@ var segments = {
             },
             {
                 "datatype": "CNE",
-                "desc": "Mood Code  ",
+                "desc": "Mood Code",
                 "opt": 3,
                 "rep": 1,
                 "table": 725
@@ -3914,7 +3914,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Ambulatory Payment Classification Code ",
+                "desc": "Ambulatory Payment Classification Code",
                 "opt": 1,
                 "rep": 1,
                 "table": 466
@@ -4305,7 +4305,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Handicap ",
+                "desc": "Handicap",
                 "opt": 1,
                 "rep": 1,
                 "table": 295
@@ -5039,7 +5039,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Handicap ",
+                "desc": "Handicap",
                 "opt": 1,
                 "rep": 1,
                 "table": 295
@@ -5297,7 +5297,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Citizenship ",
+                "desc": "Citizenship",
                 "opt": 1,
                 "rep": 0,
                 "table": 171
@@ -5311,7 +5311,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Living Arrangement ",
+                "desc": "Living Arrangement",
                 "opt": 1,
                 "rep": 1,
                 "table": 220
@@ -5333,14 +5333,14 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Student Indicator ",
+                "desc": "Student Indicator",
                 "opt": 1,
                 "rep": 1,
                 "table": 231
             },
             {
                 "datatype": "CWE",
-                "desc": "Religion ",
+                "desc": "Religion",
                 "opt": 1,
                 "rep": 1,
                 "table": 6
@@ -5353,21 +5353,21 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Nationality ",
+                "desc": "Nationality",
                 "opt": 1,
                 "rep": 1,
                 "table": 212
             },
             {
                 "datatype": "CWE",
-                "desc": "Ethnic Group ",
+                "desc": "Ethnic Group",
                 "opt": 1,
                 "rep": 0,
                 "table": 189
             },
             {
                 "datatype": "CWE",
-                "desc": "Marital Status ",
+                "desc": "Marital Status",
                 "opt": 1,
                 "rep": 0,
                 "table": 2
@@ -5398,7 +5398,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Job Status ",
+                "desc": "Job Status",
                 "opt": 1,
                 "rep": 1,
                 "table": 311
@@ -5417,7 +5417,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Employer Contact Reason ",
+                "desc": "Employer Contact Reason",
                 "opt": 1,
                 "rep": 1,
                 "table": 222
@@ -5436,7 +5436,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Insured's Contact Person Reason ",
+                "desc": "Insured's Contact Person Reason",
                 "opt": 1,
                 "rep": 0,
                 "table": 222
@@ -5455,7 +5455,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Insurance Co Contact Reason ",
+                "desc": "Insurance Co Contact Reason",
                 "opt": 1,
                 "rep": 1,
                 "table": 232
@@ -5468,14 +5468,14 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Policy Scope ",
+                "desc": "Policy Scope",
                 "opt": 1,
                 "rep": 1,
                 "table": 312
             },
             {
                 "datatype": "CWE",
-                "desc": "Policy Source ",
+                "desc": "Policy Source",
                 "opt": 1,
                 "rep": 1,
                 "table": 313
@@ -5507,7 +5507,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Military Handicapped Program ",
+                "desc": "Military Handicapped Program",
                 "opt": 1,
                 "rep": 1,
                 "table": 343
@@ -5708,7 +5708,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Second Opinion Status ",
+                "desc": "Second Opinion Status",
                 "opt": 1,
                 "rep": 1,
                 "table": 151
@@ -5847,7 +5847,7 @@ var segments = {
             },
             {
                 "datatype": "CQ",
-                "desc": "On Board Stability Time ",
+                "desc": "On Board Stability Time",
                 "opt": 1,
                 "rep": 1
             },
@@ -5888,7 +5888,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Modality ",
+                "desc": "Modality",
                 "opt": 1,
                 "rep": 1
             },
@@ -5983,7 +5983,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Interaction Type Identifier ",
+                "desc": "Interaction Type Identifier",
                 "opt": 1,
                 "rep": 1,
                 "table": 368
@@ -6021,7 +6021,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Item Type ",
+                "desc": "Item Type",
                 "opt": 1,
                 "rep": 1,
                 "table": 778
@@ -6065,14 +6065,14 @@ var segments = {
             },
             {
                 "datatype": "CNE",
-                "desc": "Patient Chargeable Indicator ",
+                "desc": "Patient Chargeable Indicator",
                 "opt": 1,
                 "rep": 1,
                 "table": 532
             },
             {
                 "datatype": "CWE",
-                "desc": "Transaction Code ",
+                "desc": "Transaction Code",
                 "opt": 1,
                 "rep": 1,
                 "table": 132
@@ -6092,14 +6092,14 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Supply Risk Codes ",
+                "desc": "Supply Risk Codes",
                 "opt": 1,
                 "rep": 1,
                 "table": 871
             },
             {
                 "datatype": "XON",
-                "desc": "Approving Regulatory Agency ",
+                "desc": "Approving Regulatory Agency",
                 "opt": 1,
                 "rep": 0,
                 "table": 790
@@ -6133,7 +6133,7 @@ var segments = {
             },
             {
                 "datatype": "MO",
-                "desc": "Approved To Buy Price ",
+                "desc": "Approved To Buy Price",
                 "opt": 1,
                 "rep": 1
             },
@@ -6173,7 +6173,7 @@ var segments = {
             },
             {
                 "datatype": "CNE",
-                "desc": "Procedure Code ",
+                "desc": "Procedure Code",
                 "opt": 1,
                 "rep": 1,
                 "table": 88
@@ -6431,7 +6431,7 @@ var segments = {
             },
             {
                 "datatype": "EI",
-                "desc": "Bin Location Identifier ",
+                "desc": "Bin Location Identifier",
                 "opt": 1,
                 "rep": 0
             },
@@ -6456,7 +6456,7 @@ var segments = {
             },
             {
                 "datatype": "CNE",
-                "desc": "Patient Chargeable Indicator ",
+                "desc": "Patient Chargeable Indicator",
                 "opt": 1,
                 "rep": 1,
                 "table": 532
@@ -6497,7 +6497,7 @@ var segments = {
             },
             {
                 "datatype": "CNE",
-                "desc": "Reusable Item Indicator ",
+                "desc": "Reusable Item Indicator",
                 "opt": 1,
                 "rep": 1,
                 "table": 532
@@ -6553,7 +6553,7 @@ var segments = {
             },
             {
                 "datatype": "CNE",
-                "desc": "Operating Room Par Level Indicator ",
+                "desc": "Operating Room Par Level Indicator",
                 "opt": 1,
                 "rep": 1,
                 "table": 532
@@ -7095,13 +7095,13 @@ var segments = {
             },
             {
                 "datatype": "NM",
-                "desc": "Message Waiting Number ",
+                "desc": "Message Waiting Number",
                 "opt": 1,
                 "rep": 1
             },
             {
                 "datatype": "ID",
-                "desc": " Message Waiting Priority ",
+                "desc": " Message Waiting Priority",
                 "opt": 1,
                 "rep": 1,
                 "len": 1,
@@ -7888,19 +7888,19 @@ var segments = {
             },
             {
                 "datatype": "CQ",
-                "desc": "Collection Volume *",
+                "desc": "Collection Volume",
                 "opt": 1,
                 "rep": 1
             },
             {
                 "datatype": "XCN",
-                "desc": "Collector Identifier *",
+                "desc": "Collector Identifier",
                 "opt": 1,
                 "rep": 0
             },
             {
                 "datatype": "ID",
-                "desc": "Specimen Action Code *",
+                "desc": "Specimen Action Code",
                 "opt": 1,
                 "rep": 1,
                 "len": 1,
@@ -7920,7 +7920,7 @@ var segments = {
             },
             {
                 "datatype": "ST",
-                "desc": "Specimen Received Date/Time *",
+                "desc": "Specimen Received Date/Time",
                 "opt": 4,
                 "rep": 1
             },
@@ -7956,25 +7956,25 @@ var segments = {
             },
             {
                 "datatype": "ST",
-                "desc": "Filler Field 1 +",
+                "desc": "Filler Field 1",
                 "opt": 1,
                 "rep": 1
             },
             {
                 "datatype": "ST",
-                "desc": "Filler Field 2 +",
+                "desc": "Filler Field 2",
                 "opt": 1,
                 "rep": 1
             },
             {
                 "datatype": "DTM",
-                "desc": "Results Rpt/Status Chng - Date/Time +",
+                "desc": "Results Rpt/Status Chng - Date/Time",
                 "opt": 3,
                 "rep": 1
             },
             {
                 "datatype": "MOC",
-                "desc": "Charge to Practice +",
+                "desc": "Charge to Practice",
                 "opt": 1,
                 "rep": 1
             },
@@ -7988,7 +7988,7 @@ var segments = {
             },
             {
                 "datatype": "ID",
-                "desc": "Result Status +",
+                "desc": "Result Status",
                 "opt": 3,
                 "rep": 1,
                 "len": 1,
@@ -7996,7 +7996,7 @@ var segments = {
             },
             {
                 "datatype": "PRL",
-                "desc": "Parent Result +",
+                "desc": "Parent Result",
                 "opt": 1,
                 "rep": 1
             },
@@ -8014,7 +8014,7 @@ var segments = {
             },
             {
                 "datatype": "EIP",
-                "desc": "Parent Result Observation Identifier ",
+                "desc": "Parent Result Observation Identifier",
                 "opt": 1,
                 "rep": 1
             },
@@ -8034,49 +8034,49 @@ var segments = {
             },
             {
                 "datatype": "NDL",
-                "desc": "Principal Result Interpreter +",
+                "desc": "Principal Result Interpreter",
                 "opt": 1,
                 "rep": 1
             },
             {
                 "datatype": "NDL",
-                "desc": "Assistant Result Interpreter + ",
+                "desc": "Assistant Result Interpreter",
                 "opt": 1,
                 "rep": 0
             },
             {
                 "datatype": "NDL",
-                "desc": "Technician +",
+                "desc": "Technician",
                 "opt": 1,
                 "rep": 0
             },
             {
                 "datatype": "NDL",
-                "desc": "Transcriptionist +",
+                "desc": "Transcriptionist",
                 "opt": 1,
                 "rep": 0
             },
             {
                 "datatype": "DTM",
-                "desc": "Scheduled Date/Time +",
+                "desc": "Scheduled Date/Time",
                 "opt": 1,
                 "rep": 1
             },
             {
                 "datatype": "NM",
-                "desc": "Number of Sample Containers *",
+                "desc": "Number of Sample Containers",
                 "opt": 1,
                 "rep": 1
             },
             {
                 "datatype": "CWE",
-                "desc": "Transport Logistics of Collected Sample *",
+                "desc": "Transport Logistics of Collected Sample",
                 "opt": 1,
                 "rep": 0
             },
             {
                 "datatype": "CWE",
-                "desc": "Collector's Comment *",
+                "desc": "Collector's Comment",
                 "opt": 1,
                 "rep": 0
             },
@@ -8359,7 +8359,7 @@ var segments = {
         "fields": [
             {
                 "datatype": "ID",
-                "desc": "Type ",
+                "desc": "Type",
                 "opt": 2,
                 "rep": 1,
                 "len": 1,
@@ -9013,7 +9013,7 @@ var segments = {
             },
             {
                 "datatype": "NM",
-                "desc": "Test/Service Default Duration Quantity ",
+                "desc": "Test/Service Default Duration Quantity",
                 "opt": 1,
                 "rep": 1
             },
@@ -9025,7 +9025,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Test/Service Default Frequency ",
+                "desc": "Test/Service Default Frequency",
                 "opt": 1,
                 "rep": 1
             },
@@ -10381,7 +10381,7 @@ var segments = {
             },
             {
                 "datatype": "ST",
-                "desc": "Nationality ",
+                "desc": "Nationality",
                 "opt": 4,
                 "rep": 1
             },
@@ -10671,7 +10671,7 @@ var segments = {
             },
             {
                 "datatype": "ST",
-                "desc": "Procedure Practitioner ",
+                "desc": "Procedure Practitioner",
                 "opt": 4,
                 "rep": 1
             },
@@ -10734,7 +10734,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "DRG Procedure Determination Status ",
+                "desc": "DRG Procedure Determination Status",
                 "opt": 1,
                 "rep": 1,
                 "table": 761
@@ -10827,7 +10827,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Institution ",
+                "desc": "Institution",
                 "opt": 1,
                 "rep": 1,
                 "table": 537
@@ -11192,7 +11192,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Preferred Method of Contact ",
+                "desc": "Preferred Method of Contact",
                 "opt": 1,
                 "rep": 1,
                 "table": 185
@@ -11275,7 +11275,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Participation ",
+                "desc": "Participation",
                 "opt": 2,
                 "rep": 1,
                 "table": 912
@@ -11603,7 +11603,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Side of body ",
+                "desc": "Side of body",
                 "opt": 1,
                 "rep": 1,
                 "table": 894
@@ -11764,7 +11764,7 @@ var segments = {
             },
             {
                 "datatype": "DTM",
-                "desc": "Pathway Established Date/Time ",
+                "desc": "Pathway Established Date/Time",
                 "opt": 2,
                 "rep": 1
             },
@@ -12605,7 +12605,7 @@ var segments = {
         "fields": [
             {
                 "datatype": "CWE",
-                "desc": "Message Query Name ",
+                "desc": "Message Query Name",
                 "opt": 2,
                 "rep": 1,
                 "table": 471
@@ -12618,7 +12618,7 @@ var segments = {
             },
             {
                 "datatype": "ST",
-                "desc": "User Parameters (in successive fields) ",
+                "desc": "User Parameters (in successive fields)",
                 "opt": 1,
                 "rep": 1
             }
@@ -12848,7 +12848,7 @@ var segments = {
             },
             {
                 "datatype": "ID",
-                "desc": "Segment group inclusion ",
+                "desc": "Segment group inclusion",
                 "opt": 1,
                 "rep": 0,
                 "len": 256,
@@ -13068,7 +13068,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Referral Documentation Completion Status ",
+                "desc": "Referral Documentation Completion Status",
                 "opt": 1,
                 "rep": 1,
                 "table": 865
@@ -13232,7 +13232,7 @@ var segments = {
             },
             {
                 "datatype": "XTN",
-                "desc": "Phone ",
+                "desc": "Phone",
                 "opt": 1,
                 "rep": 0
             },
@@ -14653,7 +14653,7 @@ var segments = {
             },
             {
                 "datatype": "NA",
-                "desc": "Position in Carrier ",
+                "desc": "Position in Carrier",
                 "opt": 1,
                 "rep": 1
             },
@@ -14672,7 +14672,7 @@ var segments = {
             },
             {
                 "datatype": "NA",
-                "desc": "Position in Tray ",
+                "desc": "Position in Tray",
                 "opt": 1,
                 "rep": 1
             },
@@ -14903,13 +14903,13 @@ var segments = {
             },
             {
                 "datatype": "CQ",
-                "desc": "Condition Time ",
+                "desc": "Condition Time",
                 "opt": 1,
                 "rep": 1
             },
             {
                 "datatype": "CQ",
-                "desc": "Sterilize Time ",
+                "desc": "Sterilize Time",
                 "opt": 1,
                 "rep": 1
             },
@@ -14927,7 +14927,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Device Status ",
+                "desc": "Device Status",
                 "opt": 1,
                 "rep": 1,
                 "table": 682
@@ -15282,7 +15282,7 @@ var segments = {
         "fields": [
             {
                 "datatype": "NM",
-                "desc": "Number Of Decontamination/Sterilization Devices ",
+                "desc": "Number Of Decontamination/Sterilization Devices",
                 "opt": 1,
                 "rep": 1
             },
@@ -15524,7 +15524,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Substance Manufacturer Identifier ",
+                "desc": "Substance Manufacturer Identifier",
                 "opt": 3,
                 "rep": 1,
                 "table": 385
@@ -15548,7 +15548,7 @@ var segments = {
             },
             {
                 "datatype": "EI",
-                "desc": "Lot Number ",
+                "desc": "Lot Number",
                 "opt": 1,
                 "rep": 1
             },
@@ -15578,7 +15578,7 @@ var segments = {
             },
             {
                 "datatype": "EIP",
-                "desc": "Specimen ID ",
+                "desc": "Specimen ID",
                 "opt": 1,
                 "rep": 1
             },
@@ -15590,7 +15590,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Specimen Type ",
+                "desc": "Specimen Type",
                 "opt": 2,
                 "rep": 1,
                 "table": 487
@@ -15611,7 +15611,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Specimen Collection Method ",
+                "desc": "Specimen Collection Method",
                 "opt": 1,
                 "rep": 1,
                 "table": 488
@@ -15657,13 +15657,13 @@ var segments = {
             },
             {
                 "datatype": "ST",
-                "desc": "Specimen Description ",
+                "desc": "Specimen Description",
                 "opt": 1,
                 "rep": 0
             },
             {
                 "datatype": "CWE",
-                "desc": "Specimen Handling Code ",
+                "desc": "Specimen Handling Code",
                 "opt": 1,
                 "rep": 0,
                 "table": 376
@@ -15677,7 +15677,7 @@ var segments = {
             },
             {
                 "datatype": "DR",
-                "desc": "Specimen Collection Date/Time ",
+                "desc": "Specimen Collection Date/Time",
                 "opt": 1,
                 "rep": 1
             },
@@ -15710,28 +15710,28 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Specimen Quality ",
+                "desc": "Specimen Quality",
                 "opt": 1,
                 "rep": 1,
                 "table": 491
             },
             {
                 "datatype": "CWE",
-                "desc": "Specimen Appropriateness ",
+                "desc": "Specimen Appropriateness",
                 "opt": 1,
                 "rep": 1,
                 "table": 492
             },
             {
                 "datatype": "CWE",
-                "desc": "Specimen Condition ",
+                "desc": "Specimen Condition",
                 "opt": 1,
                 "rep": 0,
                 "table": 493
             },
             {
                 "datatype": "CQ",
-                "desc": "Specimen Current Quantity ",
+                "desc": "Specimen Current Quantity",
                 "opt": 1,
                 "rep": 1
             },
@@ -15743,7 +15743,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Container Type ",
+                "desc": "Container Type",
                 "opt": 1,
                 "rep": 1
             },
@@ -15756,7 +15756,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Specimen Child Role ",
+                "desc": "Specimen Child Role",
                 "opt": 1,
                 "rep": 1,
                 "table": 494
@@ -16055,7 +16055,7 @@ var segments = {
             },
             {
                 "datatype": "ED",
-                "desc": "Signature ",
+                "desc": "Signature",
                 "opt": 1,
                 "rep": 1
             }
@@ -16087,7 +16087,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Maintenance Type ",
+                "desc": "Maintenance Type",
                 "opt": 1,
                 "rep": 1,
                 "table": 811
@@ -16201,19 +16201,19 @@ var segments = {
             },
             {
                 "datatype": "SN",
-                "desc": "Auto-Dilution Factor ",
+                "desc": "Auto-Dilution Factor",
                 "opt": 1,
                 "rep": 1
             },
             {
                 "datatype": "SN",
-                "desc": "Rerun Dilution Factor ",
+                "desc": "Rerun Dilution Factor",
                 "opt": 1,
                 "rep": 1
             },
             {
                 "datatype": "SN",
-                "desc": "Pre-Dilution Factor ",
+                "desc": "Pre-Dilution Factor",
                 "opt": 1,
                 "rep": 1
             },
@@ -16426,7 +16426,7 @@ var segments = {
             },
             {
                 "datatype": "CWE",
-                "desc": "Document Type ",
+                "desc": "Document Type",
                 "opt": 2,
                 "rep": 1,
                 "table": 270
@@ -16556,7 +16556,7 @@ var segments = {
             },
             {
                 "datatype": "PPN",
-                "desc": "Authentication Person, Time Stamp (set) ",
+                "desc": "Authentication Person, Time Stamp (set)",
                 "opt": 3,
                 "rep": 0
             },
@@ -16580,7 +16580,7 @@ var segments = {
             },
             {
                 "datatype": "DTM",
-                "desc": "Agreed Due Date/Time   ",
+                "desc": "Agreed Due Date/Time",
                 "opt": 1,
                 "rep": 1
             }
@@ -16598,7 +16598,7 @@ var segments = {
             },
             {
                 "datatype": "ED",
-                "desc": "User Authentication Credential  ",
+                "desc": "User Authentication Credential",
                 "opt": 2,
                 "rep": 1
             }
@@ -17033,7 +17033,7 @@ var segments = {
             },
             {
                 "datatype": "EI",
-                "desc": "Vendor Identifier ",
+                "desc": "Vendor Identifier",
                 "opt": 2,
                 "rep": 1
             },

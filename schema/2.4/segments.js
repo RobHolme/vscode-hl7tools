@@ -6278,35 +6278,35 @@ var segments = {
             },
             {
                 "datatype": "TS",
-                "desc": "Observation Date/Time  ",
+                "desc": "Observation Date/Time",
                 "opt": 1,
                 "rep": 1,
                 "len": 26
             },
             {
                 "datatype": "TS",
-                "desc": "Observation End Date/Time  ",
+                "desc": "Observation End Date/Time",
                 "opt": 1,
                 "rep": 1,
                 "len": 26
             },
             {
                 "datatype": "CQ",
-                "desc": "Collection Volume *",
+                "desc": "Collection Volume",
                 "opt": 1,
                 "rep": 1,
                 "len": 20
             },
             {
                 "datatype": "XCN",
-                "desc": "Collector Identifier *",
+                "desc": "Collector Identifier",
                 "opt": 1,
                 "rep": 0,
                 "len": 250
             },
             {
                 "datatype": "ID",
-                "desc": "Specimen Action Code *",
+                "desc": "Specimen Action Code",
                 "opt": 1,
                 "rep": 1,
                 "len": 1,
@@ -6328,7 +6328,7 @@ var segments = {
             },
             {
                 "datatype": "TS",
-                "desc": "Specimen Received Date/Time *",
+                "desc": "Specimen Received Date/Time",
                 "opt": 1,
                 "rep": 1,
                 "len": 26
@@ -6370,28 +6370,28 @@ var segments = {
             },
             {
                 "datatype": "ST",
-                "desc": "Filler Field 1 +",
+                "desc": "Filler Field 1",
                 "opt": 1,
                 "rep": 1,
                 "len": 60
             },
             {
                 "datatype": "ST",
-                "desc": "Filler Field 2 +",
+                "desc": "Filler Field 2",
                 "opt": 1,
                 "rep": 1,
                 "len": 60
             },
             {
                 "datatype": "TS",
-                "desc": "Results Rpt/Status Chng - Date/Time +",
+                "desc": "Results Rpt/Status Chng - Date/Time",
                 "opt": 1,
                 "rep": 1,
                 "len": 26
             },
             {
                 "datatype": "MOC",
-                "desc": "Charge to Practice +",
+                "desc": "Charge to Practice",
                 "opt": 1,
                 "rep": 1,
                 "len": 40
@@ -6406,7 +6406,7 @@ var segments = {
             },
             {
                 "datatype": "ID",
-                "desc": "Result Status +",
+                "desc": "Result Status",
                 "opt": 1,
                 "rep": 1,
                 "len": 1,
@@ -6414,7 +6414,7 @@ var segments = {
             },
             {
                 "datatype": "PRL",
-                "desc": "Parent Result +",
+                "desc": "Parent Result",
                 "opt": 1,
                 "rep": 1,
                 "len": 400
@@ -6457,56 +6457,56 @@ var segments = {
             },
             {
                 "datatype": "NDL",
-                "desc": "Principal Result Interpreter +",
+                "desc": "Principal Result Interpreter",
                 "opt": 1,
                 "rep": 1,
                 "len": 200
             },
             {
                 "datatype": "NDL",
-                "desc": "Assistant Result Interpreter +",
+                "desc": "Assistant Result Interpreter",
                 "opt": 1,
                 "rep": 0,
                 "len": 200
             },
             {
                 "datatype": "NDL",
-                "desc": "Technician +",
+                "desc": "Technician",
                 "opt": 1,
                 "rep": 0,
                 "len": 200
             },
             {
                 "datatype": "NDL",
-                "desc": "Transcriptionist +",
+                "desc": "Transcriptionist",
                 "opt": 1,
                 "rep": 0,
                 "len": 200
             },
             {
                 "datatype": "TS",
-                "desc": "Scheduled Date/Time +",
+                "desc": "Scheduled Date/Time",
                 "opt": 1,
                 "rep": 1,
                 "len": 26
             },
             {
                 "datatype": "NM",
-                "desc": "Number of Sample Containers *",
+                "desc": "Number of Sample Containers",
                 "opt": 1,
                 "rep": 1,
                 "len": 4
             },
             {
                 "datatype": "CE",
-                "desc": "Transport Logistics of Collected Sample *",
+                "desc": "Transport Logistics of Collected Sample",
                 "opt": 1,
                 "rep": 0,
                 "len": 250
             },
             {
                 "datatype": "CE",
-                "desc": "Collector's Comment *",
+                "desc": "Collector's Comment",
                 "opt": 1,
                 "rep": 0,
                 "len": 250

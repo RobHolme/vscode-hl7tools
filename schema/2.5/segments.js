@@ -7535,7 +7535,7 @@ var segments = {
             },
             {
                 "datatype": "NM",
-                "desc": "Number of Sample Containers *",
+                "desc": "Number of Sample Containers",
                 "opt": 1,
                 "rep": 1,
                 "len": 4
@@ -7549,7 +7549,7 @@ var segments = {
             },
             {
                 "datatype": "CE",
-                "desc": "Collector's Comment *",
+                "desc": "Collector's Comment",
                 "opt": 1,
                 "rep": 0,
                 "len": 250

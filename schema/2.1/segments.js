@@ -789,7 +789,7 @@ var segments = {
             },
             {
                 "datatype": "TN",
-                "desc": "Guarantor employ phone  ",
+                "desc": "Guarantor employ phone",
                 "opt": 1,
                 "rep": 1,
                 "len": 40
@@ -1646,14 +1646,14 @@ var segments = {
             },
             {
                 "datatype": "CM",
-                "desc": "Placer order  ",
+                "desc": "Placer order",
                 "opt": 1,
                 "rep": 1,
                 "len": 75
             },
             {
                 "datatype": "CM",
-                "desc": "Filler order  ",
+                "desc": "Filler order",
                 "opt": 1,
                 "rep": 1,
                 "len": 75
@@ -1837,7 +1837,7 @@ var segments = {
             },
             {
                 "datatype": "CM",
-                "desc": "Parent accession  ",
+                "desc": "Parent accession",
                 "opt": 1,
                 "rep": 1,
                 "len": 150
@@ -1998,21 +1998,21 @@ var segments = {
             },
             {
                 "datatype": "CM",
-                "desc": "Placer order  ",
+                "desc": "Placer order number",
                 "opt": 1,
                 "rep": 1,
                 "len": 75
             },
             {
                 "datatype": "CM",
-                "desc": "Filler order  ",
+                "desc": "Filler order number",
                 "opt": 1,
                 "rep": 1,
                 "len": 75
             },
             {
                 "datatype": "CM",
-                "desc": "Placer group  ",
+                "desc": "Placer group number",
                 "opt": 1,
                 "rep": 1,
                 "len": 75
@@ -2956,7 +2956,7 @@ var segments = {
             },
             {
                 "datatype": "NM",
-                "desc": "Prescription sequence  ",
+                "desc": "Prescription sequence number",
                 "opt": 1,
                 "rep": 1,
                 "len": 3
