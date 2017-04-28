@@ -426,11 +426,10 @@ function activate(context) {
         var tokens = currentDoc.lineAt(currentLineNum).text.split('|');
         var segment = tokens[0];
         var repeatNum = 0;
-
-        // if a custom segment ('Z' segment) is found, the segment name will not exist in hl7Schema. 
         var segmentDef = hl7Schema[segment];
 
-        // if the segment isn;t defined in the HL7 schema, warn user and exit function.
+        // if a custom segment ('Z' segment) is selected, the segment name will not exist in hl7Schema. 
+        // if the segment isn't defined in the HL7 schema, warn user and exit function.
         if (!segmentDef) {
             vscode.window.showWarningMessage("Custom segments are not supported.");
             return;
@@ -439,7 +438,6 @@ function activate(context) {
         if (segment === 'MSH') {
             tokens.splice(1, 0, '|');
         }
-
 
         var output = [{ segment: segment + '-0', desc: segment, repeat: repeatNum, values: [segment] }];
         var maxLength = 0;
@@ -501,20 +499,28 @@ function activate(context) {
             }
             else {
                 for (var j = 0; j < output[i].values.length; j++) {
-                    var componentDescription = "";
+                    // create unicode 'border' charcters for components of fields
+                    var border = "├";
+                    if (j == (output[i].values.length - 1)) {
+                        border = "└";
+                    }
+                    
                     // get the description of the component (if the data does not match the schema datatype leave unknown component descriptions blank)
+                    var componentDescription = "";
                     if (j < (hl7Fields[output[i].datatype]).subfields.length) {
                         componentDescription = hl7Fields[output[i].datatype].subfields[j].desc;
                     }
+          
                     // if no repeats for the field exist, don't include the repeat number in the output
                     if (output[i].repeat == 0) {
 
-                        value += padRight('\n   ' + output[i].segment + '.' + (j + 1) + ' (' + componentDescription + ') ', prefix.length + 1);
+                        value += padRight('\n ' + border + ' ' + output[i].segment + '.' + (j + 1) + ' (' + componentDescription + ') ', prefix.length + 1);
                         value += output[i].values[j];
                     }
+          
                     // include the repeat number for repeating fields. e.g. PID-3[2].1 would be the first componennt of the second repeat of the PID-3 field. 
                     else {
-                        value += padRight('\n   ' + output[i].segment + '[' + output[i].repeat.toString() + '].' + (j + 1) + ' (' + componentDescription + ') ', prefix.length + 1);
+                        value += padRight('\n ' + border + ' ' + output[i].segment + '[' + output[i].repeat.toString() + '].' + (j + 1) + ' (' + componentDescription + ') ', prefix.length + 1);
                         value += output[i].values[j];
                     }
                 }

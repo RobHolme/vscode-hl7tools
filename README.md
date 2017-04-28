@@ -103,6 +103,9 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 ### 1.2.4
 * Minor update to display of component numbers when displaying fields in a segment, uses '.' instead of '-' to match HL7 nomenclature.
 
+### 1.2.5
+* Minor update to add border characters to output from 'Display Segment fields' to link components to the parent field.
+
 ## Credits
 * The HL7 syntax highlighting was sourced from https://github.com/craighurley/sublime-hl7-syntax
 * The Display Segment Fields function was based on a function from https://github.com/pagebrooks/vscode-hl7 
