@@ -5,6 +5,7 @@
 // Import the module and reference it with the alias vscode in your code below
 var vscode = require('vscode');
 var window = vscode.window;
+const sbHL7Version = window.createStatusBarItem(vscode.StatusBarAlignment.Left);
 var workspace = vscode.workspace;
 var hl7Schema;
 var hl7Fields;
@@ -119,6 +120,7 @@ function LoadHL7Schema() {
     // exit if the editor is not active
     var activeEditor = window.activeTextEditor;
     var supportedSchemas = ["2.1", "2.2", "2.3", "2.3.1", "2.4", "2.5", "2.5.1", "2.6", "2.7", "2.7.1"];
+    var hl7SchemaTooltip = "";
 
     if (!activeEditor) {
         return;
@@ -132,19 +134,27 @@ function LoadHL7Schema() {
                 // Load the segment descriptions from the HL7-Dictionary module
                 hl7Schema = require('./schema/' + hl7Version + '/segments.js');
                 hl7Fields = require('./schema/' + hl7Version + '/fields.js');
+                hl7SchemaTooltip = "HL7 v" + hl7Version + " (auto detected)";
             }
             // default to the 2.7.1 schema if there is a not a schema available for the version reported (e.g. future releases)
             else {
                 console.log("Schema for HL7 version " + hl7Version + " is not supported. Defaulting to v2.7.1 schema");
+                hl7Version = "2.7.1";
+                hl7SchemaTooltip = "HL7 version not detected. Defaulting to v" + hl7Version; 
                 hl7Schema = require('./schema/2.7.1/segments.js');
                 hl7Fields = require('./schema/2.7.1/fields.js');
             }
+            // show HL7 version in status bar
+            sbHL7Version.color = 'white';
+            sbHL7Version.text = "$(info) HL7 schema: v" + hl7Version;  // $(info) - GitHub Octicon - https://octicons.github.com/
+            sbHL7Version.tooltip = hl7SchemaTooltip;
+            sbHL7Version.show();
         }
         // if the first line is not a MSH segment (this would be unexpected), default to the 2.7.1 schema
         else {
             hl7Schema = require('./schema/2.7.1/segments.js');
             hl7Fields = require('./schema/2.7.1/fields.js');
-            console.log("HL7 version could not be determined. Defaulting to v2.7.1 schema.");
+            console.log("HL7 version could not be detected. Defaulting to v2.7.1 schema.");
         }
     }
 }
@@ -504,20 +514,20 @@ function activate(context) {
                     if (j == (output[i].values.length - 1)) {
                         border = "└";
                     }
-                    
+
                     // get the description of the component (if the data does not match the schema datatype leave unknown component descriptions blank)
                     var componentDescription = "";
                     if (j < (hl7Fields[output[i].datatype]).subfields.length) {
                         componentDescription = hl7Fields[output[i].datatype].subfields[j].desc;
                     }
-          
+
                     // if no repeats for the field exist, don't include the repeat number in the output
                     if (output[i].repeat == 0) {
 
                         value += padRight('\n ' + border + ' ' + output[i].segment + '.' + (j + 1) + ' (' + componentDescription + ') ', prefix.length + 1);
                         value += output[i].values[j];
                     }
-          
+
                     // include the repeat number for repeating fields. e.g. PID-3[2].1 would be the first componennt of the second repeat of the PID-3 field. 
                     else {
                         value += padRight('\n ' + border + ' ' + output[i].segment + '[' + output[i].repeat.toString() + '].' + (j + 1) + ' (' + componentDescription + ') ', prefix.length + 1);

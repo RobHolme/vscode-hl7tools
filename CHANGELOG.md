@@ -24,5 +24,7 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 * Minor update to display of component numbers when displaying fields in a segment, uses '.' instead of '-' to match HL7 nomenclature.
 ## 1.2.5 - 2017-04-28
 * Minor update to add border characters to output from 'Display Segment fields' to link components to the parent field.
+## 1.2.6 - 2017-05-11
+* Added the version of HL7 schema detected to the status bar.
 
 ## [Unreleased]

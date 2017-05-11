@@ -7,7 +7,7 @@ This is a Visual Studio Code extension for working with HL7 v2.x files. It provi
 
 ## Features
 ### Syntax highlighting
-* Segment, field, component, subcomponent and repeat separators are highlighted. 
+* Segment, field, component, sub component and repeat separators are highlighted. 
 
 ![Syntax highlighting](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/syntax.jpg)
 
@@ -20,7 +20,7 @@ When the mouse is hovered over a field, the field name and location is displayed
 ![Field descriptions](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/FieldDescription.jpg)
 
 ### Field highlighting
-This prompts the user to enter a HL7 field location (e.g. PID-3), the corresponding field is then highligted in the editor.
+This prompts the user to enter a HL7 field location (e.g. PID-3), the corresponding field is then highlighted in the editor.
 
 * Press F1 --> HL7 Tools: Highlight Field
 
@@ -30,7 +30,7 @@ This prompts the user to enter a HL7 field location (e.g. PID-3), the correspond
 
 ![Field highlighting](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/highlightfield1.jpg)
 
-* The field will be highlighted. If part of the field name was entered, all matching fields will be highlighted. e.g. 'Patient' would match to 'Patient ID List', 'Patient Name', etc. Selecting a new field will remove the previuosly highlighted field. Entering a blank value for a field location will remove all highlighting.
+* The field will be highlighted. If part of the field name was entered, all matching fields will be highlighted. e.g. 'Patient' would match to 'Patient ID List', 'Patient Name', etc. Selecting a new field will remove the previously highlighted field. Entering a blank value for a field location will remove all highlighting.
 
 ![Field highlighting](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/highlightfield2.jpg)
 
@@ -94,7 +94,7 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 * updated function 'HL7 Tools: Identify Fields' to search for matching fields based on field name (in addition to location). e.g. entering 'birth' would highlight all fields with 'birth' in the field name  (such as 'birth date', 'multiple birth indicator', 'country of birth').
 
 ### 1.2.2
-* When masking identifiable fields, the GT1 segmnt is now included.
+* When masking identifiable fields, the GT1 segment is now included.
 
 ### 1.2.3
 * The message schema specific to the version of HL7 in the message is now used (as reported by MSH-12)
@@ -105,6 +105,9 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 
 ### 1.2.5
 * Minor update to add border characters to output from 'Display Segment fields' to link components to the parent field.
+
+### 1.2.6
+* Added the version of HL7 schema detected to the status bar.
 
 ## Credits
 * The HL7 syntax highlighting was sourced from https://github.com/craighurley/sublime-hl7-syntax
