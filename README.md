@@ -60,6 +60,10 @@ This function lists all fields from the currently selected segment in a list in 
 >* All IN2 fields after IN2-1
 >* All GT1 fields after GT1-2
 
+### Split HL7 Batch files
+If a single file contains multiple HL7 messages, this function splits each message into a new document. Each document is opened in the editor as an untitled file, it will be the user's responsibility to save the files.
+* Press F1 --> HL7 Tools: Split HL7 Batch Files.
+
 ## Installation
 ### Visual Studio Code 
 Press `F1` and enter the `ext install hl7tools` command.
@@ -81,7 +85,7 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 * Initial release.
 
 ### 1.1.0
-* Added function 'HL7 Tools: Highlight Field'. This prompts the user to enter a HL7 field location (e.g. PID-3), the corresponding field is then highligted in the editor.
+* Added function 'HL7 Tools: Highlight Field'. This prompts the user to enter a HL7 field location (e.g. PID-3), the corresponding field is then highlighted in the editor.
 * Bugfix: Mask identifiers was failing on PID and NK1 segments if not all fields were present in the message.
 
 ### 1.1.1
@@ -108,6 +112,13 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 
 ### 1.2.6
 * Added the version of HL7 schema detected to the status bar.
+
+### 1.3.0
+* Added function to split HL7 batch files into separate files per message.
+* HL7 schema (and field identification) is only loaded on activation for messages with .hl7 file extensions, or a Header segment (MSH) as the first line (or FHS, BHS segments for HL7 batch files). The field identification can still be applied manually (via F1 --> HL7 Tools: Identify Fields) for messages that do not match the criteria listed above.
+
+### 1.3.1
+* Bugfix: Fixed duplication of MSH segment when splitting HL7 batch files .
 
 ## Credits
 * The HL7 syntax highlighting was sourced from https://github.com/craighurley/sublime-hl7-syntax

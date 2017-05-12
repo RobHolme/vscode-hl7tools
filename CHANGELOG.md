@@ -8,7 +8,7 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 * Initial release.
 
 ## 1.1.0 - 2017-03-22
-* Added function 'HL7 Tools: Highlight Field'. This prompts the user to enter a HL7 field location (e.g. PID-3), the corresponding field is then highligted in the editor.
+* Added function 'HL7 Tools: Highlight Field'. This prompts the user to enter a HL7 field location (e.g. PID-3), the corresponding field is then highlighted in the editor.
 * Bugfix: Mask identifiers was failing on PID and NK1 segments if not all fields were present in the message.
 ## 1.1.1 - 2017-03-23
 * Added keymap to bind 'HL7 Tools: Highlight Field' to ctrl+alt+h (only applies to hl7 files)
@@ -17,7 +17,7 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 ## 1.2.1 - 2017-03-25
 * updated function 'HL7 Tools: Identify Fields' to search for matching fields based on field name (in addition to location). e.g. entering 'birth' would highlight all fields with 'birth' in the field name  (such as 'birth date', 'multiple birth indicator', 'country of birth').
 ## 1.2.2 - 2017-04-02
-* When masking identifiable fields, the GT1 segmnt is now included.
+* When masking identifiable fields, the GT1 segment is now included.
 ## 1.2.3 - 2017-04-26
 * The message schema specific to the version of HL7 in the message is now used (as reported by MSH-12)
 ## 1.2.4 - 2017-04-28
@@ -26,5 +26,9 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 * Minor update to add border characters to output from 'Display Segment fields' to link components to the parent field.
 ## 1.2.6 - 2017-05-11
 * Added the version of HL7 schema detected to the status bar.
-
+## 1.3.0 - 2017-05-12
+* Added function to split HL7 batch files into separate files per message.
+* HL7 schema (and field identification) is only loaded on activation for messages with .hl7 file extensions, or a Header segment (MSH) as the first line (or FHS and BHS segments for HL7 batch files). The field identification can still be applied manually (via F1 --> HL7 Tools: Identify Fields) for messages that do not match the criteria listed above.
+## 1.3.1 - 2017-05-12
+* Bugfix: Fixed duplication of MSH segment when splitting HL7 batch files .
 ## [Unreleased]
