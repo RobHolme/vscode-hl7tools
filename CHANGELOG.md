@@ -30,5 +30,7 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 * Added function to split HL7 batch files into separate files per message.
 * HL7 schema (and field identification) is only loaded on activation for messages with .hl7 file extensions, or a Header segment (MSH) as the first line (or FHS and BHS segments for HL7 batch files). The field identification can still be applied manually (via F1 --> HL7 Tools: Identify Fields) for messages that do not match the criteria listed above.
 ## 1.3.1 - 2017-05-12
-* Bugfix: Fixed duplication of MSH segment when splitting HL7 batch files .
+* Bugfix: Fixed duplication of MSH segment when splitting HL7 batch files.
+## 1.3.2 - 2017-06-23
+* Added filename to output window name for 'Display Segment Fields' - less confusion when comparing segments from more than one file. 
 ## [Unreleased]

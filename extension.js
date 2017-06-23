@@ -476,6 +476,9 @@ function activate(context) {
         var repeatNum = 0;
         var segmentDef = hl7Schema[segment];
 
+        const path = require("path");		               
+		const fileName = path.basename(currentDoc.uri.fsPath);
+
         // if a custom segment ('Z' segment) is selected, the segment name will not exist in hl7Schema. 
         // if the segment isn't defined in the HL7 schema, warn user and exit function.
         if (!segmentDef) {
@@ -494,7 +497,7 @@ function activate(context) {
             var dataType = segmentDef.fields[i - 1].datatype;
             // calculate the length of the longest description (include field and component descriptions). Used to calculate padding length when displaying output.
             for (j = 0; j < hl7Fields[dataType].subfields.length; j++) {
-                maxLength = Math.max(maxLength, (desc.length + 9), (hl7Fields[dataType].subfields[j].desc.length + 14));
+                maxLength = Math.max(maxLength, (desc.length + 9), (hl7Fields[dataType].subfields[j].desc.length + 17));
             }
 
             var values = [];
@@ -577,7 +580,8 @@ function activate(context) {
         }
 
         // write the results to visual studio code's output window
-        var channel = vscode.window.createOutputChannel('HL7 Fields - ' + segment);
+        //const fileName = path.basename(currentDoc.Uri);
+        var channel = vscode.window.createOutputChannel('HL7 Fields - ' + segment + ' (' + fileName + ')');
         channel.clear();
         channel.appendLine(channelOutput);
         channel.show(vscode.ViewColumn.Two);

@@ -120,6 +120,9 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 ### 1.3.1
 * Bugfix: Fixed duplication of MSH segment when splitting HL7 batch files .
 
+### 1.3.2
+* Added filename to output window name for 'Display Segment Fields' - less confusion when comparing segments from more than one file. 
+
 ## Credits
 * The HL7 syntax highlighting was sourced from https://github.com/craighurley/sublime-hl7-syntax
 * The Display Segment Fields function was based on a function from https://github.com/pagebrooks/vscode-hl7 
