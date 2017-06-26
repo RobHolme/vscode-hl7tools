@@ -437,11 +437,15 @@ function activate(context) {
             }
         }
 
-        // display the masked message in the output window 
-        var channel = vscode.window.createOutputChannel('De-Identified Message');
-        channel.clear();
-        channel.appendLine(maskedMessage);
-        channel.show(vscode.ViewColumn.Two);
+        // display the masked message in a new window in the editor
+        if (maskedMessage.length > 0) {
+            vscode.workspace.openTextDocument({ content: maskedMessage, language: "hl7" }).then((newDocument) => {
+                vscode.window.showTextDocument(newDocument, 1, false).then(e => {
+                });
+            }, (error) => {
+                console.error(error);
+            });
+        }
 
     });
     context.subscriptions.push(maskIdentifiersCommand);

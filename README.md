@@ -123,6 +123,9 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 ### 1.3.2
 * Added filename to output window name for 'Display Segment Fields' - less confusion when comparing segments from more than one file. 
 
+### 1.3.3
+* When using the 'Mask Identifiers' command, the masked message is now opened as a new document in the editor window, instead of being displayed in the output window.  
+
 ## Credits
 * The HL7 syntax highlighting was sourced from https://github.com/craighurley/sublime-hl7-syntax
 * The Display Segment Fields function was based on a function from https://github.com/pagebrooks/vscode-hl7 

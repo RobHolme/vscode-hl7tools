@@ -33,4 +33,7 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 * Bugfix: Fixed duplication of MSH segment when splitting HL7 batch files.
 ## 1.3.2 - 2017-06-23
 * Added filename to output window name for 'Display Segment Fields' - less confusion when comparing segments from more than one file. 
+## 1.3.3
+* When using the 'Mask Identifiers' command, the masked message is now opened as a new document in the editor window, instead of being displayed in the output window.  
+
 ## [Unreleased]
