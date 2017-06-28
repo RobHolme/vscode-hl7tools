@@ -35,5 +35,6 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 * Added filename to output window name for 'Display Segment Fields' - less confusion when comparing segments from more than one file. 
 ## 1.3.3
 * When using the 'Mask Identifiers' command, the masked message is now opened as a new document in the editor window, instead of being displayed in the output window.  
-
+## 1.3.4
+* Fixed issues in 'Highlight Field' command where searches to highlight an item based on location (not name) failed if the location entered was in lowercase.
 ## [Unreleased]
