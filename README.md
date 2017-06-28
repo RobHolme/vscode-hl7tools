@@ -128,6 +128,7 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 
 ### 1.3.4
 * Fixed issues in 'Highlight Field' command where searches to highlight an item based on location (not name) failed if the location entered was in lowercase.
+* Fixed issued in 'Highlight Field' command where highlighting fields in the MSH segment were shifted 1 field to the right.
 
 ## Credits
 * The HL7 syntax highlighting was sourced from https://github.com/craighurley/sublime-hl7-syntax

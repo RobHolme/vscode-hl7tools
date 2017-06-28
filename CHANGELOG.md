@@ -36,5 +36,6 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 ## 1.3.3
 * When using the 'Mask Identifiers' command, the masked message is now opened as a new document in the editor window, instead of being displayed in the output window.  
 ## 1.3.4
-* Fixed issues in 'Highlight Field' command where searches to highlight an item based on location (not name) failed if the location entered was in lowercase.
+* Fixed issue in 'Highlight Field' command where searches to highlight an item based on location (not name) failed if the location entered was in lowercase.
+* Fixed issued in 'Highlight Field' command where highlighting fields in the MSH segment were shifted 1 field to the right.
 ## [Unreleased]
