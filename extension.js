@@ -275,10 +275,14 @@ function activate(context) {
                 // identify the segment name and field index from the location string
                 var segmentName = GetSegmentName(itemLocation).toUpperCase();
                 var fieldIndex = parseInt(GetFieldIndex(itemLocation), 10);
+                // the first field of MSH segments is the field delimiter, adjust index accordingly for MSH fields
+                if (segmentName == "MSH") {
+                    fieldIndex--;
+                }
                 fieldIndexArray.push(fieldIndex);
                 locationHashtable[segmentName] = fieldIndexArray;
             }
-            // else assume the user has provided a field description to search for.
+            // else assume the user has provided a field description to search for instead of a location.
             else {
                 // find matching field names for any segment present in the message
                 var segmentHash = GetAllSegmentNames(currentDoc);
@@ -289,7 +293,13 @@ function activate(context) {
                         fieldIndexArray = [];
                         for (var i = 0; i < segmentDef.fields.length; i++) {
                             if (nameRegEx.test(segmentDef.fields[i].desc)) {
-                                fieldIndexArray.push(i + 1)
+                                // the first field of MSH segments is the field delimiter, adjust index accordingly for MSH fields
+                                if (key == "MSH") {
+                                    fieldIndexArray.push(i);
+                                }
+                                else {
+                                    fieldIndexArray.push(i + 1);
+                                }
                             }
                         }
                         locationHashtable[key] = fieldIndexArray;
@@ -480,8 +490,8 @@ function activate(context) {
         var repeatNum = 0;
         var segmentDef = hl7Schema[segment];
 
-        const path = require("path");		               
-		const fileName = path.basename(currentDoc.uri.fsPath);
+        const path = require("path");
+        const fileName = path.basename(currentDoc.uri.fsPath);
 
         // if a custom segment ('Z' segment) is selected, the segment name will not exist in hl7Schema. 
         // if the segment isn't defined in the HL7 schema, warn user and exit function.
