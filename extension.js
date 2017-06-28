@@ -273,7 +273,7 @@ function activate(context) {
             // test to see if the user has provided a valid location string
             if (itemLocationRegex.test(itemLocation)) {
                 // identify the segment name and field index from the location string
-                var segmentName = GetSegmentName(itemLocation);
+                var segmentName = GetSegmentName(itemLocation).toUpperCase();
                 var fieldIndex = parseInt(GetFieldIndex(itemLocation), 10);
                 fieldIndexArray.push(fieldIndex);
                 locationHashtable[segmentName] = fieldIndexArray;
