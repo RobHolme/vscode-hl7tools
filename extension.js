@@ -1,10 +1,14 @@
 // Powershell Tools extension for Visual Studio Code
 // Robert Holme 
 
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-var vscode = require('vscode');
+// The module 'vscode' contains the VS Code extensibility API. Import the module and reference it with the alias vscode in your code below
+const vscode = require('vscode');
+const path = require("path");
+// Import HL7Tools modules
 const HighlightFields = require('./lib/HighlightField');
+const MaskIdentifiers = require('./lib/MaskIdentifiers');
+const FieldTreeView = require('./lib/FieldTreeView');
+
 var window = vscode.window;
 var workspace = vscode.workspace;
 // Store the HL7 schema and associated field descriptions
@@ -47,68 +51,7 @@ function IsHL7File(editor) {
     }
 }
 
-// add leading spaces to right pad a string
-function padRight(stringToPad, padLength) {
-    if (!stringToPad || stringToPad.length >= padLength) {
-        return stringToPad;
-    }
-    var maxLength = (padLength - stringToPad.length);
-    for (var i = 0; i < maxLength; i++) {
-        stringToPad += " ";
-    }
-    return stringToPad;
-}
 
-// mask out the nominated component from the field string. 
-// if no component is nominated, mask all components.
-// Assumes a field string includes components delimited by '^'
-function maskComponent(fieldToMask, componentNumber) {
-    var returnField = "";
-    var components = fieldToMask.split('^');
-
-    // no component specified, masks all components and join back into a field string from the modified components.
-    if (!componentNumber) {
-        for (componentIndex = 0; componentIndex < components.length; componentIndex++) {
-            components[componentIndex] = components[componentIndex].replace(/\w/g, '#')
-        }
-        returnField = components.join('^');
-    }
-    // only mask the component specified, then join all components back into a field string.
-    else {
-        if (components.length >= componentNumber) {
-            components[componentNumber - 1] = components[componentNumber - 1].replace(/\w/g, '#')
-            returnField = components.join('^');
-        }
-        // if the nominated component to mask is out of range, return the original string
-        else {
-            returnField = fieldToMask;
-        }
-    }
-    return returnField;
-}
-
-// Mask all items in a single field, including repeating items.
-// optionally limit the mask to a specific component of the field
-function maskField(fieldToMask, componentNumber) {
-    // mask out mother's maiden name
-    var fieldRepeats = fieldToMask.split('~')
-    for (fieldRepeatIndex = 0; fieldRepeatIndex < fieldRepeats.length; fieldRepeatIndex++) {
-        fieldRepeats[fieldRepeatIndex] = maskComponent(fieldRepeats[fieldRepeatIndex], componentNumber);
-    }
-    fieldRepeats = fieldRepeats.join('~');
-    return fieldRepeats;
-}
-
-// Mask all fields in an array of fields. Optionally start masking fields occurring from startingFieldPosition (1 based index of fields)  
-function maskFieldList(fieldListToMask, startingPosition) {
-    if (!startingPosition) {
-        startingPosition = 1;
-    }
-    for (fieldIndex = startingPosition; fieldIndex < fields.length; fieldIndex++) {
-        fieldListToMask[fieldIndex] = maskField(fieldListToMask[fieldIndex]);
-    }
-    return fieldListToMask;
-}
 
 
 // load the appropriate hl7 schema based on the HL7 version (as defined in MSH-12) 
@@ -234,96 +177,7 @@ function activate(context) {
     // This function masks out patient & next of kin identifiers
     var maskIdentifiersCommand = vscode.commands.registerCommand('hl7tools.MaskIdentifiers', function () {
         console.log('In function MaskIdentifiers');
-
-        // exit if the editor is not active
-        var editor = vscode.window.activeTextEditor;
-        if (!editor) {
-            return;
-        }
-        var currentDoc = editor.document;
-
-        // examine each line in the HL7 message
-        var maskedMessage = "";
-        for (lineIndex = 0; lineIndex < currentDoc.lineCount; lineIndex++) {
-            var currentLine = currentDoc.lineAt(lineIndex).text;
-            var fields = currentLine.split('|');
-
-            // mask selected fields/components from the PID segment
-            if ((fields[0]).toUpperCase() === "PID") {
-                // mask out all patient IDs, except for the first one in the list
-                var patientIDList = fields[3].split('~')
-                for (i = 1; i < patientIDList.length; i++) {
-                    patientIDList[i] = maskComponent(patientIDList[i]);
-                }
-                fields[3] = patientIDList.join('~');
-                // mask out specific PID fields continued in the array below (1 based index - e.g. 4 = PID-4). fields[0] is the segment name.
-                var pidFieldsToMask = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 26, 27, 28];
-                for (i = 0; i < pidFieldsToMask.length; i++) {
-                    if (pidFieldsToMask[i] < fields.length) {
-                        fields[pidFieldsToMask[i]] = maskField(fields[pidFieldsToMask[i]]);
-                    }
-                }
-                // join all modified fields back into a segment
-                var maskedSegment = fields.join('|');
-                maskedMessage += maskedSegment + '\r';
-            }
-            // mask out specific next of kin fields
-            else if ((fields[0]).toUpperCase() === "NK1") {
-                // mask out specific PID fields continued in the array below (1 based index - e.g. 4 = PID-4). fields[0] is the segment name.
-                var nk1FieldsToMask = [2, 4, 5, 6, 7, 10, 11, 12, 13, 14, 15, 16, 19, 20, 25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 37, 38];
-                for (i = 0; i < nk1FieldsToMask.length; i++) {
-                    if (nk1FieldsToMask[i] < fields.length) {
-                        fields[nk1FieldsToMask[i]] = maskField(fields[nk1FieldsToMask[i]]);
-                    }
-                }
-                // join all modified fields back into a segment
-                var maskedSegment = fields.join('|');
-                maskedMessage += maskedSegment + '\r'
-
-            }
-            // mask out all IN1 fields after IN1-2
-            else if ((fields[0]).toUpperCase() === "IN1") {
-                for (in1Index = 2; in1Index < fields.length; in1Index++) {
-                    fields[in1Index] = maskField(fields[in1Index]);
-                }
-                // join all modified fields back into a segment
-                var maskedSegment = fields.join('|');
-                maskedMessage += maskedSegment + '\r'
-            }
-            // mask out all IN2 fields after IN2-2
-            else if ((fields[0]).toUpperCase() === "IN2") {
-                for (in2Index = 2; in2Index < fields.length; in2Index++) {
-                    fields[in2Index] = maskField(fields[in2Index]);
-                }
-                // join all modified fields back into a segment
-                var maskedSegment = fields.join('|');
-                maskedMessage += maskedSegment + '\r'
-            }
-            // mask out all GT1 fields after GT1-2
-            else if ((fields[0]).toUpperCase() === "GT1") {
-                for (gt1Index = 2; gt1Index < fields.length; gt1Index++) {
-                    fields[gt1Index] = maskField(fields[gt1Index]);
-                }
-                // join all modified fields back into a segment
-                var maskedSegment = fields.join('|');
-                maskedMessage += maskedSegment + '\r'
-            }
-            // if the segment does not contain identifiable information, leave it unmodified
-            else {
-                maskedMessage += currentLine + '\r';
-            }
-        }
-
-        // display the masked message in a new window in the editor
-        if (maskedMessage.length > 0) {
-            vscode.workspace.openTextDocument({ content: maskedMessage, language: "hl7" }).then((newDocument) => {
-                vscode.window.showTextDocument(newDocument, 1, false).then(e => {
-                });
-            }, (error) => {
-                console.error(error);
-            });
-        }
-
+        MaskIdentifiers.MaskAll();
     });
     context.subscriptions.push(maskIdentifiersCommand);
 
@@ -352,119 +206,16 @@ function activate(context) {
         var currentDoc = editor.document;
         var selection = editor.selection;
         var currentLineNum = selection.start.line;
-        var tokens = currentDoc.lineAt(currentLineNum).text.split('|');
-        var segment = tokens[0];
-        var repeatNum = 0;
-        var segmentDef = hl7Schema[segment];
-
-        const path = require("path");
         const fileName = path.basename(currentDoc.uri.fsPath);
-
-        // if a custom segment ('Z' segment) is selected, the segment name will not exist in hl7Schema. 
-        // if the segment isn't defined in the HL7 schema, warn user and exit function.
-        if (!segmentDef) {
-            vscode.window.showWarningMessage("Custom segments are not supported.");
-            return;
-        }
-
-        if (segment === 'MSH') {
-            tokens.splice(1, 0, '|');
-        }
-
-        var output = [{ segment: segment + '-0', desc: segment, repeat: repeatNum, values: [segment] }];
-        var maxLength = 0;
-        for (var i = 1; i <= segmentDef.fields.length; i++) {
-            var desc = segmentDef.fields[i - 1].desc;
-            var dataType = segmentDef.fields[i - 1].datatype;
-            // calculate the length of the longest description (include field and component descriptions). Used to calculate padding length when displaying output.
-            for (j = 0; j < hl7Fields[dataType].subfields.length; j++) {
-                maxLength = Math.max(maxLength, (desc.length + 9), (hl7Fields[dataType].subfields[j].desc.length + 17));
-            }
-
-            var values = [];
-            if (i < tokens.length) {
-                if (segment === 'MSH' && i === 2) {
-                    values.push(0, tokens[i]);
-                }
-                else {
-                    // split the field into repeating segments, then split into components.
-                    var repeats = tokens[i].split('~');
-                    for (var k = 0; k < repeats.length; k++) {
-                        var subTokens = repeats[k].split('^');
-                        for (var j = 0; j < subTokens.length; j++) {
-                            values.push(subTokens[j]);
-                        }
-                        // if the field repeats, include the repeat number starting from 1
-                        if (repeats.length > 1) {
-                            output.push({
-                                segment: segment + '-' + i,
-                                desc: desc,
-                                repeat: k + 1,
-                                values: values,
-                                datatype: dataType
-                            })
-                        }
-                        // if the field does not repeat, use 0 as the repeat number. The output will be formatted differently for non repeating items (based on examining this value).
-                        else {
-                            output.push({
-                                segment: segment + '-' + i,
-                                desc: desc,
-                                repeat: 0,
-                                values: values,
-                                datatype: dataType
-                            })
-                        }
-                        var values = [];
-                    }
-                }
-            }
-        }
-
-        // format the results for display.
-        var channelOutput = 'HL7 Segment: ' + output[0].desc + '\n\n';
-        for (var i = 1; i < output.length; i++) {
-            var prefix = padRight(output[i].segment + ' ' + output[i].desc + ':', maxLength) + ' ';
-
-            var value = '';
-            if (output[i].values.length === 1) {
-                value += output[i].values[0];
-            }
-            else {
-                for (var j = 0; j < output[i].values.length; j++) {
-                    // create unicode 'border' characters for components of fields
-                    var border = "├";
-                    if (j == (output[i].values.length - 1)) {
-                        border = "└";
-                    }
-
-                    // get the description of the component (if the data does not match the schema datatype leave unknown component descriptions blank)
-                    var componentDescription = "";
-                    if (j < (hl7Fields[output[i].datatype]).subfields.length) {
-                        componentDescription = hl7Fields[output[i].datatype].subfields[j].desc;
-                    }
-
-                    // if no repeats for the field exist, don't include the repeat number in the output
-                    if (output[i].repeat == 0) {
-
-                        value += padRight('\n ' + border + ' ' + output[i].segment + '.' + (j + 1) + ' (' + componentDescription + ') ', prefix.length + 1);
-                        value += output[i].values[j];
-                    }
-
-                    // include the repeat number for repeating fields. e.g. PID-3[2].1 would be the first component of the second repeat of the PID-3 field. 
-                    else {
-                        value += padRight('\n ' + border + ' ' + output[i].segment + '[' + output[i].repeat.toString() + '].' + (j + 1) + ' (' + componentDescription + ') ', prefix.length + 1);
-                        value += output[i].values[j];
-                    }
-                }
-            }
-            channelOutput += prefix + value + '\n';
-        }
+        var currentSegment = currentDoc.lineAt(currentLineNum).text
+        var segmentArray = currentSegment.split('|');
+        var segmentName = segmentArray[0];
+        var output = FieldTreeView.DisplaySegmentAsTree(currentSegment, hl7Schema, hl7Fields);
 
         // write the results to visual studio code's output window
-        //const fileName = path.basename(currentDoc.Uri);
-        var channel = vscode.window.createOutputChannel('HL7 Fields - ' + segment + ' (' + fileName + ')');
+        var channel = vscode.window.createOutputChannel('HL7 Fields - ' + segmentName + ' (' + fileName + ')');
         channel.clear();
-        channel.appendLine(channelOutput);
+        channel.appendLine(output);
         channel.show(vscode.ViewColumn.Two);
 
     });
