@@ -5,13 +5,15 @@ This is a Visual Studio Code extension for working with HL7 v2.x files. It provi
 * mask out identifying fields in the message.
 * display fields from a segment in a list.
 
+> Note: The extension is automatically activated for files with a .hl7 file extension. If viewing files without a .hl7 file extension you will need to manually specify that the file is a HL7 file. Click on the current language (e.g. 'PlainText') in the right hand side of the status bar, and enter 'hl7' as the language. It is recommended to rename files to use a .hl7 extension for ease of use.  
+
 ## Features
 ### Syntax highlighting
 * Segment, field, component, sub component and repeat separators are highlighted. 
 
 ![Syntax highlighting](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/syntax.jpg)
 
-> Note: The default dark and light themes don't highlight the field separators, I've found the Monkai theme works best.
+> Note: The default dark and light themes don't highlight the field separators, I've found the Monkai & Solarize themes work well.
 
 ### Field descriptions
 When the mouse is hovered over a field, the field name and location is displayed in a pop-up tooltip. If the file has a .hl7 extension this will be applied when the file loads, other wise it will need to be manually activated via:
@@ -20,7 +22,7 @@ When the mouse is hovered over a field, the field name and location is displayed
 ![Field descriptions](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/FieldDescription.jpg)
 
 ### Field highlighting
-This prompts the user to enter a HL7 field location (e.g. PID-3), the corresponding field is then highlighted in the editor.
+This prompts the user to enter a HL7 field location (e.g. PID-3), or partial field description (e.g. name), the corresponding field(s) is then highlighted in the editor. The field highlighting will be applied to other HL7 messages if you have multiple messages open.
 
 * Press F1 --> HL7 Tools: Highlight Field
 
@@ -30,11 +32,11 @@ This prompts the user to enter a HL7 field location (e.g. PID-3), the correspond
 
 ![Field highlighting](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/highlightfield1.jpg)
 
-* The field will be highlighted. If part of the field name was entered, all matching fields will be highlighted. e.g. 'Patient' would match to 'Patient ID List', 'Patient Name', etc. Selecting a new field will remove the previously highlighted field. Entering a blank value for a field location will remove all highlighting.
+* The field will be highlighted. If part of the field name was entered, all matching fields will be highlighted. e.g. 'Patient' would match to 'Patient ID List', 'Patient Name', etc. Selecting a new field will remove the previously highlighted field. Entering a blank value for a field location will remove all highlighting, or run the command 'HL7 Tools: Clear Highlighted Field'.
 
 ![Field highlighting](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/highlightfield2.jpg)
 
-> Note: the field highlighting may be shifted by a character if the document end of line character is changed from the editor default.
+> Note: the field highlighting may be shifted by a character if the document end of line character is changed from the editor EOL preference.
 
 ### Display segment fields
 This function lists all fields from the currently selected segment in a list in the output window. Field components are indented. Any repeating field values are included.
@@ -49,7 +51,7 @@ This function lists all fields from the currently selected segment in a list in 
 
 ![Mask Identifiers](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/MaskIdentifiers1.jpg)
 
-* Common patient and next of kin identifiers will be masked with a '#' character. The masked message will be displayed in the output window, the original message will not be changed.
+* Common patient and next of kin identifiers will be masked with a '#' character. The masked message will be displayed in a new window, the original message will not be changed. 
 
 ![Mask Identifiers](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/MaskIdentifiers2.jpg)
 
@@ -129,6 +131,9 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 ### 1.3.4
 * Fixed issues in 'Highlight Field' command where searches to highlight an item based on location (not name) failed if the location entered was in lowercase.
 * Fixed issued in 'Highlight Field' command where highlighting fields in the MSH segment were shifted 1 field to the right.
+
+### 1.3.5
+* The 'Highlight Field' now persists the highlighting for all HL7 files open in the current editor session. Previously switching to another tab would clear the highlighting. The command 'Clear Highlighted Fields' has been added to manually clear the highlighted fields.
 
 ## Credits
 * The HL7 syntax highlighting was sourced from https://github.com/craighurley/sublime-hl7-syntax

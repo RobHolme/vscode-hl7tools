@@ -38,4 +38,5 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 ## 1.3.4
 * Fixed issue in 'Highlight Field' command where searches to highlight an item based on location (not name) failed if the location entered was in lowercase.
 * Fixed issued in 'Highlight Field' command where highlighting fields in the MSH segment were shifted 1 field to the right.
-## [Unreleased]
+## 1.3.5 
+* The 'Highlight Field' now persists the highlighting for all HL7 files open in the current editor session. Previously switching to another tab would clear the highlighting. The command 'Clear Highlighted Fields' has been added to manually clear the highlighted fields.
