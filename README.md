@@ -81,7 +81,7 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 ## Release Notes
 
 ### Known issues
-* Display Segment fields function fails on custom 'Z' segments
+No known issues. Raise issues via https://github.com/RobHolme/vscode-hl7tools/issues
 
 ### 1.0.0
 * Initial release.
@@ -134,6 +134,10 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 
 ### 1.3.5
 * The 'Highlight Field' now persists the highlighting for all HL7 files open in the current editor session. Previously switching to another tab would clear the highlighting. The command 'Clear Highlighted Fields' has been added to manually clear the highlighted fields.
+
+### 1.3.6
+* Custom segments now displayed by the 'Display Segment Fields' command.
+* Fixed issue where fields not defined in the schema where not displayed by the 'Display Segment Fields' command.
 
 ## Credits
 * The HL7 syntax highlighting was sourced from https://github.com/craighurley/sublime-hl7-syntax

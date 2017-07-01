@@ -33,10 +33,13 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 * Bugfix: Fixed duplication of MSH segment when splitting HL7 batch files.
 ## 1.3.2 - 2017-06-23
 * Added filename to output window name for 'Display Segment Fields' - less confusion when comparing segments from more than one file. 
-## 1.3.3
+## 1.3.3 - 2017-06-26
 * When using the 'Mask Identifiers' command, the masked message is now opened as a new document in the editor window, instead of being displayed in the output window.  
-## 1.3.4
+## 1.3.4 - 2017-06-28
 * Fixed issue in 'Highlight Field' command where searches to highlight an item based on location (not name) failed if the location entered was in lowercase.
 * Fixed issued in 'Highlight Field' command where highlighting fields in the MSH segment were shifted 1 field to the right.
-## 1.3.5 
+## 1.3.5 2017-06-30
 * The 'Highlight Field' now persists the highlighting for all HL7 files open in the current editor session. Previously switching to another tab would clear the highlighting. The command 'Clear Highlighted Fields' has been added to manually clear the highlighted fields.
+## 1.3.6 2017-06-31
+* Custom segments now displayed by the 'Display Segment Fields' command.
+* Fixed issue where fields not defined in the schema where not displayed by the 'Display Segment Fields' command.
