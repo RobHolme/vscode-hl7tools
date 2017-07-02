@@ -4,6 +4,7 @@ This is a Visual Studio Code extension for working with HL7 v2.x files. It provi
 * highlight user specified fields in the message.
 * mask out identifying fields in the message.
 * display fields from a segment in a list.
+* split a hl7 batch file into separate files per message.
 
 > Note: The extension is automatically activated for files with a .hl7 file extension. If viewing files without a .hl7 file extension you will need to manually specify that the file is a HL7 file. Click on the current language (e.g. 'PlainText') in the right hand side of the status bar, and enter 'hl7' as the language. It is recommended to rename files to use a .hl7 extension for ease of use.  
 
@@ -80,9 +81,6 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 
 ## Release Notes
 
-### Known issues
-No known issues. Raise issues via https://github.com/RobHolme/vscode-hl7tools/issues
-
 ### 1.0.0
 * Initial release.
 
@@ -142,5 +140,5 @@ No known issues. Raise issues via https://github.com/RobHolme/vscode-hl7tools/is
 ## Credits
 * The HL7 syntax highlighting was sourced from https://github.com/craighurley/sublime-hl7-syntax
 * The Display Segment Fields function was based on a function from https://github.com/pagebrooks/vscode-hl7 
-* the HL7 segment descriptions (segment.js) was extracted from http://github.com/fernandojsg/hl7-dictionary. To reduce disk footprint only the segment and field definitions were used.
+* the HL7 segment descriptions (schema) was extracted from http://github.com/fernandojsg/hl7-dictionary. 
 
