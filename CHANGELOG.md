@@ -43,3 +43,5 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 ## 1.3.6 2017-06-31
 * Custom segments now displayed by the 'Display Segment Fields' command.
 * Fixed issue where fields not defined in the schema where not displayed by the 'Display Segment Fields' command.
+## 1.3.7 2017-07-03
+* The background colour for highlighted fields can now be defined via a user preference (hl7tools.highlightBackgroundColor).  e.g: "hl7tools.highlightBackgroundColor": "rgba(0,255,0,0.3)" 

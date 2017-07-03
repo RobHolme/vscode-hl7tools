@@ -4,7 +4,6 @@ This is a Visual Studio Code extension for working with HL7 v2.x files. It provi
 * highlight user specified fields in the message.
 * mask out identifying fields in the message.
 * display fields from a segment in a list.
-* split a hl7 batch file into separate files per message.
 
 > Note: The extension is automatically activated for files with a .hl7 file extension. If viewing files without a .hl7 file extension you will need to manually specify that the file is a HL7 file. Click on the current language (e.g. 'PlainText') in the right hand side of the status bar, and enter 'hl7' as the language. It is recommended to rename files to use a .hl7 extension for ease of use.  
 
@@ -23,7 +22,7 @@ When the mouse is hovered over a field, the field name and location is displayed
 ![Field descriptions](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/FieldDescription.jpg)
 
 ### Field highlighting
-This prompts the user to enter a HL7 field location (e.g. PID-3), or partial field description (e.g. name), the corresponding field(s) is then highlighted in the editor. The field highlighting will be applied to other HL7 messages if you have multiple messages open.
+This prompts the user to enter a HL7 field location (e.g. PID-3), or partial field description (e.g. name), the corresponding field(s) is then highlighted in the editor. The field highlighting will be applied to other HL7 messages if you have multiple messages open. The background colour applied to highlighted fields can be changed via the user preference "hl7tools.highlightBackgroundColor". The preference requires a RGBA colour value, specified with: rgba(red, green, blue, alpha). The alpha parameter is a number between 0.0 (fully transparent) and 1.0 (fully opaque).
 
 * Press F1 --> HL7 Tools: Highlight Field
 
@@ -81,6 +80,9 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 
 ## Release Notes
 
+### Known issues
+No known issues. Raise issues via https://github.com/RobHolme/vscode-hl7tools/issues
+
 ### 1.0.0
 * Initial release.
 
@@ -137,8 +139,11 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 * Custom segments now displayed by the 'Display Segment Fields' command.
 * Fixed issue where fields not defined in the schema where not displayed by the 'Display Segment Fields' command.
 
+### 1.3.7
+* The background colour for highlighted fields can now be defined via a user preference (hl7tools.highlightBackgroundColor).  e.g: "hl7tools.highlightBackgroundColor": "rgba(0,255,0,0.3)" 
+
 ## Credits
 * The HL7 syntax highlighting was sourced from https://github.com/craighurley/sublime-hl7-syntax
 * The Display Segment Fields function was based on a function from https://github.com/pagebrooks/vscode-hl7 
-* the HL7 segment descriptions (schema) was extracted from http://github.com/fernandojsg/hl7-dictionary. 
+* the HL7 segment descriptions (segment.js) was extracted from http://github.com/fernandojsg/hl7-dictionary. To reduce disk footprint only the segment and field definitions were used.
 

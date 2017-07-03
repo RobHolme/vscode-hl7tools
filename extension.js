@@ -1,16 +1,18 @@
 // Powershell Tools extension for Visual Studio Code
-// Robert Holme 
+// Rob Holme 
 
-// The module 'vscode' contains the VS Code extensibility API. Import the module and reference it with the alias vscode in your code below
+// The module 'vscode' contains the VS Code extensibility API. 
 const vscode = require('vscode');
+var window = vscode.window;
+var workspace = vscode.workspace;
+
 const path = require("path");
-// Import HL7Tools modules
+
+// HL7Tools modules
 const HighlightFields = require('./lib/HighlightField');
 const MaskIdentifiers = require('./lib/MaskIdentifiers');
 const FieldTreeView = require('./lib/FieldTreeView');
 
-var window = vscode.window;
-var workspace = vscode.workspace;
 // Store the HL7 schema and associated field descriptions
 var hl7Schema;
 var hl7Fields;
@@ -18,15 +20,24 @@ var hl7Fields;
 var currentItemLocation;
 // the status bar item to display current HL7 schema this is loaded
 var statusbarHL7Version = window.createStatusBarItem(vscode.StatusBarAlignment.Left);
-
 // the list of fields with hover decorations (displaying the field description);
 var hoverDecorationList = [];
 // stores the current highlighted field so that it can be cleared when selecting a new field.
 var currentDecoration;
 // stores the current hover decorations
 var currentHoverDecoration;
+// the value of the background colour for highlighted items (from the preferences file). Expects a RGBA value.
+var highlightFieldBackgroundColor;
 
 
+//----------------------------------------------------
+// update the user configuration settings 
+function UpdateConfiguration() {
+    var config = vscode.workspace.getConfiguration('hl7tools');
+    highlightFieldBackgroundColor = config['highlightBackgroundColor'];
+}
+
+//----------------------------------------------------
 // Determine if the file is a HL7 file (returns true/false). 
 // This expects that the file extension is .hl7, or the first line contains
 // a MSH segment (or FHS of BHS segment for batch files).
@@ -51,9 +62,7 @@ function IsHL7File(editor) {
     }
 }
 
-
-
-
+//----------------------------------------------------
 // load the appropriate hl7 schema based on the HL7 version (as defined in MSH-12) 
 function LoadHL7Schema() {
     // exit if the editor is not active
@@ -99,9 +108,14 @@ function LoadHL7Schema() {
     }
 }
 
+//----------------------------------------------------
 // this method is called when the extension is activated
 function activate(context) {
     console.log('The extension "hl7tools" is now active.');
+
+    // get user preferences for the extension
+    UpdateConfiguration();
+    
     var activeEditor = window.activeTextEditor
     // only activate the field descriptions if it is identified as a HL7 file  
     if (!IsHL7File(activeEditor)) {
@@ -127,7 +141,7 @@ function activate(context) {
                 // the new document may be a different version of HL7, so load the appropriate version of schema
                 LoadHL7Schema();
                 UpdateFieldDescriptions();
-                HighlightFields.ShowHighlights(currentItemLocation, hl7Schema);
+                HighlightFields.ShowHighlights(currentItemLocation, hl7Schema, highlightFieldBackgroundColor);
             }
             else {
                 statusbarHL7Version.hide();
@@ -148,6 +162,10 @@ function activate(context) {
         }
     }, null, context.subscriptions);
 
+    // user preferences have changed
+    workspace.onDidChangeConfiguration(UpdateConfiguration);
+    UpdateConfiguration();
+
     //-------------------------------------------------------------------------------------------
     // this function highlights HL7 items in the message based on item position identified by user.
     var highlightFieldCommand = vscode.commands.registerCommand('hl7tools.HighlightHL7Item', function () {
@@ -156,7 +174,7 @@ function activate(context) {
         var itemLocationPromise = vscode.window.showInputBox({ prompt: "Enter HL7 item location (e.g. 'PID-3'), or the partial field name (e.g. 'name')" });
         itemLocationPromise.then(function (itemLocation) {
             currentItemLocation = itemLocation;
-            HighlightFields.ShowHighlights(itemLocation, hl7Schema);
+            HighlightFields.ShowHighlights(itemLocation, hl7Schema, highlightFieldBackgroundColor);
     });
         
     });
@@ -169,7 +187,7 @@ function activate(context) {
         console.log('In function ClearHighlightedFields');
         // set the highlighted location to null, then call ShowHighlights. This will clear highlights on a null location parameter.
         currentItemLocation = null;
-        HighlightFields.ShowHighlights(currentItemLocation, hl7Schema);
+        HighlightFields.ShowHighlights(currentItemLocation, hl7Schema, highlightFieldBackgroundColor);
     });
     context.subscriptions.push(ClearHighlightedFieldsCommand);
 
@@ -362,6 +380,7 @@ function activate(context) {
 }
 exports.activate = activate;
 
+//----------------------------------------------------
 // this method is called when your extension is deactivated
 function deactivate() {
     console.log("deactivating HL7Tools extension");
