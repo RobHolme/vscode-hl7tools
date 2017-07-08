@@ -12,6 +12,7 @@ const path = require("path");
 const HighlightFields = require('./lib/HighlightField');
 const MaskIdentifiers = require('./lib/MaskIdentifiers');
 const FieldTreeView = require('./lib/FieldTreeView');
+const TcpMllpClient = require('./lib/SendHL7Message.js');
 
 // Store the HL7 schema and associated field descriptions
 var hl7Schema;
@@ -115,7 +116,7 @@ function activate(context) {
 
     // get user preferences for the extension
     UpdateConfiguration();
-    
+
     var activeEditor = window.activeTextEditor
     // only activate the field descriptions if it is identified as a HL7 file  
     if (!IsHL7File(activeEditor)) {
@@ -175,8 +176,8 @@ function activate(context) {
         itemLocationPromise.then(function (itemLocation) {
             currentItemLocation = itemLocation;
             HighlightFields.ShowHighlights(itemLocation, hl7Schema, highlightFieldBackgroundColor);
-    });
-        
+        });
+
     });
     context.subscriptions.push(highlightFieldCommand);
 
@@ -290,6 +291,44 @@ function activate(context) {
     });
 
     context.subscriptions.push(splitBatchFileCommand);
+
+    //-------------------------------------------------------------------------------------------
+    // This function sends the message in the active document to a remote host via TCP. The HL7 message is framed using MLLP.
+    var SendMessageCommand = vscode.commands.registerCommand('hl7tools.SendMessage', function () {
+
+        console.log("Sending HL7 message to remote host");
+
+        var activeEditor = vscode.window.activeTextEditor;
+        if (!activeEditor) {
+            return;
+        }
+
+        // get the HL7 message from the active document. Convert EOL to <CR> only.
+        var currentDoc = activeEditor.document;
+        var hl7Message = currentDoc.getText();
+        var config = vscode.workspace.getConfiguration();
+        var endOfLineChar = config.files.eol;
+        hl7Message.replace(endOfLineChar, String.fromCharCode(0x0d));
+
+        var remoteHostPromise = vscode.window.showInputBox({ prompt: "Enter the remote host and port (in the format RemoteHost:Port) e.g. '10.0.1.100:5000'" });
+        remoteHostPromise.then(function (remoteEndpoint) {
+            // extract the hostname and port from the end point entered by the user
+            remoteHost = remoteEndpoint.split(":")[0];
+            remotePort = remoteEndpoint.split(":")[1];
+            // send the current message to the remote end point.
+            TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message);
+
+            // TO DO: 
+            //      Wait for ACK message.
+            //      Implement user preference to populate the default remote host
+            //      implement preference to ignore ACKs.
+
+        });
+
+    });
+
+    context.subscriptions.push(SendMessageCommand);
+
 
     //-------------------------------------------------------------------------------------------
     // apply descriptions to each field as a hover decoration (tooltip)

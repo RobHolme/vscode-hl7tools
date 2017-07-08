@@ -80,9 +80,6 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 
 ## Release Notes
 
-### Known issues
-No known issues. Raise issues via https://github.com/RobHolme/vscode-hl7tools/issues
-
 ### 1.0.0
 * Initial release.
 
@@ -141,6 +138,9 @@ No known issues. Raise issues via https://github.com/RobHolme/vscode-hl7tools/is
 
 ### 1.3.7
 * The background colour for highlighted fields can now be defined via a user preference (hl7tools.highlightBackgroundColor).  e.g: "hl7tools.highlightBackgroundColor": "rgba(0,255,0,0.3)" 
+
+### 1.3.8
+* Added 'Send Message' command to send the current HL7 message to a remote host.
 
 ## Credits
 * The HL7 syntax highlighting was sourced from https://github.com/craighurley/sublime-hl7-syntax

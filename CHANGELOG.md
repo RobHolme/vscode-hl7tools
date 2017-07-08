@@ -45,3 +45,6 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 * Fixed issue where fields not defined in the schema where not displayed by the 'Display Segment Fields' command.
 ## 1.3.7 2017-07-03
 * The background colour for highlighted fields can now be defined via a user preference (hl7tools.highlightBackgroundColor).  e.g: "hl7tools.highlightBackgroundColor": "rgba(0,255,0,0.3)" 
+## 1.3.8 2017-07-08
+* Added 'Send Message' command to send the current HL7 message to a remote host.
+* The background colour for highlighted fields can now be defined via a user preference (hl7tools.highlightBackgroundColor).  e.g: "hl7tools.highlightBackgroundColor": "rgba(0,255,0,0.3)" 
