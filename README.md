@@ -66,6 +66,25 @@ This function lists all fields from the currently selected segment in a list in 
 If a single file contains multiple HL7 messages, this function splits each message into a new document. Each document is opened in the editor as an untitled file, it will be the user's responsibility to save the files.
 * Press F1 --> HL7 Tools: Split HL7 Batch Files.
 
+### Send HL7 Message to Remote Host
+This command sends the current message to a remote host (via TCP). 
+* Press F1 --> HL7 Tools: Send Message
+* Enter the destination hostname (or IP address) and the port number (Host:Port).
+
+![SendMessage](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/SendMessage1.jpg)
+
+* The status will be displayed in the output window. If an ACK is returned it is also displayed. If no ack is returned, the connection will time out and close (default timeout is 5 seconds).
+
+![SendMessage](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/SendMessage2.jpg)
+ 
+
+User preferences applicable to the function include:
+`// The TCP connection timeout (in seconds) when sending a HL7 message.`  
+`"hl7tools.ConnectionTimeout": 10`  
+  
+`// The default remote host and IP address to send HL7 messages to.`  
+`"hl7tools.DefaultRemoteHost": "127.0.0.1:5000"`  
+
 ## Installation
 ### Visual Studio Code 
 Press `F1` and enter the `ext install hl7tools` command.
@@ -141,6 +160,12 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 
 ### 1.4.0
 * Added 'Send Message' command to send the current HL7 message to a remote host.
+* Added user preferences for 'Send Message' function  
+    `// The TCP connection timeout (in seconds) when sending a HL7 message.`  
+    `"hl7tools.ConnectionTimeout": 10`  
+      
+    `// The default remote host and IP address to send HL7 messages to.`  
+    `"hl7tools.DefaultRemoteHost": "127.0.0.1:5000"`  
 
 ## Credits
 * The HL7 syntax highlighting was sourced from https://github.com/craighurley/sublime-hl7-syntax

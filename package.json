@@ -123,15 +123,15 @@
 					"default": "rgba(0,255,0,0.3)",
 					"description": "The background colour applied to highlighted HL7 fields. Requires a RGBA value."
 				},
-				"hl7tools.ConnectionTimeout": {
-					"type": "number",
-					"default": 10,
-					"description": "The TCP connection timeout (in seconds) when sending a HL7 message."
-				},
 				"hl7tools.DefaultRemoteHost": {
 					"type": "string",
 					"default": "127.0.0.1:5000",
 					"description": "The default remote host and IP address to send HL7 messages to."
+				},
+				"hl7tools.ConnectionTimeout": {
+					"type": "number",
+					"default": 5,
+					"description": "The TCP connection timeout (in seconds) when sending a HL7 message."
 				}
 			}
 		},

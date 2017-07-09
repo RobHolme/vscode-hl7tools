@@ -30,7 +30,6 @@ var currentHoverDecoration;
 // the value of the background colour for highlighted items (from the preferences file). Expects a RGBA value.
 var highlightFieldBackgroundColor;
 
-
 //----------------------------------------------------
 // update the user configuration settings 
 function UpdateConfiguration() {
@@ -321,7 +320,7 @@ function activate(context) {
             remoteHost = remoteEndpoint.split(":")[0];
             remotePort = remoteEndpoint.split(":")[1];
             // send the current message to the remote end point.
-            TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message);
+            TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout);
 
             // TO DO: 
             //      Wait for ACK message.
