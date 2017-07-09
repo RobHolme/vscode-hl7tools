@@ -2,7 +2,7 @@
 	"name": "hl7tools",
 	"displayName": "HL7Tools",
 	"description": "HL7 tools for Visual Studio Code",
-	"version": "1.3.8",
+	"version": "1.4.0",
 	"icon": "images/hl7tools-icon.png",
 	"publisher": "RobHolme",
 	"bugs": {
@@ -113,14 +113,25 @@
 				"path": "./syntax/hl7.tmLanguage"
 			}
 		],
-		"configuration": {
+		"configuration": 
+		{
 			"type": "object",
 			"title": "HL7 Tools configuration",
 			"properties": {
 				"hl7tools.highlightBackgroundColor": {
 					"type": "string",
 					"default": "rgba(0,255,0,0.3)",
-					"description": "The background colour applied to highlighted HL7 fields. Requires RGBA value"
+					"description": "The background colour applied to highlighted HL7 fields. Requires a RGBA value."
+				},
+				"hl7tools.ConnectionTimeout": {
+					"type": "number",
+					"default": 10,
+					"description": "The TCP connection timeout (in seconds) when sending a HL7 message."
+				},
+				"hl7tools.DefaultRemoteHost": {
+					"type": "string",
+					"default": "127.0.0.1:5000",
+					"description": "The default remote host and IP address to send HL7 messages to."
 				}
 			}
 		},

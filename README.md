@@ -139,7 +139,7 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 ### 1.3.7
 * The background colour for highlighted fields can now be defined via a user preference (hl7tools.highlightBackgroundColor).  e.g: "hl7tools.highlightBackgroundColor": "rgba(0,255,0,0.3)" 
 
-### 1.3.8
+### 1.4.0
 * Added 'Send Message' command to send the current HL7 message to a remote host.
 
 ## Credits

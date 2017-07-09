@@ -307,10 +307,15 @@ function activate(context) {
         var currentDoc = activeEditor.document;
         var hl7Message = currentDoc.getText();
         var config = vscode.workspace.getConfiguration();
-        var endOfLineChar = config.files.eol;
+        const endOfLineChar = config.files.eol;
         hl7Message.replace(endOfLineChar, String.fromCharCode(0x0d));
+        
+        // get the user defaults for SendMessage
+        var hl7toolsConfig = vscode.workspace.getConfiguration('hl7tools');
+        const defaultEndPoint = hl7toolsConfig['DefaultRemoteHost'];
+        const tcpConnectionTimeout = hl7toolsConfig['ConnectionTimeout'] * 1000;
 
-        var remoteHostPromise = vscode.window.showInputBox({ prompt: "Enter the remote host and port (in the format RemoteHost:Port) e.g. '10.0.1.100:5000'" });
+        var remoteHostPromise = vscode.window.showInputBox({ prompt: "Enter the remote host and port ('RemoteHost:Port')'",value: defaultEndPoint});
         remoteHostPromise.then(function (remoteEndpoint) {
             // extract the hostname and port from the end point entered by the user
             remoteHost = remoteEndpoint.split(":")[0];
@@ -322,6 +327,8 @@ function activate(context) {
             //      Wait for ACK message.
             //      Implement user preference to populate the default remote host
             //      implement preference to ignore ACKs.
+            //      timeout
+            //      display results to output window
 
         });
 
