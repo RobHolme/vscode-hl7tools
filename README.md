@@ -78,7 +78,7 @@ This command sends the current message to a remote host (via TCP).
 ![SendMessage](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/SendMessage2.jpg)
  
 
-User preferences applicable to the function include:
+User preferences applicable to the function include:  
 `// The TCP connection timeout (in seconds) when sending a HL7 message.`  
 `"hl7tools.ConnectionTimeout": 10`  
   
