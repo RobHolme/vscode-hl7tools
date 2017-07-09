@@ -321,14 +321,6 @@ function activate(context) {
             remotePort = remoteEndpoint.split(":")[1];
             // send the current message to the remote end point.
             TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout);
-
-            // TO DO: 
-            //      Wait for ACK message.
-            //      Implement user preference to populate the default remote host
-            //      implement preference to ignore ACKs.
-            //      timeout
-            //      display results to output window
-
         });
 
     });

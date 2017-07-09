@@ -1,9 +1,10 @@
 # HL7 Tools for Visual Studio Code README
 This is a Visual Studio Code extension for working with HL7 v2.x files. It provides basic syntax highlighting, and the following features:
-* display field description when mouse is hovered over a field
+* display field description when mouse is hovered over a field.
 * highlight user specified fields in the message.
 * mask out identifying fields in the message.
-* display fields from a segment in a list.
+* send the HL7 message to a remote host.
+* display fields from a single segment in a list.
 
 > Note: The extension is automatically activated for files with a .hl7 file extension. If viewing files without a .hl7 file extension you will need to manually specify that the file is a HL7 file. Click on the current language (e.g. 'PlainText') in the right hand side of the status bar, and enter 'hl7' as the language. It is recommended to rename files to use a .hl7 extension for ease of use.  
 
