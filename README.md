@@ -168,6 +168,9 @@ You can submit your issues and feature requests on the GitHub [issues page](http
     `// The default remote host and IP address to send HL7 messages to.`  
     `"hl7tools.DefaultRemoteHost": "127.0.0.1:5000"`  
 
+### 1.4.1
+* Incorrect case in path name caused extension commands to fail under Linux with v1.4.0.
+
 ## Credits
 * The HL7 syntax highlighting was sourced from https://github.com/craighurley/sublime-hl7-syntax
 * The Display Segment Fields function was based on a function from https://github.com/pagebrooks/vscode-hl7 

@@ -46,5 +46,8 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 ## 1.3.7 2017-07-03
 * The background colour for highlighted fields can now be defined via a user preference (hl7tools.highlightBackgroundColor).  e.g: "hl7tools.highlightBackgroundColor": "rgba(0,255,0,0.3)" 
 ## 1.4.0 2017-07-08
+## 1.4.1 2017-07-10
+* Incorrect case in path name caused extension commands to fail under Linux with v1.4.0.
+
 * Added 'Send Message' command to send the current HL7 message to a remote host.
 * The background colour for highlighted fields can now be defined via a user preference (hl7tools.highlightBackgroundColor).  e.g: "hl7tools.highlightBackgroundColor": "rgba(0,255,0,0.3)" 
