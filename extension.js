@@ -12,7 +12,7 @@ const path = require("path");
 const HighlightFields = require('./lib/HighlightField');
 const MaskIdentifiers = require('./lib/MaskIdentifiers');
 const FieldTreeView = require('./lib/FieldTreeView');
-const TcpMllpClient = require('./lib/SendHL7Message.js');
+const TcpMllpClient = require('./lib/SendHl7Message.js');
 
 // Store the HL7 schema and associated field descriptions
 var hl7Schema;
