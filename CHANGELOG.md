@@ -1,12 +1,9 @@
 # Change Log
 All notable changes to the "hl7tools" extension will be documented in this file.
 
-## Known Issues
-* displaying segment fields for custom 'Z' segments fail
 
 ## 1.0.0 - 2017-03-19
 * Initial release.
-
 ## 1.1.0 - 2017-03-22
 * Added function 'HL7 Tools: Highlight Field'. This prompts the user to enter a HL7 field location (e.g. PID-3), the corresponding field is then highlighted in the editor.
 * Bugfix: Mask identifiers was failing on PID and NK1 segments if not all fields were present in the message.
@@ -46,8 +43,12 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 ## 1.3.7 2017-07-03
 * The background colour for highlighted fields can now be defined via a user preference (hl7tools.highlightBackgroundColor).  e.g: "hl7tools.highlightBackgroundColor": "rgba(0,255,0,0.3)" 
 ## 1.4.0 2017-07-08
+* Added 'Send Message' command to send the current HL7 message to a remote host.
+* Added user preferences for 'Send Message' function  
+    `// The TCP connection timeout (in seconds) when sending a HL7 message.`  
+    `"hl7tools.ConnectionTimeout": 10`  
+      
+    `// The default remote host and IP address to send HL7 messages to.`  
+    `"hl7tools.DefaultRemoteHost": "127.0.0.1:5000"`  
 ## 1.4.1 2017-07-10
 * Incorrect case in path name caused extension commands to fail under Linux with v1.4.0.
-
-* Added 'Send Message' command to send the current HL7 message to a remote host.
-* The background colour for highlighted fields can now be defined via a user preference (hl7tools.highlightBackgroundColor).  e.g: "hl7tools.highlightBackgroundColor": "rgba(0,255,0,0.3)" 
