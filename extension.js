@@ -13,6 +13,7 @@ const HighlightFields = require('./lib/HighlightField');
 const MaskIdentifiers = require('./lib/MaskIdentifiers');
 const FieldTreeView = require('./lib/FieldTreeView');
 const TcpMllpClient = require('./lib/SendHl7Message.js');
+const TcpMllpListener = require('./lib/TCPListener.js');
 
 // Store the HL7 schema and associated field descriptions
 var hl7Schema;
@@ -326,6 +327,36 @@ function activate(context) {
     });
 
     context.subscriptions.push(SendMessageCommand);
+
+    //-------------------------------------------------------------------------------------------
+    // This function receives messages from a remote host via TCP. Messages displayed in the editor as new documents.
+    var StartListenerCommand = vscode.commands.registerCommand('hl7tools.StartListener', function () {
+
+        var activeEditor = vscode.window.activeTextEditor;
+        if (!activeEditor) {
+            return;
+        }
+        
+        // get the user defaults for port to listen on
+        var hl7toolsConfig = vscode.workspace.getConfiguration('hl7tools');
+        const defaultPort = hl7toolsConfig['DefaultListenerPort'];
+       
+        var listenerPromise = vscode.window.showInputBox({ prompt: "Enter the TCP port to listen on for messages",value: defaultPort});
+        listenerPromise.then(function (listenerPort) {
+        TcpMllpListener.StartListener(listenerPort);
+        });
+    });
+
+    context.subscriptions.push(StartListenerCommand);
+
+    //-------------------------------------------------------------------------------------------
+    // This function stop listening for messages
+    var StopListenerCommand = vscode.commands.registerCommand('hl7tools.StopListener', function () {
+  
+        TcpMllpListener.StopListener();
+    });
+
+    context.subscriptions.push(StopListenerCommand);
 
 
     //-------------------------------------------------------------------------------------------

@@ -4,6 +4,7 @@ This is a Visual Studio Code extension for working with HL7 v2.x files. It provi
 * highlight user specified fields in the message.
 * mask out identifying fields in the message.
 * send the HL7 message to a remote host.
+* listen for HL7 messages on a TCP port.
 * display fields from a single segment in a list.
 
 > Note: The extension is automatically activated for files with a .hl7 file extension. If viewing files without a .hl7 file extension you will need to manually specify that the file is a HL7 file. Click on the current language (e.g. 'PlainText') in the right hand side of the status bar, and enter 'hl7' as the language. It is recommended to rename files to use a .hl7 extension for ease of use.  
@@ -85,6 +86,11 @@ User preferences applicable to the function include:
   
 `// The default remote host and IP address to send HL7 messages to.`  
 `"hl7tools.DefaultRemoteHost": "127.0.0.1:5000"`  
+
+### Receive HL7 Messages from Remote Host
+This command listens for HL7 messages sent from a remote host (via TCP using MLLP framing). All messages received are displayed in the editor as new documents. 
+* Press F1 --> HL7 Tools: Start Message Listener
+* To stop receiving messages, Press F1 --> HL7 Tools: Stop Message Listener
 
 ## Installation
 ### Visual Studio Code 

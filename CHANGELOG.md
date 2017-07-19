@@ -52,3 +52,5 @@ All notable changes to the "hl7tools" extension will be documented in this file.
     `"hl7tools.DefaultRemoteHost": "127.0.0.1:5000"`  
 ## 1.4.1 2017-07-10
 * Incorrect case in path name caused extension commands to fail under Linux with v1.4.0.
+## 1.4.2 2017-07-19
+* Added function to listen on a TCP port for HL7 messages send from remote hosts. Messages received are displayed in the editor as new documents.

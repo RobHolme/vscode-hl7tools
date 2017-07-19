@@ -1,152 +1,184 @@
 {
-	"name": "hl7tools",
-	"displayName": "HL7Tools",
-	"description": "HL7 tools for Visual Studio Code",
-	"version": "1.4.1",
-	"icon": "images/hl7tools-icon.png",
-	"publisher": "RobHolme",
-	"bugs": {
-		"url": "https://github.com/RobHolme/vscode-hl7tools/issues"
-	},
-	"homepage": "https://github.com/RobHolme/vscode-hl7tools/blob/master/README.md",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/RobHolme/vscode-hl7tools.git"
-	},
-	"engines": {
-		"vscode": "^1.9.0"
-	},
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
-		"onLanguage:hl7",
-		"onCommand:hl7tools.DisplaySegmentFields",
-		"onCommand:hl7tools.MaskIdentifiers",
-		"onCommand:hl7tools.HighlightHL7Item",
-		"onCommand:hl7tools.ClearHighlightedFields",
-		"onCommand:hl7tools.IdentifyFields",
-		"onCommand:hl7tools.SplitBatchFile",
-		"onCommand:hl7tools.SendMessage"
-	],
-	"main": "./extension",
-	"contributes": {
-		"keybindings": [
-			{
-				"command": "hl7tools.HighlightHL7Item",
-				"key": "ctrl+alt+h",
-				"when": "editorLangId == hl7"
-			},
-			{
-				"command": "hl7tools.ClearHighlightedFields",
-				"key": "ctrl+alt+c",
-				"when": "editorLangId == hl7"
-			},
-			{
-				"command": "hl7tools.IdentifyFields",
-				"key": "ctrl+alt+i",
-				"when": "editorLangId == hl7"
-			},
-			{
-				"command": "hl7tools.MaskIdentifiers",
-				"key": "ctrl+alt+m",
-				"when": "editorLangId == hl7"
-			},
-			{
-				"command": "hl7tools.DisplaySegmentFields",
-				"key": "ctrl+alt+d",
-				"when": "editorLangId == hl7"
-			},
-			{
-				"command": "hl7tools.SendMessage",
-				"key": "ctrl+alt+s",
-				"when": "editorLangId == hl7"
-			}
-		],
-		"commands": [
-			{
-				"command": "hl7tools.DisplaySegmentFields",
-				"title": "HL7 Tools: Display Segment Fields"
-			},
-			{
-				"command": "hl7tools.MaskIdentifiers",
-				"title": "HL7 Tools: Mask Identifiers"
-			},
-			{
-				"command": "hl7tools.HighlightHL7Item",
-				"title": "HL7 Tools: Highlight Field"
-			},
-			{
-				"command": "hl7tools.ClearHighlightedFields",
-				"title": "HL7 Tools: Clear Highlighted Fields"
-			},
-			{
-				"command": "hl7tools.IdentifyFields",
-				"title": "HL7 Tools: Identify Fields"
-			},
-			{
-				"command": "hl7tools.SplitBatchFile",
-				"title": "HL7 Tools: Split HL7 Batch Files"
-			},
-			{
-				"command": "hl7tools.SendMessage",
-				"title": "HL7 Tools: Send Message"
-			}
-		],
-		"languages": [
-			{
-				"id": "hl7",
-				"aliases": [
-					"HL7",
-					"hl7"
-				],
-				"extensions": [
-					".hl7",
-					".HL7"
-				]
-			}
-		],
-		"grammars": [
-			{
-				"language": "hl7",
-				"scopeName": "text.hl7",
-				"path": "./syntax/hl7.tmLanguage"
-			}
-		],
-		"configuration": 
-		{
-			"type": "object",
-			"title": "HL7 Tools configuration",
-			"properties": {
-				"hl7tools.highlightBackgroundColor": {
-					"type": "string",
-					"default": "rgba(0,255,0,0.3)",
-					"description": "The background colour applied to highlighted HL7 fields. Requires a RGBA value."
-				},
-				"hl7tools.DefaultRemoteHost": {
-					"type": "string",
-					"default": "127.0.0.1:5000",
-					"description": "The default remote host and IP address to send HL7 messages to."
-				},
-				"hl7tools.ConnectionTimeout": {
-					"type": "number",
-					"default": 5,
-					"description": "The TCP connection timeout (in seconds) when sending a HL7 message."
-				}
-			}
-		},
-		"devDependencies": {
-			"typescript": "^2.0.3",
-			"vscode": "^1.0.0",
-			"mocha": "^2.3.3",
-			"eslint": "^3.6.0",
-			"@types/node": "^6.0.40",
-			"@types/mocha": "^2.2.32"
-		},
-		"__metadata": {
-			"id": "b919e7cc-6fa1-454b-ab7f-216ed8d48f19",
-			"publisherId": "be56bacd-8aad-4010-8775-e3f3abf3f41d",
-			"publisherDisplayName": "Rob Holme"
-		}
-	}
+  "name": "hl7tools",
+  "displayName": "HL7Tools",
+  "description": "HL7 tools for Visual Studio Code",
+  "version": "1.4.1",
+  "icon": "images/hl7tools-icon.png",
+  "publisher": "RobHolme",
+  "bugs": {
+    "url": "https://github.com/RobHolme/vscode-hl7tools/issues"
+  },
+  "homepage": "https://github.com/RobHolme/vscode-hl7tools/blob/master/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RobHolme/vscode-hl7tools.git"
+  },
+  "engines": {
+    "vscode": "^1.9.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:hl7",
+    "onCommand:hl7tools.DisplaySegmentFields",
+    "onCommand:hl7tools.MaskIdentifiers",
+    "onCommand:hl7tools.HighlightHL7Item",
+    "onCommand:hl7tools.ClearHighlightedFields",
+    "onCommand:hl7tools.IdentifyFields",
+    "onCommand:hl7tools.SplitBatchFile",
+    "onCommand:hl7tools.SendMessage",
+    "onCommand:hl7tools.StartListener",
+    "onCommand:hl7tools.StopListener"
+  ],
+  "main": "./extension",
+  "contributes": {
+    "keybindings": [
+      {
+        "command": "hl7tools.HighlightHL7Item",
+        "key": "ctrl+alt+h",
+        "when": "editorLangId == hl7"
+      },
+      {
+        "command": "hl7tools.ClearHighlightedFields",
+        "key": "ctrl+alt+c",
+        "when": "editorLangId == hl7"
+      },
+      {
+        "command": "hl7tools.IdentifyFields",
+        "key": "ctrl+alt+i",
+        "when": "editorLangId == hl7"
+      },
+      {
+        "command": "hl7tools.MaskIdentifiers",
+        "key": "ctrl+alt+m",
+        "when": "editorLangId == hl7"
+      },
+      {
+        "command": "hl7tools.DisplaySegmentFields",
+        "key": "ctrl+alt+d",
+        "when": "editorLangId == hl7"
+      },
+      {
+        "command": "hl7tools.SendMessage",
+        "key": "ctrl+alt+s",
+        "when": "editorLangId == hl7"
+      },
+      {
+        "command": "hl7tools.StartListener",
+        "key": "ctrl+alt+l",
+        "when": "editorLangId == hl7"
+      },
+      {
+        "command": "hl7tools.StopListener",
+        "key": "ctrl+alt+p",
+        "when": "editorLangId == hl7"
+      }
+    ],
+    "commands": [
+      {
+        "command": "hl7tools.DisplaySegmentFields",
+        "title": "HL7 Tools: Display Segment Fields"
+      },
+      {
+        "command": "hl7tools.MaskIdentifiers",
+        "title": "HL7 Tools: Mask Identifiers"
+      },
+      {
+        "command": "hl7tools.HighlightHL7Item",
+        "title": "HL7 Tools: Highlight Field"
+      },
+      {
+        "command": "hl7tools.ClearHighlightedFields",
+        "title": "HL7 Tools: Clear Highlighted Fields"
+      },
+      {
+        "command": "hl7tools.IdentifyFields",
+        "title": "HL7 Tools: Identify Fields"
+      },
+      {
+        "command": "hl7tools.SplitBatchFile",
+        "title": "HL7 Tools: Split HL7 Batch Files"
+      },
+      {
+        "command": "hl7tools.SendMessage",
+        "title": "HL7 Tools: Send Message"
+      },
+      {
+        "command": "hl7tools.StartListener",
+        "title": "HL7 Tools: Start Message Listener"
+      },
+      {
+        "command": "hl7tools.StopListener",
+        "title": "HL7 Tools: Stop Message Listener"
+      }
+    ],
+    "languages": [
+      {
+        "id": "hl7",
+        "aliases": [
+          "HL7",
+          "hl7"
+        ],
+        "extensions": [
+          ".hl7",
+          ".HL7"
+        ]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "hl7",
+        "scopeName": "text.hl7",
+        "path": "./syntax/hl7.tmLanguage"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "HL7 Tools configuration",
+      "properties": {
+        "hl7tools.highlightBackgroundColor": {
+          "type": "string",
+          "default": "rgba(0,255,0,0.3)",
+          "description": "The background colour applied to highlighted HL7 fields. Requires a RGBA value."
+        },
+        "hl7tools.DefaultRemoteHost": {
+          "type": "string",
+          "default": "127.0.0.1:5000",
+          "description": "The default remote host and IP address to send HL7 messages to."
+        },
+        "hl7tools.ConnectionTimeout": {
+          "type": "number",
+          "default": 5,
+          "description": "The TCP connection timeout (in seconds) when sending a HL7 message."
+        },
+        "hl7tools.DefaultListenerPort": {
+          "type": "number",
+          "default": 5000,
+          "description": "The default TCP port to listen on for messages (HL7 Tools: Start Message Listener)."
+        }
+      }
+    },
+    "devDependencies": {
+      "typescript": "^2.0.3",
+      "vscode": "^1.0.0",
+      "mocha": "^2.3.3",
+      "eslint": "^3.6.0",
+      "@types/node": "^6.0.40",
+      "@types/mocha": "^2.2.32"
+    },
+    "__metadata": {
+      "id": "b919e7cc-6fa1-454b-ab7f-216ed8d48f19",
+      "publisherId": "be56bacd-8aad-4010-8775-e3f3abf3f41d",
+      "publisherDisplayName": "Rob Holme"
+    }
+  },
+  "devDependencies": {
+    "eslint": "^4.2.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1"
+  }
 }
