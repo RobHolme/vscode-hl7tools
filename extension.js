@@ -49,7 +49,7 @@ function IsHL7File(editor) {
             return true;
         }
         firstLine = editor.document.lineAt(0).text;
-        var hl7HeaderRegex = /(^MSH\|)|(^FHS\|)|(^BHS\|)/i // new RegExp("(^MSH\|)|(^FHS\|)|(^BHS\|)", 'i');
+        var hl7HeaderRegex = /(^MSH\|)|(^FHS\|)|(^BHS\|)/i 
         if (hl7HeaderRegex.test(firstLine)) {
             console.log("HL7 header line detected");
             return true;
@@ -239,7 +239,7 @@ function activate(context) {
 
     });
     context.subscriptions.push(displaySegmentCommand);
-
+    
 
     //-------------------------------------------------------------------------------------------
     // this function splits HL7 batch files into a separate file per message

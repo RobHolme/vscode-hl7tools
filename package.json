@@ -2,7 +2,7 @@
   "name": "hl7tools",
   "displayName": "HL7Tools",
   "description": "HL7 tools for Visual Studio Code",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "icon": "images/hl7tools-icon.png",
   "publisher": "RobHolme",
   "bugs": {
@@ -156,6 +156,11 @@
           "type": "number",
           "default": 5000,
           "description": "The default TCP port to listen on for messages (HL7 Tools: Start Message Listener)."
+        },
+        "hl7tools.SendACK": {
+          "type": "boolean",
+          "default": true,
+          "description": "Send a ACK in response to messages received (HL7 Tools: Start Message Listener)."
         }
       }
     },
