@@ -54,3 +54,10 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 * Incorrect case in path name caused extension commands to fail under Linux with v1.4.0.
 ## 1.5.0 2017-07-19
 * Added function to listen on a TCP port for HL7 messages send from remote hosts. Messages received are displayed in the editor as new documents. The listener expects MLLP framing for the messages.
+## 1.5.1 2017-07-31
+* If splitting a large HL7 batch file, the user is given the opportunity to cancel the operation. Opening a large number of files could have a negative impact on performance. Dealing with a large number of files is better left for a solution that does not require then to be opened in the editor.
+* A setting has been added to suppress the generation of the hover field descriptions for large hl7 files. By default only the first 200 segments of each message will include field descriptions when fields are hovered over with the mouse. The default value is user configurable via the following setting.
+
+    `// Stop applying hover fields descriptions after this number of lines in a file (poor performance on large files)`
+    `"hl7tools.MaxLinesForFieldDescriptions"`
+      
