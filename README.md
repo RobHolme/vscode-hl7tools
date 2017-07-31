@@ -24,6 +24,10 @@ When the mouse is hovered over a field, the field name and location is displayed
 
 ![Field descriptions](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/FieldDescription.jpg)
 
+By default only the first 200 segments of each message will include hover over field descriptions (performance can be impacted with large files). This limit is configurable via the following user preference.
+
+`"hl7tools.MaxLinesForFieldDescriptions"`
+
 ### Field highlighting
 This prompts the user to enter a HL7 field location (e.g. PID-3), or partial field description (e.g. name), the corresponding field(s) is then highlighted in the editor. The field highlighting will be applied to other HL7 messages if you have multiple messages open. The background colour applied to highlighted fields can be changed via the user preference "hl7tools.highlightBackgroundColor". The preference requires a RGBA colour value, specified with: rgba(red, green, blue, alpha). The alpha parameter is a number between 0.0 (fully transparent) and 1.0 (fully opaque).
 
