@@ -49,7 +49,7 @@ function IsHL7File(editor) {
             return true;
         }
         firstLine = editor.document.lineAt(0).text;
-        var hl7HeaderRegex = /(^MSH\|)|(^FHS\|)|(^BHS\|)/i 
+        var hl7HeaderRegex = /(^MSH\|)|(^FHS\|)|(^BHS\|)/i
         if (hl7HeaderRegex.test(firstLine)) {
             console.log("HL7 header line detected");
             return true;
@@ -239,7 +239,7 @@ function activate(context) {
 
     });
     context.subscriptions.push(displaySegmentCommand);
-    
+
 
     //-------------------------------------------------------------------------------------------
     // this function splits HL7 batch files into a separate file per message
@@ -256,195 +256,198 @@ function activate(context) {
         var batchHeaderRegEx = /(^FHS\|)|(^BHS\|)|(^BTS\|)|(^FTS\|)/i;
         var mshRegEx = /^MSH\|/i;
         var currentDoc = activeEditor.document;
-        for (lineIndex = 0; lineIndex < currentDoc.lineCount; lineIndex++) {
-            var currentLine = currentDoc.lineAt(lineIndex).text;
-            // ignore batch header segments (FHS, BHS, BTS, FTS)
-            if (batchHeaderRegEx.test(currentLine)) {
-                continue;
-            }
-            // split the message on MSH segments
-            if (mshRegEx.test(currentLine)) {
-                if (newMessage.length > 0) {
-                    // open the message in a new document, user will be prompted to save on exit
-                    vscode.workspace.openTextDocument({ content: newMessage, language: "hl7" }).then((newDocument) => {
-                        vscode.window.showTextDocument(newDocument, 1, false).then(e => {
+        var messageCount = 0;
+
+        var allMessages = currentDoc.getText();
+
+        var re = /^MSH\|/gim;
+        var split = allMessages.split(re);
+        
+        // If the user is splitting the file into more than 100 new files, warn and provide the opportunity to cancel.
+        // Opening a large number of files could be a drain on system resources. 
+        if (split.length > 100) {
+            var largeFileWarningPromise = vscode.window.showWarningMessage("This will open " + split.length + " new files. This could impact performance. Select 'Close' to cancel, or 'Continue' to proceed.", "Continue");
+            largeFileWarningPromise.then(function (response) {
+                if (response == "Continue") {
+                    // loop through all matches, discarding anything before the first match (i.e batch header segments, or empty strings if MSH is the first segment) 
+                    for (var i = 1; i < split.length; i++) {
+// TO DO: remove batch footers            
+                        // open the message in a new document, user will be prompted to save on exit
+                        var newMessage = "MSH|" + split[i];
+                        vscode.workspace.openTextDocument({ content: newMessage, language: "hl7" }).then((newDocument) => {
+                            vscode.window.showTextDocument(newDocument, 1, false).then(e => {
+                            });
+                        }, (error) => {
+                            console.error(error);
                         });
-                    }, (error) => {
-                        console.error(error);
-                    });
+                    }
                 }
-                newMessage = currentLine;
-            }
-            else {
-                newMessage += endOfLineChar + currentLine
-            }
-        }
-        // write the last message to a new document 
-        if (newMessage.length > 0) {
-            vscode.workspace.openTextDocument({ content: newMessage, language: "hl7" }).then((newDocument) => {
-                vscode.window.showTextDocument(newDocument, 1, false).then(e => {
-                });
-            }, (error) => {
-                console.error(error);
             });
-        }
+        }      
     });
+context.subscriptions.push(splitBatchFileCommand);
 
-    context.subscriptions.push(splitBatchFileCommand);
+//-------------------------------------------------------------------------------------------
+// This function sends the message in the active document to a remote host via TCP. The HL7 message is framed using MLLP.
+var SendMessageCommand = vscode.commands.registerCommand('hl7tools.SendMessage', function () {
 
-    //-------------------------------------------------------------------------------------------
-    // This function sends the message in the active document to a remote host via TCP. The HL7 message is framed using MLLP.
-    var SendMessageCommand = vscode.commands.registerCommand('hl7tools.SendMessage', function () {
+    console.log("Sending HL7 message to remote host");
 
-        console.log("Sending HL7 message to remote host");
-
-        var activeEditor = vscode.window.activeTextEditor;
-        if (!activeEditor) {
-            return;
-        }
-
-        // get the HL7 message from the active document. Convert EOL to <CR> only.
-        var currentDoc = activeEditor.document;
-        var hl7Message = currentDoc.getText();
-        var config = vscode.workspace.getConfiguration();
-        const endOfLineChar = config.files.eol;
-        hl7Message.replace(endOfLineChar, String.fromCharCode(0x0d));
-        
-        // get the user defaults for SendMessage
-        var hl7toolsConfig = vscode.workspace.getConfiguration('hl7tools');
-        const defaultEndPoint = hl7toolsConfig['DefaultRemoteHost'];
-        const tcpConnectionTimeout = hl7toolsConfig['ConnectionTimeout'] * 1000;
-
-        var remoteHostPromise = vscode.window.showInputBox({ prompt: "Enter the remote host and port ('RemoteHost:Port')'",value: defaultEndPoint});
-        remoteHostPromise.then(function (remoteEndpoint) {
-            // extract the hostname and port from the end point entered by the user
-            remoteHost = remoteEndpoint.split(":")[0];
-            remotePort = remoteEndpoint.split(":")[1];
-            // send the current message to the remote end point.
-            TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout);
-        });
-
-    });
-
-    context.subscriptions.push(SendMessageCommand);
-
-    //-------------------------------------------------------------------------------------------
-    // This function receives messages from a remote host via TCP. Messages displayed in the editor as new documents.
-    var StartListenerCommand = vscode.commands.registerCommand('hl7tools.StartListener', function () {
-
-        var activeEditor = vscode.window.activeTextEditor;
-        if (!activeEditor) {
-            return;
-        }
-        
-        // get the user defaults for port to listen on
-        var hl7toolsConfig = vscode.workspace.getConfiguration('hl7tools');
-        const defaultPort = hl7toolsConfig['DefaultListenerPort'];
-       
-        var listenerPromise = vscode.window.showInputBox({ prompt: "Enter the TCP port to listen on for messages",value: defaultPort});
-        listenerPromise.then(function (listenerPort) {
-        TcpMllpListener.StartListener(listenerPort);
-        });
-    });
-
-    context.subscriptions.push(StartListenerCommand);
-
-    //-------------------------------------------------------------------------------------------
-    // This function stop listening for messages
-    var StopListenerCommand = vscode.commands.registerCommand('hl7tools.StopListener', function () {
-  
-        TcpMllpListener.StopListener();
-    });
-
-    context.subscriptions.push(StopListenerCommand);
-
-
-    //-------------------------------------------------------------------------------------------
-    // apply descriptions to each field as a hover decoration (tooltip)
-    function UpdateFieldDescriptions() {
-        // exit if the editor is not active
-
-        var activeEditor = vscode.window.activeTextEditor;
-        if (!activeEditor) {
-            return;
-        }
-        console.log("Updating field hover descriptions");
-        var hoverDecorationType = vscode.window.createTextEditorDecorationType({
-        });
-        var regEx = /\|/g;
-        var validSegmentRegEx = /^[a-z][a-z]([a-z]|[0-9])\|/i;
-        var currentDoc = activeEditor.document;
-        var text = currentDoc.getText();
-        // calculate the number of characters at the end of line (<CR>, or <CR><LF>)
-        var config = vscode.workspace.getConfiguration();
-        var endOfLineLength = config.files.eol.length;
-
-        // dispose of any prior decorations
-        if (hoverDecorationList.length > 0) {
-            currentHoverDecoration.dispose();
-            hoverDecorationList = [];
-        }
-        // search each line in the message to locate a matching segment
-        var positionOffset = 0;
-        for (lineIndex = 0; lineIndex < currentDoc.lineCount; lineIndex++) {
-            var startPos = null;
-            var endPos = null;
-            var currentLine = currentDoc.lineAt(lineIndex).text;
-            var fields = currentLine.split('|');
-            var segmentName = fields[0];
-            var segmentDef = hl7Schema[segmentName];
-            var fieldCount = -1;
-            var previousEndPos = null;
-            var fieldDescription = "";
-            // ignore all lines that do not at least contain a segment name and field delimiter. This should be the absolute minimum for a segment
-            if (!validSegmentRegEx.test(currentLine)) {
-                positionOffset += currentLine.length + endOfLineLength;
-                continue;
-            }
-            // the first delimiter is a field for MSH segments
-            if (segmentName.toUpperCase() == "MSH") {
-                fieldCount++;
-            }
-            // get the location of field delimiter characters
-            while (match = regEx.exec(currentLine)) {
-                endPos = activeEditor.document.positionAt(positionOffset + match.index);
-                startPos = previousEndPos;
-                previousEndPos = activeEditor.document.positionAt(positionOffset + match.index + 1);
-                // when the next field is located, apply a hover tag decoration to the previous field
-                if (startPos) {
-                    // try/catch needed for custom 'Z' segments not listed in the HL7 data dictionary.
-                    try {
-                        fieldDescription = segmentDef.fields[fieldCount].desc;
-                    }
-                    catch (err) {
-                        fieldDescription = "";
-                    }
-                    var decoration = { range: new vscode.Range(startPos, endPos), hoverMessage: fieldDescription + " (" + segmentName + "-" + (fieldCount + 1) + ")" };
-                    hoverDecorationList.push(decoration);
-                }
-                fieldCount++;
-            }
-            // add a decoration for the last field in the segment (not bounded by a field delimiter) 
-            startPos = previousEndPos;
-            endPos = activeEditor.document.positionAt(positionOffset + (currentLine.length + 1));
-            try {
-                fieldDescription = segmentDef.fields[fieldCount].desc;
-            }
-            catch (err) {
-                fieldDescription = "";
-            }
-            var decoration = { range: new vscode.Range(startPos, endPos), hoverMessage: fieldDescription + " (" + segmentName + "-" + (fieldCount + 1) + ")" };
-            hoverDecorationList.push(decoration);
-
-            // the field locations are relative to the current line, so calculate the offset of previous lines to identify the location within the file.
-            positionOffset += currentLine.length + endOfLineLength;
-        }
-
-        // apply the hover decoration to the field 
-        activeEditor.setDecorations(hoverDecorationType, hoverDecorationList);
-        currentHoverDecoration = hoverDecorationType;
+    var activeEditor = vscode.window.activeTextEditor;
+    if (!activeEditor) {
+        return;
     }
 
+    // get the HL7 message from the active document. Convert EOL to <CR> only.
+    var currentDoc = activeEditor.document;
+    var hl7Message = currentDoc.getText();
+    var config = vscode.workspace.getConfiguration();
+    const endOfLineChar = config.files.eol;
+    hl7Message.replace(endOfLineChar, String.fromCharCode(0x0d));
+
+    // get the user defaults for SendMessage
+    var hl7toolsConfig = vscode.workspace.getConfiguration('hl7tools');
+    const defaultEndPoint = hl7toolsConfig['DefaultRemoteHost'];
+    const tcpConnectionTimeout = hl7toolsConfig['ConnectionTimeout'] * 1000;
+
+    var remoteHostPromise = vscode.window.showInputBox({ prompt: "Enter the remote host and port ('RemoteHost:Port')'", value: defaultEndPoint });
+    remoteHostPromise.then(function (remoteEndpoint) {
+        // extract the hostname and port from the end point entered by the user
+        remoteHost = remoteEndpoint.split(":")[0];
+        remotePort = remoteEndpoint.split(":")[1];
+        // send the current message to the remote end point.
+        TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout);
+    });
+
+});
+
+context.subscriptions.push(SendMessageCommand);
+
+//-------------------------------------------------------------------------------------------
+// This function receives messages from a remote host via TCP. Messages displayed in the editor as new documents.
+var StartListenerCommand = vscode.commands.registerCommand('hl7tools.StartListener', function () {
+
+    var activeEditor = vscode.window.activeTextEditor;
+    if (!activeEditor) {
+        return;
+    }
+
+    // get the user defaults for port to listen on
+    var hl7toolsConfig = vscode.workspace.getConfiguration('hl7tools');
+    const defaultPort = hl7toolsConfig['DefaultListenerPort'];
+
+    var listenerPromise = vscode.window.showInputBox({ prompt: "Enter the TCP port to listen on for messages", value: defaultPort });
+    listenerPromise.then(function (listenerPort) {
+        TcpMllpListener.StartListener(listenerPort);
+    });
+});
+
+context.subscriptions.push(StartListenerCommand);
+
+//-------------------------------------------------------------------------------------------
+// This function stop listening for messages
+var StopListenerCommand = vscode.commands.registerCommand('hl7tools.StopListener', function () {
+
+    TcpMllpListener.StopListener();
+});
+
+context.subscriptions.push(StopListenerCommand);
+
+
+//-------------------------------------------------------------------------------------------
+// apply descriptions to each field as a hover decoration (tooltip)
+function UpdateFieldDescriptions() {
+    console.log("Updating field hover descriptions");
+
+    // exit if the editor is not active
+    var activeEditor = vscode.window.activeTextEditor;
+    if (!activeEditor) {
+        return;
+    }
+
+    // don't apply descriptions if file is too large (i.e. large hl7 batch files). 
+    // Performance can be impacted on low specced systems 
+    var currentDoc = activeEditor.document;
+    var hl7toolsConfig = vscode.workspace.getConfiguration('hl7tools');
+    const maxLinesPreference = hl7toolsConfig['MaxLinesForFieldDescriptions'];
+    var maxLines = Math.min(currentDoc.lineCount, maxLinesPreference)
+
+    var regEx = /\|/g;
+    var validSegmentRegEx = /^[a-z][a-z]([a-z]|[0-9])\|/i;
+    var text = currentDoc.getText();
+    // calculate the number of characters at the end of line (<CR>, or <CR><LF>)
+    var config = vscode.workspace.getConfiguration();
+    var endOfLineLength = config.files.eol.length;
+
+    var hoverDecorationType = vscode.window.createTextEditorDecorationType({
+    });
+
+    // dispose of any prior decorations
+    if (hoverDecorationList.length > 0) {
+        currentHoverDecoration.dispose();
+        hoverDecorationList = [];
+    }
+    // Search each line in the message to locate a matching segment.
+    // For large documents end after a defined maximum number of lines (set via user preference) 
+    var positionOffset = 0;
+    for (lineIndex = 0; lineIndex < maxLines; lineIndex++) {
+        var startPos = null;
+        var endPos = null;
+        var currentLine = currentDoc.lineAt(lineIndex).text;
+        var fields = currentLine.split('|');
+        var segmentName = fields[0];
+        var segmentDef = hl7Schema[segmentName];
+        var fieldCount = -1;
+        var previousEndPos = null;
+        var fieldDescription = "";
+        // ignore all lines that do not at least contain a segment name and field delimiter. This should be the absolute minimum for a segment
+        if (!validSegmentRegEx.test(currentLine)) {
+            positionOffset += currentLine.length + endOfLineLength;
+            continue;
+        }
+        // the first delimiter is a field for MSH segments
+        if (segmentName.toUpperCase() == "MSH") {
+            fieldCount++;
+        }
+        // get the location of field delimiter characters
+        while (match = regEx.exec(currentLine)) {
+            endPos = activeEditor.document.positionAt(positionOffset + match.index);
+            startPos = previousEndPos;
+            previousEndPos = activeEditor.document.positionAt(positionOffset + match.index + 1);
+            // when the next field is located, apply a hover tag decoration to the previous field
+            if (startPos) {
+                // try/catch needed for custom 'Z' segments not listed in the HL7 data dictionary.
+                try {
+                    fieldDescription = segmentDef.fields[fieldCount].desc;
+                }
+                catch (err) {
+                    fieldDescription = "";
+                }
+                var decoration = { range: new vscode.Range(startPos, endPos), hoverMessage: fieldDescription + " (" + segmentName + "-" + (fieldCount + 1) + ")" };
+                hoverDecorationList.push(decoration);
+            }
+            fieldCount++;
+        }
+        // add a decoration for the last field in the segment (not bounded by a field delimiter) 
+        startPos = previousEndPos;
+        endPos = activeEditor.document.positionAt(positionOffset + (currentLine.length + 1));
+        try {
+            fieldDescription = segmentDef.fields[fieldCount].desc;
+        }
+        catch (err) {
+            fieldDescription = "";
+        }
+        var decoration = { range: new vscode.Range(startPos, endPos), hoverMessage: fieldDescription + " (" + segmentName + "-" + (fieldCount + 1) + ")" };
+        hoverDecorationList.push(decoration);
+
+        // the field locations are relative to the current line, so calculate the offset of previous lines to identify the location within the file.
+        positionOffset += currentLine.length + endOfLineLength;
+    }
+
+    // apply the hover decoration to the field 
+    activeEditor.setDecorations(hoverDecorationType, hoverDecorationList);
+    currentHoverDecoration = hoverDecorationType;
+}
 }
 exports.activate = activate;
 
@@ -454,4 +457,3 @@ function deactivate() {
     console.log("deactivating HL7Tools extension");
     exports.deactivate = deactivate;
 }
-
