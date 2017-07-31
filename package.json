@@ -2,7 +2,7 @@
   "name": "hl7tools",
   "displayName": "HL7Tools",
   "description": "HL7 tools for Visual Studio Code",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "icon": "images/hl7tools-icon.png",
   "publisher": "RobHolme",
   "bugs": {
@@ -166,6 +166,11 @@
           "type": "boolean",
           "default": true,
           "description": "Send a ACK in response to messages received (HL7 Tools: Start Message Listener)."
+        },
+        "hl7tools.MaxLinesForFieldDescriptions": {
+          "type": "number",
+          "default": 200,
+          "description": "Stop applying hover fields descriptions after this number of lines in a file (poor performance on large files)"
         }
       }
     },
