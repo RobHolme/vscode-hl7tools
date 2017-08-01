@@ -60,4 +60,5 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 
     `// Stop applying hover fields descriptions after this number of lines in a file (poor performance on large files)`
     `"hl7tools.MaxLinesForFieldDescriptions"`
-      
+## 1.5.2 2017-08-01
+Bugfix: HL7 batch files with less than 100 messages were ignored, this is now fixed.      
