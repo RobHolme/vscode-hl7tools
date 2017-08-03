@@ -7,6 +7,7 @@ This is a Visual Studio Code extension for working with HL7 v2.x files. It provi
 * receive HL7 messages sent from a remote host.
 * display fields from a single segment in a list.
 * split a HL7 batch file into a seperate file per message.
+* extract all similar from the file to a new document
 
 > Note: The extension is automatically activated for files with a .hl7 file extension. If viewing files without a .hl7 file extension you will need to manually specify that the file is a HL7 file. Click on the current language (e.g. 'PlainText') in the right hand side of the status bar, and enter 'hl7' as the language. It is recommended to rename files to use a .hl7 extension for ease of use.  
 
@@ -100,6 +101,11 @@ This command listens for HL7 messages sent from a remote host (via TCP using MLL
 User preferences applicable to this function include:  
 `// Send a ACK in response to messages received (HL7 Tools: Start Message Listener).`  
 `"hl7tools.SendACK": true`  
+
+### Extract Similar Segments
+This command will open a copy of all segments the same as the one currently selected in the message. e.g. if the cursor is in the MSH segment, all MSH segments in the current file will be copied to a new window. Suited more for files containing multiple HL7 messages.
+* move the cursor to the segment type you want to extract
+* Press F1 --> HL7 Tools: Extract Matching Segments
 
 ## Installation
 ### Visual Studio Code 
