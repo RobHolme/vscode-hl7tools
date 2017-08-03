@@ -361,7 +361,7 @@ function activate(context) {
     context.subscriptions.push(StartListenerCommand);
 
     //-------------------------------------------------------------------------------------------
-    // This function stop listening for messages
+    // This functions stop listening for messages
     var StopListenerCommand = vscode.commands.registerCommand('hl7tools.StopListener', function () {
 
         TcpMllpListener.StopListener();
@@ -369,6 +369,47 @@ function activate(context) {
 
     context.subscriptions.push(StopListenerCommand);
 
+
+    //-------------------------------------------------------------------------------------------
+    // Extract matching segments from the message into a new document
+    var ExtractSegments = vscode.commands.registerCommand('hl7tools.ExtractSegments', function () {
+
+        // exit if the editor is not active
+        var editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            return;
+        }
+
+        // get the EOL character(s)
+        var config = vscode.workspace.getConfiguration();
+        var endOfLine = config.files.eol;
+
+        var extractedSegments = "";
+        var currentDoc = editor.document;
+        var selection = editor.selection;
+        var currentLineNum = selection.start.line;
+        const fileName = path.basename(currentDoc.uri.fsPath);
+        var currentSegment = currentDoc.lineAt(currentLineNum).text
+        var segmentArray = currentSegment.split('|');
+        var segmentName = segmentArray[0].substring(0,3);
+        var segmentRegEx = new RegExp("^" + segmentName + "\\|", "i");
+        for (var i = 0; i < currentDoc.lineCount; i++) {
+            var currentLine = currentDoc.lineAt(i).text;
+            if (segmentRegEx.test(currentLine) == true) {
+                extractedSegments += currentLine + endOfLine;
+            }
+        }
+
+        vscode.workspace.openTextDocument({ content: extractedSegments, language: "hl7" }).then((newDocument) => {
+            vscode.window.showTextDocument(newDocument, 1, false).then(e => {
+            });
+        }, (error) => {
+            console.error(error);
+        });
+
+    });
+
+    context.subscriptions.push(ExtractSegments);
 
     //-------------------------------------------------------------------------------------------
     // apply descriptions to each field as a hover decoration (tooltip)
