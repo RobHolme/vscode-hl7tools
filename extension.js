@@ -8,12 +8,15 @@ var workspace = vscode.workspace;
 
 const path = require("path");
 
-// HL7Tools modules
+// load local modules
+const common = require('./lib/common.js');
 const HighlightFields = require('./lib/HighlightField');
 const MaskIdentifiers = require('./lib/MaskIdentifiers');
 const FieldTreeView = require('./lib/FieldTreeView');
 const TcpMllpClient = require('./lib/SendHl7Message.js');
 const TcpMllpListener = require('./lib/TCPListener.js');
+
+var delimiters;
 
 // Store the HL7 schema and associated field descriptions
 var hl7Schema;
@@ -50,7 +53,7 @@ function IsHL7File(editor) {
             return true;
         }
         firstLine = editor.document.lineAt(0).text;
-        var hl7HeaderRegex = /(^MSH\|)|(^FHS\|)|(^BHS\|)/i
+        var hl7HeaderRegex = new RegExp("(^MSH\\" + delimiters.FIELD + ")|(^FHS\\" + delimiters.FIELD + ")|(^BHS\\" + delimiters.FIELD + ")", "i");  
         if (hl7HeaderRegex.test(firstLine)) {
             console.log("HL7 header line detected");
             return true;
@@ -63,6 +66,9 @@ function IsHL7File(editor) {
         return false;
     }
 }
+
+
+
 
 //----------------------------------------------------
 // load the appropriate hl7 schema based on the HL7 version (as defined in MSH-12) 
@@ -77,8 +83,8 @@ function LoadHL7Schema() {
     }
     else {
         msh = activeEditor.document.lineAt(0).text;
-        if (msh.split('|')[0].toUpperCase() == "MSH") {
-            var hl7Version = msh.split('|')[11];
+        if (msh.split(delimiters.FIELD)[0].toUpperCase() == "MSH") {
+            var hl7Version = msh.split(delimiters.FIELD)[11];
             console.log("HL7 version detected as " + hl7Version);
             if (supportedSchemas.includes(hl7Version)) {
                 // Load the segment descriptions from the HL7-Dictionary module
@@ -129,6 +135,8 @@ function activate(context) {
         return;
     }
     else {
+        // update the HL7 delimiter characters from the current file
+        delimiters = common.ParseDelimiters();
         // load the HL7 schema based on the version reported by the MSH segment
         LoadHL7Schema();
         // apply the hover descriptions for each field
@@ -138,6 +146,9 @@ function activate(context) {
     // the active document has changed. 
     window.onDidChangeActiveTextEditor(function (editor) {
         if (editor) {
+            // update the HL7 deliemter characters from the current file
+            delimiters = common.ParseDelimiters();
+            
             // only activate the field descriptions if it is identified as a HL7 file  
             if (IsHL7File(editor)) {
                 // the new document may be a different version of HL7, so load the appropriate version of schema
@@ -228,7 +239,7 @@ function activate(context) {
         var currentLineNum = selection.start.line;
         const fileName = path.basename(currentDoc.uri.fsPath);
         var currentSegment = currentDoc.lineAt(currentLineNum).text
-        var segmentArray = currentSegment.split('|');
+        var segmentArray = currentSegment.split(delimiters.FIELD);
         var segmentName = segmentArray[0];
         var output = FieldTreeView.DisplaySegmentAsTree(currentSegment, hl7Schema, hl7Fields);
 
@@ -254,14 +265,17 @@ function activate(context) {
         var endOfLineChar = config.files.eol;
 
         var newMessage = "";
-        var batchHeaderRegEx = /(^FHS\|)|(^BHS\|)|(^BTS\|)|(^FTS\|)/i;
-        var mshRegEx = /^MSH\|/i;
+       // var batchHeaderRegEx = /(^FHS\|)|(^BHS\|)|(^BTS\|)|(^FTS\|)/i;
+        var batchHeaderRegEx = new RegExp("(^FHS\\" + delimiters.FIELD + ")|(^BHS\\" + delimiters.FIELD + ")|(^BTS\\" + delimiters.FIELD + ")(^FTS\\" + delimiters.FIELD + ")", "i");  
+      //  var mshRegEx = /^MSH\|/i;
+        var mshRegEx = new RegExp("^MSH\\" + delimiters.FIELD, "i");
         var currentDoc = activeEditor.document;
         var messageCount = 0;
 
         var allMessages = currentDoc.getText();
 
-        var re = /^MSH\|/gim;
+       // var re = /^MSH\|/gim;
+        var re = new RegExp("^MSH\\" + delimiters.FIELD, "gim");
         var split = allMessages.split(re);
 
         // If the user is splitting the file into more than 100 new files, warn and provide the opportunity to cancel.
@@ -274,7 +288,7 @@ function activate(context) {
                     for (var i = 1; i < split.length; i++) {
                         // TO DO: remove batch footers            
                         // open the message in a new document, user will be prompted to save on exit
-                        var newMessage = "MSH|" + split[i];
+                        var newMessage = "MSH" + delimiters.FIELD + split[i];
                         vscode.workspace.openTextDocument({ content: newMessage, language: "hl7" }).then((newDocument) => {
                             vscode.window.showTextDocument(newDocument, 1, false).then(e => {
                             });
@@ -291,7 +305,7 @@ function activate(context) {
             for (var i = 1; i < split.length; i++) {
                 // TO DO: remove batch footers            
                 // open the message in a new document, user will be prompted to save on exit
-                var newMessage = "MSH|" + split[i];
+                var newMessage = "MSH" + delimiters.FIELD + split[i];
                 vscode.workspace.openTextDocument({ content: newMessage, language: "hl7" }).then((newDocument) => {
                     vscode.window.showTextDocument(newDocument, 1, false).then(e => {
                     });
@@ -390,9 +404,9 @@ function activate(context) {
         var currentLineNum = selection.start.line;
         const fileName = path.basename(currentDoc.uri.fsPath);
         var currentSegment = currentDoc.lineAt(currentLineNum).text
-        var segmentArray = currentSegment.split('|');
+        var segmentArray = currentSegment.split(delimiters.FIELD);
         var segmentName = segmentArray[0].substring(0,3);
-        var segmentRegEx = new RegExp("^" + segmentName + "\\|", "i");
+        var segmentRegEx = new RegExp("^" + segmentName + "\\" + delimiters.FIELD, "i");
         for (var i = 0; i < currentDoc.lineCount; i++) {
             var currentLine = currentDoc.lineAt(i).text;
             if (segmentRegEx.test(currentLine) == true) {
@@ -429,8 +443,10 @@ function activate(context) {
         const maxLinesPreference = hl7toolsConfig['MaxLinesForFieldDescriptions'];
         var maxLines = Math.min(currentDoc.lineCount, maxLinesPreference)
 
-        var regEx = /\|/g;
-        var validSegmentRegEx = /^[a-z][a-z]([a-z]|[0-9])\|/i;
+        //var regEx = /\|/g;
+        var regEx = new RegExp("\\" + delimiters.FIELD, "g");
+        //var validSegmentRegEx = /^[a-z][a-z]([a-z]|[0-9])\|/i;
+        var validSegmentRegEx = new RegExp("^[a-z][a-z]([a-z]|[0-9])\\" + delimiters.FIELD, "i");
         var text = currentDoc.getText();
         // calculate the number of characters at the end of line (<CR>, or <CR><LF>)
         var config = vscode.workspace.getConfiguration();
@@ -451,7 +467,7 @@ function activate(context) {
             var startPos = null;
             var endPos = null;
             var currentLine = currentDoc.lineAt(lineIndex).text;
-            var fields = currentLine.split('|');
+            var fields = currentLine.split(delimiters.FIELD);
             var segmentName = fields[0];
             var segmentDef = hl7Schema[segmentName];
             var fieldCount = -1;
