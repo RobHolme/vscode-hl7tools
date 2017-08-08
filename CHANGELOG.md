@@ -63,4 +63,6 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 ## 1.5.2 2017-08-01
 * Bugfix: HL7 batch files with less than 100 messages were ignored, this is now fixed.
 ## 1.6.0 2017-08-03
-* Added the command 'Extract Matching Segments'       
+* Added the command 'Extract Matching Segments'  
+## 1.6.1 2017-08-08
+* Updated all functions to query the HL7 delimiter characters used, rather than assuming defaults used.    
