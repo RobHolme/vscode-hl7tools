@@ -121,6 +121,9 @@ function LoadHL7Schema() {
 function activate(context) {
     console.log('The extension "hl7tools" is now active.');
 
+    // update the HL7 delimiter characters from the current file
+    delimiters = common.ParseDelimiters();
+    
     // get user preferences for the extension
     UpdateConfiguration();
 
@@ -135,8 +138,6 @@ function activate(context) {
         return;
     }
     else {
-        // update the HL7 delimiter characters from the current file
-        delimiters = common.ParseDelimiters();
         // load the HL7 schema based on the version reported by the MSH segment
         LoadHL7Schema();
         // apply the hover descriptions for each field
