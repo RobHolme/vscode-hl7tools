@@ -66,3 +66,5 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 * Added the command 'Extract Matching Segments'  
 ## 1.6.1 2017-08-08
 * Updated all functions to query the HL7 delimiter characters used, rather than assuming defaults used.    
+## 1.6.2 2017-08-16
+* fixed issue introduced in v1.6.1 - for files without .hl7 file extensions the hl7 delimiters were not parsed on activation of the extension. This caused several commands to fail to run.
