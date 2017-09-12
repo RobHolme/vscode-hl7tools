@@ -444,9 +444,7 @@ function activate(context) {
         const maxLinesPreference = hl7toolsConfig['MaxLinesForFieldDescriptions'];
         var maxLines = Math.min(currentDoc.lineCount, maxLinesPreference)
 
-        //var regEx = /\|/g;
         var regEx = new RegExp("\\" + delimiters.FIELD, "g");
-        //var validSegmentRegEx = /^[a-z][a-z]([a-z]|[0-9])\|/i;
         var validSegmentRegEx = new RegExp("^[a-z][a-z]([a-z]|[0-9])\\" + delimiters.FIELD, "i");
         var text = currentDoc.getText();
         // calculate the number of characters at the end of line (<CR>, or <CR><LF>)
