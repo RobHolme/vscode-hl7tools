@@ -68,3 +68,5 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 * Updated all functions to query the HL7 delimiter characters used, rather than assuming defaults used.    
 ## 1.6.2 2017-08-16
 * fixed issue introduced in v1.6.1 - for files without .hl7 file extensions the hl7 delimiters were not parsed on activation of the extension. This caused several commands to fail to run.
+## 1.6.3 2017-09-12
+* refactored the 'Display Segment Fields' command to improve maintainability. Fixed issue where MSH-2 was not displayed correctly.
