@@ -2,7 +2,7 @@
   "name": "hl7tools",
   "displayName": "HL7Tools",
   "description": "HL7 tools for Visual Studio Code",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "icon": "images/hl7tools-icon.png",
   "publisher": "RobHolme",
   "bugs": {
@@ -30,8 +30,8 @@
     "onCommand:hl7tools.SendMessage",
     "onCommand:hl7tools.StartListener",
     "onCommand:hl7tools.StopListener",
-    "onCommand:hl7tools.ExtractSegments"
-
+    "onCommand:hl7tools.ExtractSegments",
+	"onCommand:hl7tools.FindSegments"
   ],
   "main": "./extension",
   "contributes": {
@@ -85,6 +85,11 @@
         "command": "hl7tools.ExtractSegments",
         "key": "ctrl+alt+e",
         "when": "editorLangId == hl7"
+      },
+      {
+        "command": "hl7tools.FindSegments",
+        "key": "ctrl+alt+f",
+        "when": "editorLangId == hl7"
       }
     ],
     "commands": [
@@ -127,6 +132,10 @@
       {
         "command": "hl7tools.ExtractSegments",
         "title": "HL7 Tools: Extract Matching Segments"
+      },
+      {
+        "command": "hl7tools.FindSegments",
+        "title": "HL7 Tools: Find all Segments"
       }
     ],
     "languages": [
