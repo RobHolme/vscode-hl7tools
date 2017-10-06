@@ -156,15 +156,15 @@ function activate(context) {
 				LoadHL7Schema();
 				UpdateFieldDescriptions();
 				HighlightFields.ShowHighlights(currentItemLocation, hl7Schema, highlightFieldBackgroundColor);
+
+				// if the AddLinebreakOnActivation user preference is set, call the 'Add LineBreaks to Segment' command
+				var hl7toolsConfig = vscode.workspace.getConfiguration('hl7tools');
+				if (hl7toolsConfig['AddLinebreakOnActivation'] == true) {
+					AddLinebreaksToSegments();
+				}
 			}
 			else {
 				statusbarHL7Version.hide();
-			}
-
-			// if the AddLinebreakOnActivation user preference is set, call the 'Add LineBreaks to Segment' command
-			var hl7toolsConfig = vscode.workspace.getConfiguration('hl7tools');
-			if (hl7toolsConfig['AddLinebreakOnActivation'] == true) {
-				AddLinebreaksToSegments();
 			}
 		}
 	}, null, context.subscriptions);
