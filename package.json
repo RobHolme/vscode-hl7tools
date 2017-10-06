@@ -31,7 +31,7 @@
     "onCommand:hl7tools.StartListener",
     "onCommand:hl7tools.StopListener",
     "onCommand:hl7tools.ExtractSegments",
-	"onCommand:hl7tools.FindSegments"
+	"onCommand:hl7tools.AddLinebreakToSegment"
   ],
   "main": "./extension",
   "contributes": {
@@ -87,8 +87,8 @@
         "when": "editorLangId == hl7"
       },
       {
-        "command": "hl7tools.FindSegments",
-        "key": "ctrl+alt+f",
+        "command": "hl7tools.AddLinebreakToSegment",
+        "key": "ctrl+alt+a",
         "when": "editorLangId == hl7"
       }
     ],
@@ -134,8 +134,8 @@
         "title": "HL7 Tools: Extract Matching Segments"
       },
       {
-        "command": "hl7tools.FindSegments",
-        "title": "HL7 Tools: Find all Segments"
+        "command": "hl7tools.AddLinebreakToSegment",
+        "title": "HL7 Tools: Add Linebreak to Segments"
       }
     ],
     "languages": [
@@ -191,6 +191,11 @@
           "type": "number",
           "default": 200,
           "description": "Stop applying hover fields descriptions after this number of lines in a file (poor performance on large files)"
+        },
+        "hl7tools.AddLinebreakOnActivation": {
+          "type": "boolean",
+          "default": false,
+          "description": "Apply the command 'Add Linebreak to Segments' every time a file is active in the editor"
         }
       }
     },

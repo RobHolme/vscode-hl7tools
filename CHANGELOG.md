@@ -71,4 +71,4 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 ## 1.6.3 2017-09-12
 * refactored the 'Display Segment Fields' command to improve maintainability. Fixed issue where MSH-2 was not displayed correctly.
 ## 1.6.4 (05/10/2017)
-* added function 'Show All Segments'. This extracts segments from a file where no segment delimiter was included.
+* added function 'Add Linebreak to Segments'. This identifies and extracts segments from a file where no segment delimiter (line break) was included. Useful if importing from a system that does not separate segments.

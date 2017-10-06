@@ -160,6 +160,12 @@ function activate(context) {
 			else {
 				statusbarHL7Version.hide();
 			}
+
+			// if the AddLinebreakOnActivation user preference is set, call the 'Add LineBreaks to Segment' command
+			var hl7toolsConfig = vscode.workspace.getConfiguration('hl7tools');
+			if (hl7toolsConfig['AddLinebreakOnActivation'] == true) {
+				AddLinebreaksToSegments();
+			}
 		}
 	}, null, context.subscriptions);
 
@@ -420,14 +426,21 @@ function activate(context) {
 		});
 
 	});
-
 	context.subscriptions.push(ExtractSegments);
 
+
 	//-------------------------------------------------------------------------------------------
-	// Command to update the field descriptions (as a hover decoration over the field in the editor window)
-	var findSegmentsCommand = vscode.commands.registerCommand('hl7tools.FindSegments', function () {
-		console.log('Running command hl7tools.FindSegments');
-		//$segments = [regex]::split($message,'(?=ABS\||ACC\||ADD\||ADJ\||AFF\||AIG\||AIL\||AIP\||AIS\||AL1\||APR\||ARQ\||ARV\||AUT\||BHS\||BLC\||BLG\||BPO\||BPX\||BTS\||BTX\||BUI\||CDM\||CDO\||CER\||CM0\||CM1\||CM2\||CNS\||CON\||CSP\||CSR\||CSS\||CTD\||CTI\||DB1\||DG1\||DMI\||DON\||DPS\||DRG\||DSC\||DSP\||ECD\||ECR\||EDU\||EQP\||EQU\||ERR\||EVN\||FAC\||FHS\||FT1\||FTS\||GOL\||GP1\||GP2\||GT1\||IAM\||IAR\||IIM\||ILT\||IN1\||IN2\||IN3\||INV\||IPC\||IPR\||ISD\||ITM\||IVC\||IVT\||LAN\||LCC\||LCH\||LDP\||LOC\||LRL\||MCP\||MFA\||MFE\||MFI\||MRG\||MSA\||MSH\||NCK\||NDS\||NK1\||NPU\||NSC\||NST\||NTE\||OBR\||OBX\||ODS\||ODT\||OM1\||OM2\||OM3\||OM4\||OM5\||OM6\||OM7\||OMC\||ORC\||ORG\||OVR\||PAC\||PCE\||PCR\||PD1\||PDA\||PDC\||PEO\||PES\||PID\||PKG\||PM1\||PMT\||PR1\||PRA\||PRB\||PRC\||PRD\||PRT\||PSG\||PSH\||PSL\||PSS\||PTH\||PV1\||PV2\||PYE\||QAK\||QID\||QPD\||QRD\||QRF\||QRI\||RCP\||RDF\||RDT\||REL\||RF1\||RFI\||RGS\||RMI\||ROL\||RQ1\||RQD\||RXA\||RXC\||RXD\||RXE\||RXG\||RXO\||RXR\||RXV\||SAC\||SCD\||SCH\||SCP\||SDD\||SFT\||SGH\||SGT\||SHP\||SID\||SLT\||SPM\||STF\||STZ\||TCC\||TCD\||TQ1\||TQ2\||TXA\||UAC\||UB1\||UB2\||URD\||URS\||VAR\||VND\||Z[A-Z]([A-Z]\||[0-9]\|))')
+	// Register the command 'Add Linebreaks to Segments'
+	var AddLinebreakToSegmentCommand = vscode.commands.registerCommand('hl7tools.AddLinebreakToSegment', function () {
+		console.log('Running command hl7tools.AddLinebreakToSegment');
+		AddLinebreaksToSegments();
+	});
+	context.subscriptions.push(AddLinebreakToSegmentCommand);
+
+
+	//-------------------------------------------------------------------------------------------
+	// add line breaks between segments (if they are not present)
+	function AddLinebreaksToSegments() {
 		var activeEditor = vscode.window.activeTextEditor;
 		if (!activeEditor) {
 			return;
@@ -439,21 +452,30 @@ function activate(context) {
 		var config = vscode.workspace.getConfiguration();
 		const endOfLineChar = config.files.eol;
 
-		var segments = hl7Message.split(/(?=ABS\||ACC\||ADD\||ADJ\||AFF\||AIG\||AIL\||AIP\||AIS\||AL1\||APR\||ARQ\||ARV\||AUT\||BHS\||BLC\||BLG\||BPO\||BPX\||BTS\||BTX\||BUI\||CDM\||CDO\||CER\||CM0\||CM1\||CM2\||CNS\||CON\||CSP\||CSR\||CSS\||CTD\||CTI\||DB1\||DG1\||DMI\||DON\||DPS\||DRG\||DSC\||DSP\||ECD\||ECR\||EDU\||EQP\||EQU\||ERR\||EVN\||FAC\||FHS\||FT1\||FTS\||GOL\||GP1\||GP2\||GT1\||IAM\||IAR\||IIM\||ILT\||IN1\||IN2\||IN3\||INV\||IPC\||IPR\||ISD\||ITM\||IVC\||IVT\||LAN\||LCC\||LCH\||LDP\||LOC\||LRL\||MCP\||MFA\||MFE\||MFI\||MRG\||MSA\||MSH\||NCK\||NDS\||NK1\||NPU\||NSC\||NST\||NTE\||OBR\||OBX\||ODS\||ODT\||OM1\||OM2\||OM3\||OM4\||OM5\||OM6\||OM7\||OMC\||ORC\||ORG\||OVR\||PAC\||PCE\||PCR\||PD1\||PDA\||PDC\||PEO\||PES\||PID\||PKG\||PM1\||PMT\||PR1\||PRA\||PRB\||PRC\||PRD\||PRT\||PSG\||PSH\||PSL\||PSS\||PTH\||PV1\||PV2\||PYE\||QAK\||QID\||QPD\||QRD\||QRF\||QRI\||RCP\||RDF\||RDT\||REL\||RF1\||RFI\||RGS\||RMI\||ROL\||RQ1\||RQD\||RXA\||RXC\||RXD\||RXE\||RXG\||RXO\||RXR\||RXV\||SAC\||SCD\||SCH\||SCP\||SDD\||SFT\||SGH\||SGT\||SHP\||SID\||SLT\||SPM\||STF\||STZ\||TCC\||TCD\||TQ1\||TQ2\||TXA\||UAC\||UB1\||UB2\||URD\||URS\||VAR\||VND\||Z[A-Z]\w\|)/g);
+		// build the regex from the list of segment names in the schema
+		var regexString = "(?=";
+		Object.entries(hl7Schema).forEach(([key]) => {
+			regexString += key + "\\" + delimiters.FIELD + "|";
+		});
+		// include support for custom 'Z' segments (not in the schema)
+		regexString += "Z[A-Z]\\w\\|)";
+		var segmentRegEx = new RegExp(regexString, 'g');
+
+		// split the message into segments using the regex, then join elements back together with the EOL character separating segments.
+		var segments = hl7Message.split(segmentRegEx);
 		var newMessage = segments.join(endOfLineChar);
-		// display the masked message in a new window in the editor
-		if (newMessage.length > 0) {
-			vscode.workspace.openTextDocument({ content: newMessage, language: "hl7" }).then((newDocument) => {
-				vscode.window.showTextDocument(newDocument, 1, false).then(e => {
-				});
-			}, (error) => {
-				console.error(error);
-			});
-		}
 
-	});
-	context.subscriptions.push(findSegmentsCommand);
+		// remove any extra line breaks (if the file contains some segments delimited correctly)
+		newMessage = newMessage.replace(/(\r\n|\n|\r){2}/gm, endOfLineChar);
 
+		// replace current document text with reformatted text
+		var start = new vscode.Position(0, 0);
+		var end = currentDoc.positionAt(hl7Message.length);
+		activeEditor.edit(editHelper => {
+			console.log('Editing Document');
+			editHelper.replace(new vscode.Range(start, end), newMessage);
+		});
+	}
 
 
 	//-------------------------------------------------------------------------------------------
