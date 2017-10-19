@@ -74,3 +74,6 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 * added function 'Add Linebreak to Segments'. This identifies and extracts segments from a file where no segment delimiter (line break) was included. Useful if importing from a system that does not separate segments.
 ## 1.6.5 (06/10/2017)
 * bugfix to prevent the 'Add Linebreak to Segments' being applied to non HL7 files on activation
+## 1.6.6 (19/10/2017)
+* bugfix to correct issue with 'Display Segment Fields' command. The issue caused the command to fail to run when a field containing a value was not defined in the HL7 message schema.
+* udpated Mask Identifiers command to mask out spaces included in field values. The mask character was changed from '#' to '*'.
