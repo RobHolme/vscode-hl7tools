@@ -1,5 +1,5 @@
 # HL7 Tools for Visual Studio Code README
-This is a Visual Studio Code extension for working with HL7 v2.x files. It provides basic syntax highlighting, and the following features:
+This is a Visual Studio Code extension for working with HL7 v2.x files. It provides basic syntax highlighting, along with the following features:
 * display field description when mouse is hovered over a field.
 * highlight user specified fields in the message.
 * mask out identifying fields in the message.
@@ -8,17 +8,17 @@ This is a Visual Studio Code extension for working with HL7 v2.x files. It provi
 * display fields from a single segment in a list.
 * split a HL7 batch file into a seperate file per message.
 * extract all similar from the file to a new document.
-* if segments are not delimited correctly (i.e. no line break), segments will be identified and line breaks added.
+* correct messages that are missing a line break delimeter between segments
 
-> Note: The extension is automatically activated for files with a .hl7 file extension. If viewing files without a .hl7 file extension you will need to manually specify that the file is a HL7 file. Click on the current language (e.g. 'PlainText') in the right hand side of the status bar, and enter 'hl7' as the language. It is recommended to rename files to use a .hl7 extension for ease of use.  
+> Note: The extension is automatically activated for files with a .hl7 file extension. If viewing files without a .hl7 file extension, you will need to manually specify that the file is a HL7 file. Click on the current language (e.g. 'PlainText') in the right hand side of the status bar, and enter 'hl7' as the language. It is recommended to rename files to use a .hl7 extension for ease of use.  
 
 ## Features
 ### Syntax highlighting
-* Segment, field, component, sub component and repeat separators are highlighted. 
+* Segment, field, component, sub component and repeat separators, and segment names are colourised. 
 
 ![Syntax highlighting](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/syntax.jpg)
 
-> Note: The default dark and light themes don't highlight the field separators, I've found the Monkai & Solarize themes work well.
+> Note: The default Visual Studio Code dark and light themes don't highlight the field separators, I've found the Monkai & Solarize themes work well.
 
 ### Field descriptions
 When the mouse is hovered over a field, the field name and location is displayed in a pop-up tooltip. If the file has a .hl7 extension this will be applied when the file loads, other wise it will need to be manually activated via:
@@ -26,12 +26,12 @@ When the mouse is hovered over a field, the field name and location is displayed
 
 ![Field descriptions](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/FieldDescription.jpg)
 
-By default only the first 200 segments of each message will include hover over field descriptions (performance can be impacted with large files). This limit is configurable via the following user preference.
+By default only the first 200 segments of each message will include hover descriptions (performance can be impacted applying this to large hl7 files). This limit is configurable via the following user preference.
 
 `"hl7tools.MaxLinesForFieldDescriptions"`
 
 ### Field highlighting
-This prompts the user to enter a HL7 field location (e.g. PID-3), or partial field description (e.g. name), the corresponding field(s) is then highlighted in the editor. The field highlighting will be applied to other HL7 messages if you have multiple messages open. The background colour applied to highlighted fields can be changed via the user preference "hl7tools.highlightBackgroundColor". The preference requires a RGBA colour value, specified with: rgba(red, green, blue, alpha). The alpha parameter is a number between 0.0 (fully transparent) and 1.0 (fully opaque).
+This prompts for a HL7 field location (e.g. PID-3), or partial field description (e.g. name). The corresponding field(s) are then highlighted in the editor. The field highlighting will be applied to other HL7 messages when they become the active document. The background colour applied to highlighted fields can be configured via the user preference "hl7tools.highlightBackgroundColor". This preference requires a RGBA colour value, specified as: rgba(red, green, blue, alpha). The alpha parameter is a number between 0.0 (fully transparent) and 1.0 (fully opaque).
 
 * Press F1 --> HL7 Tools: Highlight Field
 
@@ -41,17 +41,17 @@ This prompts the user to enter a HL7 field location (e.g. PID-3), or partial fie
 
 ![Field highlighting](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/highlightfield1.jpg)
 
-* The field will be highlighted. If part of the field name was entered, all matching fields will be highlighted. e.g. 'Patient' would match to 'Patient ID List', 'Patient Name', etc. Selecting a new field will remove the previously highlighted field. Entering a blank value for a field location will remove all highlighting, or run the command 'HL7 Tools: Clear Highlighted Field'.
+* The field is highlighted. If part of a field name was entered, all matching fields will be highlighted. e.g. 'Patient' would match to 'Patient ID List', 'Patient Name', etc. Selecting a new field will remove the previously highlighted field. To remove highlighting run the command 'HL7 Tools: Clear Highlighted Field', or enter a blank value for a field location.
 
 ![Field highlighting](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/highlightfield2.jpg)
 
-> Note: the field highlighting may be shifted by a character if the document end of line character is changed from the editor EOL preference.
+> Note: the field highlighting may be shifted by a character if the document end of line character is changed from EOL preference defined by the editor settings.
 
 ### Display segment fields
-This function lists all fields from the currently selected segment in a list in the output window. Field components are indented. Any repeating field values are included.
+This function lists all fields from the currently selected segment in a heirarchial list. If a field contains components they will be displayed beneith the parent field. Any repeating field values are included.
 * Select the segment in the message using the cursor.
 * Press F1 --> HL7 Tools: Display Segment Fields.
-* The selected segment's fields will be displayed in the output window. Repeating fields will be included. 
+* The selected segment's fields will be displayed in the output window.  
 
 ![Syntax highlighting](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/DisplaySegmentFields.jpg)
 
@@ -60,7 +60,7 @@ This function lists all fields from the currently selected segment in a list in 
 
 ![Mask Identifiers](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/MaskIdentifiers1.jpg)
 
-* Common patient and next of kin identifiers will be masked with a '#' character. The masked message will be displayed in a new window, the original message will not be changed. 
+* Common patient and next of kin identifiers will be masked with a '*' character. The masked message will be displayed in a new window, the original message will not be modified. 
 
 ![Mask Identifiers](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/MaskIdentifiers2.jpg)
 
@@ -72,17 +72,17 @@ This function lists all fields from the currently selected segment in a list in 
 >* All GT1 fields after GT1-2
 
 ### Split HL7 Batch files
-If a single file contains multiple HL7 messages, this function splits each message into a new document. Each document is opened in the editor as an untitled file, it will be the user's responsibility to save the files.
+If a single file contains multiple HL7 messages, this function splits each message into a new document. Each document is opened in the editor as an untitled file, it will be the user's responsibility to save the files. Large batch files will take longer to process.
 * Press F1 --> HL7 Tools: Split HL7 Batch Files.
 
 ### Send HL7 Message to Remote Host
-This command sends the current message to a remote host (via TCP). 
+This command sends the current message to a remote host (via TCP using MLLP framing). 
 * Press F1 --> HL7 Tools: Send Message
 * Enter the destination hostname (or IP address) and the port number (Host:Port).
 
 ![SendMessage](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/SendMessage1.jpg)
 
-* The status will be displayed in the output window. If an ACK is returned it is also displayed. If no ack is returned, the connection will time out and close (default timeout is 5 seconds).
+* The status will be displayed in the output window. If an ACK message is returned it is also displayed. If no ACK is returned, the connection will time out and close (default timeout is 5 seconds).
 
 ![SendMessage](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/SendMessage2.jpg)
  
@@ -104,15 +104,15 @@ User preferences applicable to this function include:
 `"hl7tools.SendACK": true`  
 
 ### Extract Similar Segments
-This command will open a copy of all segments the same as the one currently selected in the message. e.g. if the cursor is in the MSH segment, all MSH segments in the current file will be copied to a new window. Suited more for files containing multiple HL7 messages.
+This command will open a copy of all segments the same name the one currently selected in the message. e.g. if the cursor is in the NK1 segment, all NK1 segments in the current file will be copied to a new window. Suited more for files containing multiple HL7 messages.
 * move the cursor to the segment type you want to extract
 * Press F1 --> HL7 Tools: Extract Matching Segments
 
 ### Add Line breaks to segments
-This command is intended to be run when an imported file does not include delimiters between segments (i.e. segments are run together without a line break between each segment). This command will identify segments and add in line breaks, displaying the modified file in a new window. If line breaks are already present this will have no effect, it is only intended to correct malformed files.
+This command is intended to be run when an imported file does not include delimiters between segments (i.e. segments are run together without a line break between each segment). This command will identify segments and add in line breaks. If line breaks are already present this will have no effect, it is only intended to correct malformed files.
 * Press F1 --> HL7 Tools: Add Linebreaks to Segments
 
-To activate this command every time a file is the active file in the editor, set the following user preference to true  
+To activate this command every time a file is the active file in the editor, set the following user preference to true (defaults to false)  
 `// Apply the command 'Add Linebreak to Segments' every time a file is active in the editor`  
 `"hl7tools.AddLinebreakOnActivation": true`  
 
@@ -127,10 +127,10 @@ Clone the [GitHub repository](https://github.com/RobHolme/vscode-hl7tools) under
 * Mac / Linux: `$HOME/.vscode/extensions`
 
 ## Issues / Feature requests
-You can submit your issues and feature requests on the GitHub [issues page](https://github.com/RobHolme/vscode-hl7tools/issues).
+You can submit your issues and feature requests on the GitHub [issues page](https://github.com/RobHolme/vscode-hl7tools/issues). Test files, or detailed descriptions that can be used to reproduce the issue are appreciated.
 
 ## Credits
 * The HL7 syntax highlighting was sourced from https://github.com/craighurley/sublime-hl7-syntax
-* the HL7 segment descriptions (segment.js) was extracted from http://github.com/fernandojsg/hl7-dictionary. To reduce disk footprint only the segment and field definitions were used.
+* the HL7 segment descriptions (segment.js) was extracted from http://github.com/fernandojsg/hl7-dictionary. To reduce disk footprint only the segment and field definitions are included with this extension.
 * Thanks to https://github.com/sherwanikhans for assistance on the 'Add Linebreak To Segments' command.
 
