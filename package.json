@@ -2,7 +2,7 @@
 	"name": "hl7tools",
 	"displayName": "HL7Tools",
 	"description": "HL7 tools for Visual Studio Code",
-	"version": "1.6.6",
+	"version": "1.6.7",
 	"icon": "images/hl7tools-icon.png",
 	"publisher": "RobHolme",
 	"bugs": {
@@ -31,7 +31,8 @@
 		"onCommand:hl7tools.StartListener",
 		"onCommand:hl7tools.StopListener",
 		"onCommand:hl7tools.ExtractSegments",
-		"onCommand:hl7tools.AddLinebreakToSegment"
+		"onCommand:hl7tools.AddLinebreakToSegment",
+		"onCommand:hl7tools.ExtractFields"
 	],
 	"main": "./extension",
 	"contributes": {
@@ -90,6 +91,11 @@
 				"command": "hl7tools.AddLinebreakToSegment",
 				"key": "ctrl+alt+a",
 				"when": "editorLangId == hl7"
+			},
+			{
+				"command": "hl7tools.ExtractFields",
+				"key": "ctrl+alt+f",
+				"when": "editorLangId == hl7"
 			}
 		],
 		"commands": [
@@ -136,6 +142,10 @@
 			{
 				"command": "hl7tools.AddLinebreakToSegment",
 				"title": "HL7 Tools: Add Linebreak to Segments"
+			},
+			{
+				"command": "hl7tools.ExtractFields",
+				"title": "HL7 Tools: Extract Fields from all Messages"
 			}
 		],
 		"languages": [

@@ -15,6 +15,7 @@ const MaskIdentifiers = require('./lib/MaskIdentifiers');
 const FieldTreeView = require('./lib/FieldTreeView');
 const TcpMllpClient = require('./lib/SendHl7Message.js');
 const TcpMllpListener = require('./lib/TCPListener.js');
+const ExtractFields = require('./lib/ExractFields.js');
 
 var delimiters;
 
@@ -437,6 +438,19 @@ function activate(context) {
 	});
 	context.subscriptions.push(AddLinebreakToSegmentCommand);
 
+
+	//-------------------------------------------------------------------------------------------
+	// Register the command 'Extract Fields from all Messages'
+	var ExtractFieldsCommand = vscode.commands.registerCommand('hl7tools.ExtractFields', function () {
+		console.log('Running command hl7tools.ExtractFields');
+
+		var fieldPromise = vscode.window.showInputBox({ prompt: "Enter the field to extract", value: fieldToExtract });
+		fieldPromise.then(function (fieldToExtract) {
+			ExtractFields.ExtractAllFields(fieldToExtract);
+		});
+	});
+	context.subscriptions.push(ExtractFieldsCommand);
+	
 
 	//-------------------------------------------------------------------------------------------
 	// add line breaks between segments (if they are not present)
