@@ -69,11 +69,13 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 ## 1.6.2 2017-08-16
 * fixed issue introduced in v1.6.1 - for files without .hl7 file extensions the hl7 delimiters were not parsed on activation of the extension. This caused several commands to fail to run.
 ## 1.6.3 2017-09-12
-* refactored the 'Display Segment Fields' command to improve maintainability. Fixed issue where MSH-2 was not displayed correctly.
+* re factored the 'Display Segment Fields' command to improve maintainability. Fixed issue where MSH-2 was not displayed correctly.
 ## 1.6.4 (05/10/2017)
-* added function 'Add Linebreak to Segments'. This identifies and extracts segments from a file where no segment delimiter (line break) was included. Useful if importing from a system that does not separate segments.
+* added function 'Add Line break to Segments'. This identifies and extracts segments from a file where no segment delimiter (line break) was included. Useful if importing from a system that does not separate segments.
 ## 1.6.5 (06/10/2017)
-* bugfix to prevent the 'Add Linebreak to Segments' being applied to non HL7 files on activation
+* bugfix to prevent the 'Add Line break to Segments' being applied to non HL7 files on activation
 ## 1.6.6 (19/10/2017)
 * bugfix to correct issue with 'Display Segment Fields' command. The issue caused the command to fail to run when a field containing a value was not defined in the HL7 message schema.
 * udpated Mask Identifiers command to mask out spaces included in field values. The mask character was changed from '#' to '*'.
+## 1.7.0 (23/11/2017) 
+* added the function 'Extract field from all open files'
