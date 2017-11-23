@@ -444,7 +444,7 @@ function activate(context) {
 	var ExtractFieldsCommand = vscode.commands.registerCommand('hl7tools.ExtractFields', function () {
 		console.log('Running command hl7tools.ExtractFields');
 
-		var fieldPromise = vscode.window.showInputBox({ prompt: "Enter the field to extract", value: fieldToExtract });
+		var fieldPromise = vscode.window.showInputBox({ prompt: "Enter the field to extract (e.g. PID-3)"});
 		fieldPromise.then(function (fieldToExtract) {
 			ExtractFields.ExtractAllFields(fieldToExtract);
 		});
