@@ -34,7 +34,8 @@ var currentDecoration;
 var currentHoverDecoration;
 // the value of the background colour for highlighted items (from the preferences file). Expects a RGBA value.
 var highlightFieldBackgroundColor;
-
+//  use this to prevent th active do hack from running more than once per session
+var activeDocHackRun = false;
 
 //----------------------------------------------------
 // update the user configuration settings 
@@ -444,10 +445,24 @@ function activate(context) {
 	var ExtractFieldsCommand = vscode.commands.registerCommand('hl7tools.ExtractFields', function () {
 		console.log('Running command hl7tools.ExtractFields');
 
-		var fieldPromise = vscode.window.showInputBox({ prompt: "Enter the field to extract (e.g. PID-3)"});
-		fieldPromise.then(function (fieldToExtract) {
-			ExtractFields.ExtractAllFields(fieldToExtract);
-		});
+		// cycle through all documents, otherwise they won't be included.
+		// ONLY NEED TO DO THIS ONCE PER SESSION, OPENING NEW DOCUMENTS IS FINE.
+		if (this.activeDocHackRun) {
+			var fieldPromise = vscode.window.showInputBox({ prompt: "Enter the field to extract (e.g. PID-3)"});
+			fieldPromise.then(function (fieldToExtract) {
+				ExtractFields.ExtractAllFields(fieldToExtract);
+			});
+		}
+		else {
+			this.activeDocHackRun = true;
+			activeDocHackPromise = common.findActiveDocsHack();
+			activeDocHackPromise.then(function () {
+				var fieldPromise = vscode.window.showInputBox({ prompt: "Enter the field to extract (e.g. PID-3)"});
+				fieldPromise.then(function (fieldToExtract) {
+					ExtractFields.ExtractAllFields(fieldToExtract);
+				});
+			});
+		}
 	});
 	context.subscriptions.push(ExtractFieldsCommand);
 	

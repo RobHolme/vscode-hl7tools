@@ -7,7 +7,7 @@ This is a Visual Studio Code extension for working with HL7 v2.x files. It provi
 * receive HL7 messages sent from a remote host.
 * extract the value of a field from all open files.
 * display fields from a single segment as a list.
-* split a HL7 batch file into a seperate file per message.
+* split a HL7 batch file into a separate file per message.
 * extract all similar from the file to a new document.
 * correct messages that are missing a line break delimiter between segments
 
@@ -117,6 +117,14 @@ To activate this command every time a file is the active file in the editor, set
 `// Apply the command 'Add Linebreak to Segments' every time a file is active in the editor`  
 `"hl7tools.AddLinebreakOnActivation": true`  
 
+### Extract fields from add open files
+This command extracts values for a specified field from all open files.
+
+>Note:As a work around for a Visual Studio Code limitation, all open files will need to be cycled through the first time this command is run for any session. 
+
+* Press F1 --> HL7 Tools: Extract Fields from all Messages
+
+![ExtractAllFields](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/ExtractAllFields.jpg)
 
 ## Installation
 ### Visual Studio Code 
@@ -132,6 +140,7 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 
 ## Credits
 * The HL7 syntax highlighting was sourced from https://github.com/craighurley/sublime-hl7-syntax
-* the HL7 segment descriptions (segment.js) was extracted from http://github.com/fernandojsg/hl7-dictionary. To reduce disk footprint only the segment and field definitions are included with this extension.
+* the HL7 segment descriptions (segment.js) was extracted from http://github.com/fernandojsg/hl7-dictionary. 
 * Thanks to https://github.com/sherwanikhans for assistance on the 'Add Linebreak To Segments' command.
+* Workaround to search all open files sourced from https://github.com/atishay/vscode-allautocomplete.
 
