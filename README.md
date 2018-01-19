@@ -123,6 +123,8 @@ This command extracts values for a specified field from all open files.
 >Note:As a work around for a Visual Studio Code limitation, all open files will need to be cycled through the first time this command is run for any session. 
 
 * Press F1 --> HL7 Tools: Extract Fields from all Messages
+* Wait for all open files to be cycled through (first time per session only)
+* When prompted, enter the field to extract (e.g. PID-3)
 
 ![ExtractAllFields](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/ExtractAllFields.jpg)
 
