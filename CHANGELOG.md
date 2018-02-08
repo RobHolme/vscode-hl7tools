@@ -79,3 +79,5 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 * udpated Mask Identifiers command to mask out spaces included in field values. The mask character was changed from '#' to '*'.
 ## 1.7.0 (19/01/2018) 
 * added the function 'Extract field from all open files'
+## 1.7.1 (08/02/2018)
+* refactored functions to improve maintenace/reuse. No functional changes.
