@@ -48,7 +48,7 @@ function UpdateConfiguration() {
 // Determine if the file is a HL7 file (returns true/false). 
 // This expects that the file extension is .hl7, or the first line contains
 // a MSH segment (or FHS of BHS segment for batch files).
-function IsHL7File(editor) {
+/*function IsHL7File(editor) {
 	if (editor) {
 		if (editor.document.languageId == "hl7") {
 			console.log("HL7 file extension detected");
@@ -68,7 +68,7 @@ function IsHL7File(editor) {
 		return false;
 	}
 }
-
+*/
 
 
 
@@ -131,7 +131,7 @@ function activate(context) {
 
 	var activeEditor = window.activeTextEditor
 	// only activate the field descriptions if it is identified as a HL7 file  
-	if (!IsHL7File(activeEditor)) {
+	if (!common.IsHL7File(activeEditor.document)) {
 		statusbarHL7Version.hide();
 		return;
 	}
@@ -153,7 +153,7 @@ function activate(context) {
 			delimiters = common.ParseDelimiters();
 
 			// only activate the field descriptions if it is identified as a HL7 file  
-			if (IsHL7File(editor)) {
+			if (common.IsHL7File(editor.document)) {
 				// the new document may be a different version of HL7, so load the appropriate version of schema
 				LoadHL7Schema();
 				UpdateFieldDescriptions();
@@ -175,7 +175,7 @@ function activate(context) {
 	workspace.onDidChangeTextDocument(function (event) {
 		if (activeEditor && (event.document === activeEditor.document)) {
 			// only activate the field descriptions if it is identified as a HL7 file  
-			if (IsHL7File(editor)) {
+			if (common.IsHL7File(editor.document)) {
 				UpdateFieldDescriptions();
 			}
 			else {
