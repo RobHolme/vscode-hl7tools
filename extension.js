@@ -45,34 +45,6 @@ function UpdateConfiguration() {
 }
 
 //----------------------------------------------------
-// Determine if the file is a HL7 file (returns true/false). 
-// This expects that the file extension is .hl7, or the first line contains
-// a MSH segment (or FHS of BHS segment for batch files).
-/*function IsHL7File(editor) {
-	if (editor) {
-		if (editor.document.languageId == "hl7") {
-			console.log("HL7 file extension detected");
-			return true;
-		}
-		firstLine = editor.document.lineAt(0).text;
-		var hl7HeaderRegex = new RegExp("(^MSH\\" + delimiters.FIELD + ")|(^FHS\\" + delimiters.FIELD + ")|(^BHS\\" + delimiters.FIELD + ")", "i");
-		if (hl7HeaderRegex.test(firstLine)) {
-			console.log("HL7 header line detected");
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-	else {
-		return false;
-	}
-}
-*/
-
-
-
-//----------------------------------------------------
 // load the appropriate hl7 schema based on the HL7 version (as defined in MSH-12) 
 function LoadHL7Schema() {
 	// exit if the editor is not active
