@@ -10,9 +10,9 @@ const path = require("path");
 
 // load local modules
 const common = require('./lib/common.js');
-const HighlightFields = require('./lib/HighlightField');
-const MaskIdentifiers = require('./lib/MaskIdentifiers');
-const FieldTreeView = require('./lib/FieldTreeView');
+const HighlightFields = require('./lib/HighlightField.js');
+const MaskIdentifiers = require('./lib/MaskIdentifiers.js');
+const FieldTreeView = require('./lib/FieldTreeView.js');
 const TcpMllpClient = require('./lib/SendHl7Message.js');
 const TcpMllpListener = require('./lib/TCPListener.js');
 const ExtractFields = require('./lib/ExractFields.js');
