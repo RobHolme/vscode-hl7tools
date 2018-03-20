@@ -17,6 +17,7 @@ const TcpMllpClient = require('./lib/SendHl7Message.js');
 const TcpMllpListener = require('./lib/TCPListener.js');
 const ExtractFields = require('./lib/ExractFields.js');
 const CheckRequiredFields = require('./lib/CheckRequiredFields.js');
+const missingRequiredFieldsClass = require('./lib/CheckRequiredFieldsResult.js');
 
 var delimiters;
 
