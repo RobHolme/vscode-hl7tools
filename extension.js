@@ -16,6 +16,7 @@ const FieldTreeView = require('./lib/FieldTreeView.js');
 const TcpMllpClient = require('./lib/SendHl7Message.js');
 const TcpMllpListener = require('./lib/TCPListener.js');
 const ExtractFields = require('./lib/ExractFields.js');
+const CheckRequiredFields = require('./lib/CheckRequiredFields.js');
 
 var delimiters;
 
@@ -437,6 +438,16 @@ function activate(context) {
 		}
 	});
 	context.subscriptions.push(ExtractFieldsCommand);
+	
+//-------------------------------------------------------------------------------------------
+	// Register the command 'Extract Fields from all Messages'
+	var CheckRequiredFieldsCommand = vscode.commands.registerCommand('hl7tools.CheckRequiredFields', function () {
+		console.log('Running command hl7tools.CheckRequiredFields');
+		var missingRequiredFields = CheckRequiredFields.CheckAllFields(hl7Schema);
+		console.log(missingRequiredFields)
+	
+	});
+	context.subscriptions.push(CheckRequiredFieldsCommand);
 	
 
 	//-------------------------------------------------------------------------------------------
