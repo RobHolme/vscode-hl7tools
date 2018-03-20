@@ -2,7 +2,7 @@
 	"name": "hl7tools",
 	"displayName": "HL7Tools",
 	"description": "HL7 tools for Visual Studio Code",
-	"version": "1.7.1",
+	"version": "1.8.0",
 	"icon": "images/hl7tools-icon.png",
 	"publisher": "RobHolme",
 	"bugs": {
@@ -32,7 +32,8 @@
 		"onCommand:hl7tools.StopListener",
 		"onCommand:hl7tools.ExtractSegments",
 		"onCommand:hl7tools.AddLinebreakToSegment",
-		"onCommand:hl7tools.ExtractFields"
+		"onCommand:hl7tools.ExtractFields",
+		"onCommand:hl7tools.CheckRequiredFields"
 	],
 	"main": "./extension",
 	"contributes": {
@@ -96,6 +97,11 @@
 				"command": "hl7tools.ExtractFields",
 				"key": "ctrl+alt+f",
 				"when": "editorLangId == hl7"
+			},
+			{
+				"command": "hl7tools.CheckRequiredFields",
+				"key": "ctrl+alt+k",
+				"when": "editorLangId == hl7"
 			}
 		],
 		"commands": [
@@ -146,6 +152,10 @@
 			{
 				"command": "hl7tools.ExtractFields",
 				"title": "HL7 Tools: Extract Fields from all Messages"
+			},
+			{
+				"command": "hl7tools.CheckRequiredFields",
+				"title": "HL7 Tools: Confirm if Required Fields have Values"
 			}
 		],
 		"languages": [
