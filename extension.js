@@ -422,7 +422,7 @@ function activate(context) {
 		// cycle through all documents, otherwise they won't be included.
 		// ONLY NEED TO DO THIS ONCE PER SESSION, OPENING NEW DOCUMENTS IS FINE.
 		if (this.activeDocHackRun) {
-			var fieldPromise = vscode.window.showInputBox({ prompt: "Enter the field to extract (e.g. PID-3)"});
+			var fieldPromise = vscode.window.showInputBox({ prompt: "Enter the field to extract (e.g. PID-3)" });
 			fieldPromise.then(function (fieldToExtract) {
 				ExtractFields.ExtractAllFields(fieldToExtract);
 			});
@@ -431,7 +431,7 @@ function activate(context) {
 			this.activeDocHackRun = true;
 			activeDocHackPromise = common.findActiveDocsHack();
 			activeDocHackPromise.then(function () {
-				var fieldPromise = vscode.window.showInputBox({ prompt: "Enter the field to extract (e.g. PID-3)"});
+				var fieldPromise = vscode.window.showInputBox({ prompt: "Enter the field to extract (e.g. PID-3)" });
 				fieldPromise.then(function (fieldToExtract) {
 					ExtractFields.ExtractAllFields(fieldToExtract);
 				});
@@ -439,17 +439,45 @@ function activate(context) {
 		}
 	});
 	context.subscriptions.push(ExtractFieldsCommand);
-	
-//-------------------------------------------------------------------------------------------
-	// Register the command 'Extract Fields from all Messages'
+
+	//-------------------------------------------------------------------------------------------
+	// Register the command 'Confirm all required fields are present'
 	var CheckRequiredFieldsCommand = vscode.commands.registerCommand('hl7tools.CheckRequiredFields', function () {
 		console.log('Running command hl7tools.CheckRequiredFields');
+
+		// exit if the editor is not active
+		var editor = vscode.window.activeTextEditor;
+		if (!editor) {
+			return;
+		}
+
+		// Check required fields 
 		var missingRequiredFields = CheckRequiredFields.CheckAllFields(hl7Schema);
-		console.log(missingRequiredFields)
-	
+		const fileName = path.basename(editor.document.uri.fsPath);
+		
+		// Write the results to visual studio code's output window if missing required field values are identified
+		if (missingRequiredFields.length > 0) {
+			var channel = vscode.window.createOutputChannel('Missing required fields - ' + fileName);
+			channel.clear();
+			channel.appendLine("The following required fields are missing, or contained no value:\n\nLine   Field   Description\n----   -----   -----------");
+			for (var i = 0; i < missingRequiredFields.length; i++) {
+				var hl7Location = missingRequiredFields[i].FieldLocation;
+				var segmentName = hl7Location.split('-')[0];
+				var fieldIndex = hl7Location.split('-')[1] - 1;
+				var output = common.padRight(missingRequiredFields[i].LineNumber, 7) + common.padRight(hl7Location, 8) + hl7Schema[segmentName].fields[fieldIndex].desc;
+				channel.appendLine(output);
+			}
+			channel.appendLine("\n\nPlease note that this does not consider conditional fields, and does not attempt to validate the data type of required fields");
+			channel.show(vscode.ViewColumn.Two);
+		}
+		
+		// display prompt indicating all required fields have values 
+		else {
+			vscode.window.showInformationMessage("All required fields are present in the message and contain values");
+		}
 	});
 	context.subscriptions.push(CheckRequiredFieldsCommand);
-	
+
 
 	//-------------------------------------------------------------------------------------------
 	// add line breaks between segments (if they are not present)

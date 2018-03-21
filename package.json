@@ -155,7 +155,7 @@
 			},
 			{
 				"command": "hl7tools.CheckRequiredFields",
-				"title": "HL7 Tools: Confirm if Required Fields have Values"
+				"title": "HL7 Tools: Check required fields"
 			}
 		],
 		"languages": [
