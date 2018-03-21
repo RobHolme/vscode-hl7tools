@@ -50,7 +50,7 @@ This prompts for a HL7 field location (e.g. PID-3), or partial field description
 > Note: the field highlighting may be shifted by a character if the document end of line character is changed from EOL preference defined by the editor settings.
 
 ### Display segment fields
-This function lists all fields from the currently selected segment in a heirarchial list. If a field contains components they will be displayed beneith the parent field. Any repeating field values are included.
+This function lists all fields from the currently selected segment in a hierarchial list. If a field contains components they will be displayed beneath the parent field. Any repeating field values are included.
 * Select the segment in the message using the cursor.
 * Press F1 --> HL7 Tools: Display Segment Fields.
 * The selected segment's fields will be displayed in the output window.  
@@ -132,7 +132,7 @@ This command extracts values for a specified field from all open files.
 ### Check Required Fields
 This command confirms all required fields (as defined by the HL7 specification) are present in the message and contain values. If any fields do not contain values, the field location and line number are reported in an output window. 
 
->Please note that this does not consider conditional fields, nor does it examine the data type of any required fields to confirm if the value is valid.
+>Note: This does not consider conditional fields, nor does it examine the data type of any required fields to confirm if the value is valid.
 
 * Press F1 --> HL7 Tools: Check Required Fields
 * If all required fields are populated, an information message will appear. If any are missing, the field location and the corresponding line number from the file will be displayed in an output window.
