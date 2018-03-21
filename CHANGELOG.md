@@ -76,8 +76,10 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 * bugfix to prevent the 'Add Line break to Segments' being applied to non HL7 files on activation
 ## 1.6.6 (19/10/2017)
 * bugfix to correct issue with 'Display Segment Fields' command. The issue caused the command to fail to run when a field containing a value was not defined in the HL7 message schema.
-* udpated Mask Identifiers command to mask out spaces included in field values. The mask character was changed from '#' to '*'.
+* updated Mask Identifiers command to mask out spaces included in field values. The mask character was changed from '#' to '*'.
 ## 1.7.0 (19/01/2018) 
 * added the function 'Extract field from all open files'
 ## 1.7.1 (08/02/2018)
-* refactored functions to improve maintenace/reuse. No functional changes.
+* refactored functions to improve maintenance/reuse. No functional changes.
+## 1.8.0 (21/02/2018)
+* added function 'Check Required Fields'
