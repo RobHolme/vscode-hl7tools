@@ -8,6 +8,7 @@ This is a Visual Studio Code extension for working with HL7 v2.x files. It provi
 * extract the value of a field from all open files.
 * display fields from a single segment as a list.
 * split a HL7 batch file into a separate file per message.
+* confirm all required fields in the message contain values.
 * extract all similar from the file to a new document.
 * correct messages that are missing a line break delimiter between segments
 
@@ -117,7 +118,7 @@ To activate this command every time a file is the active file in the editor, set
 `// Apply the command 'Add Linebreak to Segments' every time a file is active in the editor`  
 `"hl7tools.AddLinebreakOnActivation": true`  
 
-### Extract fields from add open files
+### Extract fields from all open files
 This command extracts values for a specified field from all open files.
 
 >Note:As a work around for a Visual Studio Code limitation, all open files will need to be cycled through the first time this command is run for any session. 
@@ -127,6 +128,16 @@ This command extracts values for a specified field from all open files.
 * When prompted, enter the field to extract (e.g. PID-3)
 
 ![ExtractAllFields](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/ExtractAllFields.jpg)
+
+### Check Required Fields
+This command confirms all required fields (as defined by the HL7 specification) are present in the message and contain values. If any fields do not contain values, the field location and line number are reported in an output window. 
+
+>Please note that this does not consider conditional fields, nor does it examine the data type of any required fields to confirm if the value is valid.
+
+* Press F1 --> HL7 Tools: Check Required Fields
+* If all required fields are populated, an information message will appear. If any are missing, the field location and the corresponding line number from the file will be displayed in an output window.
+
+![CheckRequiredFields](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/requiredfields.jpg)
 
 ## Installation
 ### Visual Studio Code 
