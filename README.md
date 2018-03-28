@@ -130,7 +130,7 @@ This command extracts values for a specified field from all open files.
 ![ExtractAllFields](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/ExtractAllFields.jpg)
 
 ### Check Required Fields
-This command confirms all required fields (as defined by the HL7 specification) are present in the message and contain values. If any fields do not contain values, the field location and line number are reported in an output window. 
+This command confirms all required fields (as defined by the HL7 specification) are present in the message and contain values. If any required fields do not contain values, the field location and line number are reported in an output window. 
 
 >Note: This does not consider conditional fields, nor does it examine the data type of any required fields to confirm if the value is valid.
 
