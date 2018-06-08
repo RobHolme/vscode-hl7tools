@@ -3646,7 +3646,7 @@ var fields = {
             },
             {
                 "datatype": "ST",
-                "desc": "Email Address",
+                "desc": "Communication Address",
                 "opt": 1,
                 "rep": 1,
                 "len": 199
@@ -3716,14 +3716,14 @@ var fields = {
             },
             {
                 "datatype": "DTM",
-                "desc": "Exiration Date",
+                "desc": "Expiration Date",
                 "opt": 1,
                 "rep": 1,
                 "len": 24
             },
             {
                 "datatype": "CWE",
-                "desc": "Exiration Reason",
+                "desc": "Expiration Reason",
                 "opt": 1,
                 "rep": 1,
                 "len": 705,
