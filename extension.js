@@ -479,6 +479,15 @@ function activate(context) {
 	context.subscriptions.push(CheckRequiredFieldsCommand);
 
 
+	
+	//-------------------------------------------------------------------------------------------
+	// Register the command 'Add Linebreaks to Segments'
+	var FindFieldCommand = vscode.commands.registerCommand('hl7tools.FindField', function () {
+		console.log('Running command hl7tools.FindField');
+		AddLinebreaksToSegments();
+	});
+	context.subscriptions.push(AddLinebreakToSegmentCommand);
+
 	//-------------------------------------------------------------------------------------------
 	// add line breaks between segments (if they are not present)
 	function AddLinebreaksToSegments() {
