@@ -18,6 +18,7 @@ const TcpMllpListener = require('./lib/TCPListener.js');
 const ExtractFields = require('./lib/ExractFields.js');
 const CheckRequiredFields = require('./lib/CheckRequiredFields.js');
 const missingRequiredFieldsClass = require('./lib/CheckRequiredFieldsResult.js');
+const FindField = require ('./lib/FindField.js');
 
 var delimiters;
 
@@ -481,12 +482,17 @@ function activate(context) {
 
 	
 	//-------------------------------------------------------------------------------------------
-	// Register the command 'Add Linebreaks to Segments'
+	// Register the command 'Find Field'
 	var FindFieldCommand = vscode.commands.registerCommand('hl7tools.FindField', function () {
 		console.log('Running command hl7tools.FindField');
-		AddLinebreaksToSegments();
+		// prompt the user for the location of the HL7 field (e.g. PID-3). Validate the location via regex.
+		var itemLocationPromise = vscode.window.showInputBox({ prompt: "Enter HL7 item location (e.g. 'PID-3'), or the partial field name (e.g. 'name')" });
+			itemLocationPromise.then(function (itemLocation) {
+			currentItemLocation = itemLocation;
+			FindField.FindField(itemLocation);
+		});
 	});
-	context.subscriptions.push(AddLinebreakToSegmentCommand);
+	context.subscriptions.push(FindFieldCommand);
 
 	//-------------------------------------------------------------------------------------------
 	// add line breaks between segments (if they are not present)
