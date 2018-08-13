@@ -83,3 +83,5 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 * refactored functions to improve maintenance/reuse. No functional changes.
 ## 1.8.0 (21/02/2018)
 * added function 'Check Required Fields'
+## 1.9.0 (13/08/208)
+* added function 'Find Field'
