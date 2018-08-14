@@ -103,13 +103,7 @@
 				"command": "hl7tools.CheckRequiredFields",
 				"key": "ctrl+alt+k",
 				"when": "editorLangId == hl7"
-			},
-			{
-				"command": "hl7tools.FindField",
-				"key": "ctrl+alt+f",
-				"when": "editorLangID == hl7"
 			}
-
 		],
 		"commands": [
 			{
@@ -166,7 +160,7 @@
 			},
 			{
 				"command": "hl7tools.FindField",
-				"title": "HL7 Tooles Find Field"
+				"title": "HL7 Tools: Find Field"
 			}
 		],
 		"languages": [
