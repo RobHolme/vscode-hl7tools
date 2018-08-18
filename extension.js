@@ -3,7 +3,7 @@
 
 // The module 'vscode' contains the VS Code extensibility API. 
 const vscode = require('vscode');
-var window = vscode.window;
+//var window = vscode.window;
 var workspace = vscode.workspace;
 
 const path = require("path");
@@ -20,15 +20,15 @@ const CheckRequiredFields = require('./lib/CheckRequiredFields.js');
 //const missingRequiredFieldsClass = require('./lib/CheckRequiredFieldsResult.js');
 const FindFieldClass = require('./lib/FindField.js');
 
+// the HL7 delimiters used by the message
 var delimiters;
-
 // Store the HL7 schema and associated field descriptions
 var hl7Schema;
 var hl7Fields;
 // this stores the location or name of the field to highlight. The highlight is re-applied as the active document changes.
 var currentItemLocation;
 // the status bar item to display current HL7 schema this is loaded
-var statusbarHL7Version = window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+var statusbarHL7Version = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
 // the list of fields with hover decorations (displaying the field description);
 var hoverDecorationList = [];
 // stores the current highlighted field so that it can be cleared when selecting a new field.
@@ -39,6 +39,8 @@ var currentHoverDecoration;
 var highlightFieldBackgroundColor;
 //  use this to prevent th active do hack from running more than once per session
 var activeDocHackRun = false;
+// store field locations used by Find and FindNext functions
+var findFieldLocation;
 
 //----------------------------------------------------
 // update the user configuration settings 
@@ -47,11 +49,12 @@ function UpdateConfiguration() {
 	highlightFieldBackgroundColor = config['highlightBackgroundColor'];
 }
 
+
 //----------------------------------------------------
 // load the appropriate hl7 schema based on the HL7 version (as defined in MSH-12) 
 function LoadHL7Schema() {
 	// exit if the editor is not active
-	var activeEditor = window.activeTextEditor;
+	var activeEditor = vscode.window.activeTextEditor;
 	var supportedSchemas = ["2.1", "2.2", "2.3", "2.3.1", "2.4", "2.5", "2.5.1", "2.6", "2.7", "2.7.1"];
 	var hl7SchemaTooltip = "";
 
@@ -104,7 +107,7 @@ function activate(context) {
 	// get user preferences for the extension
 	UpdateConfiguration();
 
-	var activeEditor = window.activeTextEditor
+	var activeEditor = vscode.window.activeTextEditor
 	// only activate the field descriptions if it is identified as a HL7 file  
 	if (!common.IsHL7File(activeEditor.document)) {
 		statusbarHL7Version.hide();
@@ -119,12 +122,14 @@ function activate(context) {
 		LoadHL7Schema();
 		// apply the hover descriptions for each field
 		UpdateFieldDescriptions();
+		// create a new FindField object when the active editor changes
+		findFieldLocation = new FindFieldClass(vscode.window.activeTextEditor.document,hl7Schema);
 	}
 
 	// the active document has changed. 
-	window.onDidChangeActiveTextEditor(function (editor) {
+	vscode.window.onDidChangeActiveTextEditor(function (editor) {
 		if (editor) {
-			// update the HL7 deliemter characters from the current file
+			// update the HL7 delimiter characters from the current file
 			delimiters = common.ParseDelimiters();
 
 			// only activate the field descriptions if it is identified as a HL7 file  
@@ -139,6 +144,9 @@ function activate(context) {
 				if (hl7toolsConfig['AddLinebreakOnActivation'] == true) {
 					AddLinebreaksToSegments();
 				}
+
+				// create a new FindField object when the active editor changes
+				findFieldLocation = new FindFieldClass(vscode.window.activeTextEditor.document,hl7Schema);
 			}
 			else {
 				statusbarHL7Version.hide();
@@ -488,7 +496,6 @@ function activate(context) {
 		// prompt the user for the location of the HL7 field (e.g. PID-3). Validate the location via regex.
 		var itemLocationPromise = vscode.window.showInputBox({ prompt: "Enter HL7 item location (e.g. 'PID-3'), or the partial field name (e.g. 'name')" });
 			itemLocationPromise.then(function (itemLocation) {
-			findFieldLocation = new FindFieldClass(vscode.window.activeTextEditor.document,hl7Schema);
 			findFieldLocation.Find(itemLocation);
 		});
 	});
