@@ -449,6 +449,7 @@ function activate(context) {
 	});
 	context.subscriptions.push(ExtractFieldsCommand);
 
+
 	//-------------------------------------------------------------------------------------------
 	// Register the command 'Confirm all required fields are present'
 	var CheckRequiredFieldsCommand = vscode.commands.registerCommand('hl7tools.CheckRequiredFields', function () {
@@ -487,7 +488,6 @@ function activate(context) {
 	});
 	context.subscriptions.push(CheckRequiredFieldsCommand);
 
-
 	
 	//-------------------------------------------------------------------------------------------
 	// Register the command 'Find Field'
@@ -500,6 +500,19 @@ function activate(context) {
 		});
 	});
 	context.subscriptions.push(FindFieldCommand);
+
+
+	//-------------------------------------------------------------------------------------------
+	// Register the command 'Find Next Field'
+	var FindNextFieldCommand = vscode.commands.registerCommand('hl7tools.FindNextField', function () {
+		console.log('Running command hl7tools.FindNextField');
+			var findNextResult = findFieldLocation.FindNext();
+			if (findNextResult == FindNextReturnCodeEnum.LAST_FIELD_FOUND) {
+				vscode.window.showInformationMessage("All fields found. Resuming from beginning of message");
+			}
+	});
+	context.subscriptions.push(FindNextFieldCommand);
+
 
 	//-------------------------------------------------------------------------------------------
 	// add line breaks between segments (if they are not present)
