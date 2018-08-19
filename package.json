@@ -108,6 +108,11 @@
 				"command": "hl7tools.FindField",
 				"key": "ctrl+alt+f",
 				"when": "editorLangId == hl7"
+			},
+			{
+				"command": "hl7tools.FindNextField",
+				"key": "ctrl+alt+n",
+				"when": "editorLangId == hl7"
 			}
 		],
 		"commands": [
@@ -166,6 +171,10 @@
 			{
 				"command": "hl7tools.FindField",
 				"title": "HL7 Tools: Find Field"
+			},
+			{
+				"command": "hl7tools.FindNextField",
+				"title": "HL7 Tools: Find Next Field"
 			}
 		],
 		"languages": [
