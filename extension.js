@@ -577,7 +577,7 @@ function activate(context) {
 		}
 
 		// don't apply descriptions if file is too large (i.e. large hl7 batch files). 
-		// Performance can be impacted on low specced systems 
+		// Performance can be impacted on systems with low resources
 		var currentDoc = activeEditor.document;
 		var hl7toolsConfig = vscode.workspace.getConfiguration('hl7tools');
 		const maxLinesPreference = hl7toolsConfig['MaxLinesForFieldDescriptions'];
