@@ -15,7 +15,7 @@ const MaskIdentifiers = require('./lib/MaskIdentifiers.js');
 const FieldTreeView = require('./lib/FieldTreeView.js');
 const TcpMllpClient = require('./lib/SendHl7Message.js');
 const TcpMllpListener = require('./lib/TCPListener.js');
-const ExtractFields = require('./lib/ExractFields.js');
+const ExtractFields = require('./lib/ExtractFields.js');
 const CheckRequiredFields = require('./lib/CheckRequiredFields.js');
 //const missingRequiredFieldsClass = require('./lib/CheckRequiredFieldsResult.js');
 const FindFieldClass = require('./lib/FindField.js');
@@ -123,7 +123,7 @@ function activate(context) {
 		// apply the hover descriptions for each field
 		UpdateFieldDescriptions();
 		// create a new FindField object when the active editor changes
-		findFieldLocation = new FindFieldClass(vscode.window.activeTextEditor.document,hl7Schema);
+		findFieldLocation = new FindFieldClass(vscode.window.activeTextEditor.document, hl7Schema);
 	}
 
 	// the active document has changed. 
@@ -146,7 +146,7 @@ function activate(context) {
 				}
 
 				// create a new FindField object when the active editor changes
-				findFieldLocation = new FindFieldClass(vscode.window.activeTextEditor.document,hl7Schema);
+				findFieldLocation = new FindFieldClass(vscode.window.activeTextEditor.document, hl7Schema);
 			}
 			else {
 				statusbarHL7Version.hide();
@@ -464,7 +464,7 @@ function activate(context) {
 		// Check required fields 
 		var missingRequiredFields = CheckRequiredFields.CheckAllFields(hl7Schema);
 		const fileName = path.basename(editor.document.uri.fsPath);
-		
+
 		// Write the results to visual studio code's output window if missing required field values are identified
 		if (missingRequiredFields.length > 0) {
 			var channel = vscode.window.createOutputChannel('Missing required fields - ' + fileName);
@@ -480,7 +480,7 @@ function activate(context) {
 			channel.appendLine("\n\nPlease note that this does not consider conditional fields, and does not attempt to validate the data type of required fields");
 			channel.show(vscode.ViewColumn.Two);
 		}
-		
+
 		// display prompt indicating all required fields have values 
 		else {
 			vscode.window.showInformationMessage("All required fields are present in the message and contain values");
@@ -488,15 +488,18 @@ function activate(context) {
 	});
 	context.subscriptions.push(CheckRequiredFieldsCommand);
 
-	
+
 	//-------------------------------------------------------------------------------------------
 	// Register the command 'Find Field'
 	var FindFieldCommand = vscode.commands.registerCommand('hl7tools.FindField', function () {
 		console.log('Running command hl7tools.FindField');
 		// prompt the user for the location of the HL7 field (e.g. PID-3). Validate the location via regex.
 		var itemLocationPromise = vscode.window.showInputBox({ prompt: "Enter HL7 item location (e.g. 'PID-3'), or the partial field name (e.g. 'name')" });
-			itemLocationPromise.then(function (itemLocation) {
-			findFieldLocation.Find(itemLocation);
+		itemLocationPromise.then(function (itemLocation) {
+			var findResult = findFieldLocation.Find(itemLocation);
+			if (findResult == findFieldLocation.findNextReturnCode.ERROR_NO_FIELDS_FOUND) {
+				vscode.window.showInformationMessage("No matching fields found.");
+			}
 		});
 	});
 	context.subscriptions.push(FindFieldCommand);
@@ -506,10 +509,18 @@ function activate(context) {
 	// Register the command 'Find Next Field'
 	var FindNextFieldCommand = vscode.commands.registerCommand('hl7tools.FindNextField', function () {
 		console.log('Running command hl7tools.FindNextField');
-			var findNextResult = findFieldLocation.FindNext();
-			if (findNextResult == FindNextReturnCodeEnum.LAST_FIELD_FOUND) {
-				vscode.window.showInformationMessage("All fields found. Resuming from beginning of message");
-			}
+		
+		var findNextResult = findFieldLocation.FindNext();
+		// warn user when last match found, or no matches found, or when the 'Find Fields' function hasn't been called first.
+		if (findNextResult === findFieldLocation.findNextReturnCode.SUCCESS_LAST_FIELD_FOUND) {
+			vscode.window.showInformationMessage("All fields found. Resuming from beginning of message");
+		}
+		else if (findNextResult === findFieldLocation.findNextReturnCode.ERROR_NO_SEARCH_DEFINED) {
+			vscode.window.showInformationMessage("No search defined. Use 'HL7 Tools: Find Field' function first.");
+		}
+		else if (findNextResult === findFieldLocation.findNextReturnCode.ERROR_NO_FIELDS_FOUND) {
+			vscode.window.showInformationMessage("No matching fields found.");
+		}
 	});
 	context.subscriptions.push(FindNextFieldCommand);
 
