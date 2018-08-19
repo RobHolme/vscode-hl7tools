@@ -83,5 +83,5 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 * refactored functions to improve maintenance/reuse. No functional changes.
 ## 1.8.0 (21/02/2018)
 * added function 'Check Required Fields'
-## 1.9.0 (13/08/208)
-* added function 'Find Field'
+## 1.9.0 (19/08/208)
+* added function 'Find Field' and 'Find Next Field'. HL7 fields are searched for in the message based on description (e.g. "Date of Birth") or location (e.g. "PV1-3"). 'Find Next' will loop through all matching fields in the file. The cursor will be moved to the start of the field, the field text will be selected (if not empty)
