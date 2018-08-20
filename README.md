@@ -34,7 +34,7 @@ By default only the first 200 segments of each message will include hover descri
 `"hl7tools.MaxLinesForFieldDescriptions"`
 
 ### Field highlighting
-This prompts for a HL7 field location (e.g. PID-3), or partial field description (e.g. name). The corresponding field(s) are then highlighted in the editor. The field highlighting will be applied to other HL7 messages when they become the active document. The background colour applied to highlighted fields can be configured via the user preference "hl7tools.highlightBackgroundColor". This preference requires a RGBA colour value, specified as: rgba(red, green, blue, alpha). The alpha parameter is a number between 0.0 (fully transparent) and 1.0 (fully opaque).
+This command prompts for a HL7 field location (e.g. PID-3), or partial field description (e.g. name). The corresponding field(s) are then highlighted in the editor. The field highlighting will be applied to other HL7 messages when they become the active document. The background colour applied to highlighted fields can be configured via the user preference "hl7tools.highlightBackgroundColor". This preference requires a RGBA colour value, specified as: rgba(red, green, blue, alpha). The alpha parameter is a number between 0.0 (fully transparent) and 1.0 (fully opaque).
 
 * Press F1 --> HL7 Tools: Highlight Field
 
@@ -139,6 +139,13 @@ This command confirms all required fields (as defined by the HL7 specification) 
 * If all required fields are populated, an information message will appear. If any are missing, the field location and the corresponding line number from the file will be displayed in an output window.
 
 ![CheckRequiredFields](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/requiredfields.jpg)
+
+### Find Field
+Search the current message fields matching either a field description (e.g. 'Patient Name'), or a field location (e.g. 'PV1-3'). 
+* Press F1 --> HL7 Tools: Find Field
+* Enter the reference to the field location (e.g. PID-3), or enter part of the field name (e.g. patient).
+* The matching field will be selected, with the cursor moved to the beginning of the field.
+* Press F1 --> HL7 Tools: Find Next Field to find further matching fields in the message.
 
 ## Installation
 ### Visual Studio Code 
