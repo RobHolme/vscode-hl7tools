@@ -237,29 +237,15 @@
 					"description": "Apply the command 'Add Linebreak to Segments' every time a file is active in the editor"
 				}
 			}
-		},
-		"devDependencies": {
-			"typescript": "^2.0.3",
-			"vscode": "^1.0.0",
-			"mocha": "^2.3.3",
-			"eslint": "^3.6.0",
-			"@types/node": "^6.0.40",
-			"@types/mocha": "^2.2.32"
-		},
-		"__metadata": {
-			"id": "b919e7cc-6fa1-454b-ab7f-216ed8d48f19",
-			"publisherId": "be56bacd-8aad-4010-8775-e3f3abf3f41d",
-			"publisherDisplayName": "Rob Holme"
 		}
 	},
-	"devDependencies": {
-		"eslint": "^4.2.0",
-		"eslint-config-standard": "^10.2.1",
-		"eslint-plugin-import": "^2.7.0",
-		"eslint-plugin-node": "^5.1.1",
-		"eslint-plugin-promise": "^3.5.0",
-		"eslint-plugin-standard": "^3.0.1"
-	},
+    "devDependencies": {
+        "typescript": "^2.6.1",
+        "vscode": "^1.1.21",
+        "eslint": "^4.11.0",
+        "@types/node": "^8.10.25",
+        "@types/mocha": "^2.2.42"
+    },
 	"__metadata": {
 		"id": "b919e7cc-6fa1-454b-ab7f-216ed8d48f19",
 		"publisherId": "be56bacd-8aad-4010-8775-e3f3abf3f41d",
