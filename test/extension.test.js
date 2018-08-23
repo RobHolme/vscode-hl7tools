@@ -163,12 +163,73 @@ suite("vscode-hl7tools Extension Tests", function () {
 
 	});
 
-
 	suite("CheckRequiredFieldsResult.js unit tests", function () {
-		const missingRequiredFieldsClass = require('../lib/CheckRequiredFieldsResult.js');
-		test = new missingRequiredFieldsClass.missingRequiredFieldResult(1,"MSH-1");
-		assert.equal(1, test.LineNumber);
-		assert.equal("MSH-1", test.FieldLocation);
+		test("new missingRequiredFields()", function () {
+			const missingRequiredFieldsClass = require('../lib/CheckRequiredFieldsResult.js');
+			missingRequiredFieldsClassTest = new missingRequiredFieldsClass.missingRequiredFieldResult(1, "MSH-1");
+			assert.equal(1, missingRequiredFieldsClassTest.LineNumber);
+			assert.equal("MSH-1", missingRequiredFieldsClassTest.FieldLocation);
+		});
+	});
+
+	suite("CursorManager.js unit tests", function () {
+		const cursorManagerClass = require('../lib/CursorManager.js');
+		const findFieldResultClass = require('../lib/FindFieldResult.js');
+		var testCursor = new cursorManagerClass.CursorManager();
+		
+		test("Get CursorPosition()", function () {
+			var cursorResult = testCursor.CursorPosition;
+			assert.equal(0, cursorResult.line);
+			assert.equal(0, cursorResult.character);
+		});
+
+		test("Set CursorPosition()", function() {
+			var findFieldResult = new findFieldResultClass.FindFieldResult(2,1,3);
+			testCursor.CursorPosition = findFieldResult;
+			var cursorResult = testCursor.CursorPosition;
+			assert.equal(2, cursorResult.line);
+			assert.equal(3, cursorResult.character);
+		});
+	});
+
+	suite("ExtractFieldResult.js unit tests", function () {
+		const resultClass = require('../lib/ExtractFieldResult.js');
+		var result = new resultClass.result("c:\\test\\test.hl7", "test")	
+		var results = new resultClass.resultCollection();
+		
+		test("new result()", function() {
+			assert.notEqual(undefined, result);
+		});
+		
+		test("Get Filename()", function() {
+			assert.equal("c:\\test\\test.hl7", result.Filename);
+		});
+		
+		test("Get Value()", function() {
+			assert.equal("test", result.Value);
+		});
+		
+		test ("AddResult()", function() {
+			results.AddResult(result);
+			assert.equal(1, results.Results.length);
+		});
+
+		test("Get Results()", function() {
+			results.AddResult(result);
+	
+			assert.equal("test", results.Results[0].Value);
+			assert.equal("c:\\test\\test.hl7", results.Results[0].Filename);
+		});
+		
+		test("MaxLength()", function() {
+			assert.equal(5, results.MaxLength);
+		});
+
+	});
+
+	suite("ExtractFields.js unit tests", function () { 
+// TO DO: continue unit tests
+
 	});
 
 });
