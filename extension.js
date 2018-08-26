@@ -65,7 +65,7 @@ function LoadHL7Schema() {
 		msh = activeEditor.document.lineAt(0).text;
 		if (msh.split(delimiters.FIELD)[0].toUpperCase() == "MSH") {
 			var hl7Version = msh.split(delimiters.FIELD)[11];
-			console.log("HL7 version detected as " + hl7Version);
+//			console.log("HL7 version detected as " + hl7Version);
 			if (supportedSchemas.includes(hl7Version)) {
 				// Load the segment descriptions from the HL7-Dictionary module
 				hl7Schema = require('./schema/' + hl7Version + '/segments.js');
@@ -74,7 +74,7 @@ function LoadHL7Schema() {
 			}
 			// default to the 2.7.1 schema if there is a not a schema available for the version reported (e.g. future releases)
 			else {
-				console.log("Schema for HL7 version " + hl7Version + " is not supported. Defaulting to v2.7.1 schema");
+//				console.log("Schema for HL7 version " + hl7Version + " is not supported. Defaulting to v2.7.1 schema");
 				hl7Version = "2.7.1";
 				hl7SchemaTooltip = "HL7 version not detected. Defaulting to v" + hl7Version;
 				hl7Schema = require('./schema/2.7.1/segments.js');
@@ -90,7 +90,7 @@ function LoadHL7Schema() {
 		else {
 			hl7Schema = require('./schema/2.7.1/segments.js');
 			hl7Fields = require('./schema/2.7.1/fields.js');
-			console.log("HL7 version could not be detected. Defaulting to v2.7.1 schema.");
+//			console.log("HL7 version could not be detected. Defaulting to v2.7.1 schema.");
 			statusbarHL7Version.hide();
 		}
 	}
@@ -559,7 +559,6 @@ function activate(context) {
 		var start = new vscode.Position(0, 0);
 		var end = currentDoc.positionAt(hl7Message.length);
 		activeEditor.edit(editHelper => {
-			console.log('Editing Document');
 			editHelper.replace(new vscode.Range(start, end), newMessage);
 		});
 	}
@@ -568,8 +567,7 @@ function activate(context) {
 	//-------------------------------------------------------------------------------------------
 	// apply descriptions to each field as a hover decoration (tooltip)
 	function UpdateFieldDescriptions() {
-		console.log("Updating field hover descriptions");
-
+	
 		// exit if the editor is not active
 		var activeEditor = vscode.window.activeTextEditor;
 		if (!activeEditor) {
