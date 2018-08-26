@@ -228,7 +228,13 @@ suite("vscode-hl7tools Extension Tests", function () {
 	});
 
 	suite("ExtractFields.js unit tests", function () { 
-// TO DO: continue unit tests
+		const ExtractFields = require('../lib/ExtractFields.js');
+
+		test("ExtractAllFields()", function() {
+			assert.equal(ExtractFields.ExtractReturnCode.SUCCESS, ExtractFields.ExtractAllFields("PID-3"));
+			assert.equal(ExtractFields.ExtractReturnCode.ERROR_NO_LOCATION_PROVIDED, ExtractFields.ExtractAllFields());
+			assert.equal(ExtractFields.ExtractReturnCode.ERROR_LOCATION_NOT_VALID, ExtractFields.ExtractAllFields("PID-0"));
+		});
 
 	});
 
