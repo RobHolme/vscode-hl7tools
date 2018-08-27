@@ -10,6 +10,7 @@ const path = require("path");
 
 // load local modules
 const common = require('./lib/common.js');
+//const HighlightFieldClass = require('./lib/HighlightField.js');
 const HighlightFields = require('./lib/HighlightField.js');
 const MaskIdentifiers = require('./lib/MaskIdentifiers.js');
 const FieldTreeView = require('./lib/FieldTreeView.js');
@@ -17,7 +18,6 @@ const TcpMllpClient = require('./lib/SendHl7Message.js');
 const TcpMllpListener = require('./lib/TCPListener.js');
 const ExtractFields = require('./lib/ExtractFields.js');
 const CheckRequiredFields = require('./lib/CheckRequiredFields.js');
-//const missingRequiredFieldsClass = require('./lib/CheckRequiredFieldsResult.js');
 const FindFieldClass = require('./lib/FindField.js');
 
 // the HL7 delimiters used by the message
@@ -32,7 +32,7 @@ var statusbarHL7Version = vscode.window.createStatusBarItem(vscode.StatusBarAlig
 // the list of fields with hover decorations (displaying the field description);
 var hoverDecorationList = [];
 // stores the current highlighted field so that it can be cleared when selecting a new field.
-var currentDecoration;
+//var currentDecoration;
 // stores the current hover decorations
 var currentHoverDecoration;
 // the value of the background colour for highlighted items (from the preferences file). Expects a RGBA value.
@@ -41,6 +41,8 @@ var highlightFieldBackgroundColor;
 var activeDocHackRun = false;
 // store field locations used by Find and FindNext functions
 var findFieldLocation;
+// HighlightField object
+//var highlightFields; 
 
 //----------------------------------------------------
 // update the user configuration settings 
@@ -65,7 +67,6 @@ function LoadHL7Schema() {
 		msh = activeEditor.document.lineAt(0).text;
 		if (msh.split(delimiters.FIELD)[0].toUpperCase() == "MSH") {
 			var hl7Version = msh.split(delimiters.FIELD)[11];
-//			console.log("HL7 version detected as " + hl7Version);
 			if (supportedSchemas.includes(hl7Version)) {
 				// Load the segment descriptions from the HL7-Dictionary module
 				hl7Schema = require('./schema/' + hl7Version + '/segments.js');
@@ -74,7 +75,6 @@ function LoadHL7Schema() {
 			}
 			// default to the 2.7.1 schema if there is a not a schema available for the version reported (e.g. future releases)
 			else {
-//				console.log("Schema for HL7 version " + hl7Version + " is not supported. Defaulting to v2.7.1 schema");
 				hl7Version = "2.7.1";
 				hl7SchemaTooltip = "HL7 version not detected. Defaulting to v" + hl7Version;
 				hl7Schema = require('./schema/2.7.1/segments.js');
@@ -90,7 +90,6 @@ function LoadHL7Schema() {
 		else {
 			hl7Schema = require('./schema/2.7.1/segments.js');
 			hl7Fields = require('./schema/2.7.1/fields.js');
-//			console.log("HL7 version could not be detected. Defaulting to v2.7.1 schema.");
 			statusbarHL7Version.hide();
 		}
 	}
@@ -137,6 +136,9 @@ function activate(context) {
 				// the new document may be a different version of HL7, so load the appropriate version of schema
 				LoadHL7Schema();
 				UpdateFieldDescriptions();
+	//			if (highlightFields != undefined) {
+	//				highlightFields.ShowHighlights();
+	//			}
 				HighlightFields.ShowHighlights(currentItemLocation, hl7Schema, highlightFieldBackgroundColor);
 
 				// if the AddLinebreakOnActivation user preference is set, call the 'Add LineBreaks to Segment' command
@@ -178,6 +180,13 @@ function activate(context) {
 		// prompt the user for the location of the HL7 field (e.g. PID-3). Validate the location via regex.
 		var itemLocationPromise = vscode.window.showInputBox({ prompt: "Enter HL7 item location (e.g. 'PID-3'), or the partial field name (e.g. 'name')" });
 		itemLocationPromise.then(function (itemLocation) {
+			// clear any existing highlighted fields
+	//		if (highlightFields) {
+	//			highlightFields.ClearHighlights();
+//			}
+			// create a new HighlightField object
+//			highlightFields = new HighlightFieldClass.HighlightField(itemLocation, hl7Schema, highlightFieldBackgroundColor);
+//			highlightFields.ShowHighlights();
 			currentItemLocation = itemLocation;
 			HighlightFields.ShowHighlights(itemLocation, hl7Schema, highlightFieldBackgroundColor);
 		});
@@ -191,6 +200,9 @@ function activate(context) {
 	var ClearHighlightedFieldsCommand = vscode.commands.registerCommand('hl7tools.ClearHighlightedFields', function () {
 		console.log('In function ClearHighlightedFields');
 		// set the highlighted location to null, then call ShowHighlights. This will clear highlights on a null location parameter.
+	//	if (highlightFields != undefined) {
+	//		highlightFields.ClearHighlights();
+	//	}
 		currentItemLocation = null;
 		HighlightFields.ShowHighlights(currentItemLocation, hl7Schema, highlightFieldBackgroundColor);
 	});
