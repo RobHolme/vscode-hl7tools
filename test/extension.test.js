@@ -176,15 +176,15 @@ suite("vscode-hl7tools Extension Tests", function () {
 		const cursorManagerClass = require('../lib/CursorManager.js');
 		const findFieldResultClass = require('../lib/FindFieldResult.js');
 		var testCursor = new cursorManagerClass.CursorManager();
-		
+
 		test("Get CursorPosition()", function () {
 			var cursorResult = testCursor.CursorPosition;
 			assert.equal(0, cursorResult.line);
 			assert.equal(0, cursorResult.character);
 		});
 
-		test("Set CursorPosition()", function() {
-			var findFieldResult = new findFieldResultClass.FindFieldResult(2,1,3);
+		test("Set CursorPosition()", function () {
+			var findFieldResult = new findFieldResultClass.FindFieldResult(2, 1, 3);
 			testCursor.CursorPosition = findFieldResult;
 			var cursorResult = testCursor.CursorPosition;
 			assert.equal(2, cursorResult.line);
@@ -194,72 +194,72 @@ suite("vscode-hl7tools Extension Tests", function () {
 
 	suite("ExtractFieldResult.js unit tests", function () {
 		const resultClass = require('../lib/ExtractFieldResult.js');
-		var result = new resultClass.result("c:\\test\\test.hl7", "test")	
+		var result = new resultClass.result("c:\\test\\test.hl7", "test")
 		var results = new resultClass.resultCollection();
-		
-		test("new result()", function() {
+
+		test("new result()", function () {
 			assert.notEqual(undefined, result);
 		});
-		
-		test("Get Filename()", function() {
+
+		test("Get Filename()", function () {
 			assert.equal("c:\\test\\test.hl7", result.Filename);
 		});
-		
-		test("Get Value()", function() {
+
+		test("Get Value()", function () {
 			assert.equal("test", result.Value);
 		});
-		
-		test ("AddResult()", function() {
+
+		test("AddResult()", function () {
 			results.AddResult(result);
 			assert.equal(1, results.Results.length);
 		});
 
-		test("Get Results()", function() {
+		test("Get Results()", function () {
 			results.AddResult(result);
-	
+
 			assert.equal("test", results.Results[0].Value);
 			assert.equal("c:\\test\\test.hl7", results.Results[0].Filename);
 		});
-		
-		test("MaxLength()", function() {
+
+		test("MaxLength()", function () {
 			assert.equal(5, results.MaxLength);
 		});
 
 	});
 
-	suite("ExtractFields.js unit tests", function () { 
+	suite("ExtractFields.js unit tests", function () {
 		const extractFields = require('../lib/ExtractFields.js');
-		test("ExtractAllFields()", function() {
+		test("ExtractAllFields()", function () {
 			assert.equal(extractFields.ExtractReturnCode.SUCCESS, extractFields.ExtractAllFields("PID-3"));
 			assert.equal(extractFields.ExtractReturnCode.ERROR_NO_LOCATION_PROVIDED, extractFields.ExtractAllFields());
 			assert.equal(extractFields.ExtractReturnCode.ERROR_LOCATION_NOT_VALID, extractFields.ExtractAllFields("PID-0"));
 		});
 	});
 
-	suite("FieldTreeView.js unit tests", function () { 
+	suite("FieldTreeView.js unit tests", function () {
 		const fieldTreeView = require('../lib/FieldTreeView.js');
 		var crypto = require('crypto');
 		hl7Fields = require('../schema/2.6/fields.js');
 		hl7Schema = require('../schema/2.6/segments.js');
-		
-		test("ExtractAllFields()", function() {
-			var result = fieldTreeView.DisplaySegmentAsTree("NK1|1|DUCK^HUEY|SO|3583 DUCK RD^^FOWL^CA^999990000|8885552222||Y||||||||||||||",hl7Schema,hl7Fields)
+
+		test("ExtractAllFields()", function () {
+			var result = fieldTreeView.DisplaySegmentAsTree("NK1|1|DUCK^HUEY|SO|3583 DUCK RD^^FOWL^CA^999990000|8885552222||Y||||||||||||||", hl7Schema, hl7Fields)
 			// calculate the hash of the result, compare against the hash of the expected result
 			var hash = crypto.createHash('md5').update(result).digest('hex');
 			assert.equal("d20e64530854996141aabae69135ea40", hash);
 		});
-	});	
+	});
 
-	suite("FindField.js unit tests", function () { 
+	suite("FindField.js unit tests", function () {
 		const FindFieldClass = require('../lib/FindField.js');
 		hl7Schema = require('../schema/2.3/segments.js');
-		
-		test("FindField() Constructor", function() {
+
+		test("FindField() Constructor", function () {
 			findFieldLocation = new FindFieldClass(vscode.window.activeTextEditor.document, hl7Schema);
 			assert.notEqual(undefined, findFieldLocation);
 		});
 
-		test("Find()", function() {
+		test("Find()", function () {
 			findFieldLocation = new FindFieldClass(vscode.window.activeTextEditor.document, hl7Schema);
 			// test for a valid field
 			var findResult = findFieldLocation.Find("PID-3")
@@ -269,14 +269,14 @@ suite("vscode-hl7tools Extension Tests", function () {
 			assert.equal(findFieldLocation.findNextReturnCode.ERROR_NO_FIELDS_FOUND, findResult);
 		});
 
-		test("FindNext()", function() {
+		test("FindNext()", function () {
 			findFieldLocation = new FindFieldClass(vscode.window.activeTextEditor.document, hl7Schema);
 			var findResult;
-			
+
 			// test for a failure since Find() hasn't been called yet
 			findResult = findFieldLocation.FindNext();
 			assert.equal(findFieldLocation.findNextReturnCode.ERROR_NO_SEARCH_DEFINED, findResult);
-			
+
 			// test for last field found
 			findFieldLocation.Find("PID-3")
 			findResult = findFieldLocation.FindNext();
@@ -294,29 +294,53 @@ suite("vscode-hl7tools Extension Tests", function () {
 		});
 	});
 
-	suite("FindFieldResult.js unit tests", function () { 
+	suite("FindFieldResult.js unit tests", function () {
 		const findFieldResultClass = require('../lib/FindFieldResult.js');
-		var fieldResult = new findFieldResultClass.FindFieldResult(1,2,3);
+		var fieldResult = new findFieldResultClass.FindFieldResult(1, 2, 3);
 
-		test("FindFieldResult() constructor", function() {
+		test("FindFieldResult() constructor", function () {
 			assert.notEqual(undefined, fieldResult);
 		});
 
-		test ("Get Line()", function() {
+		test("Get Line()", function () {
 			assert.equal(1, fieldResult.Line);
 		});
 
-		test ("Get StartCharacter()", function() {
+		test("Get StartCharacter()", function () {
 			assert.equal(2, fieldResult.StartCharacter);
 		});
 
-		test ("Get EndCharacter()", function() {
+		test("Get EndCharacter()", function () {
 			assert.equal(3, fieldResult.EndCharacter);
 		});
 	});
 
-	suite("HighlightField.js unit tests", function () { 
-	
+	suite("HighlightField.js unit tests", function () {
+
+		hl7Schema = require('../schema/2.3/segments.js');
+/*		const HighlightFieldClass = require('../lib/HighlightField.js');
+		var highlightFields = new HighlightFieldClass.HighlightField("PID-3", hl7Schema);
+		test("Constructor()", function () {
+			assert.notEqual(undefined, highlightFields);
+		});
+
+		test("ShowHighlights()", function () {
+			assert.equal(1, highlightFields.ShowHighlights());	
+		});
+
+		test("ClearHighlights()", function() {
+			highlightFields.ClearHighlights();
+			assert.equal(0, highlightFields.fieldSelectionList.length);
+		});
+
+		test("GetDecorationList()", function() {
+			const common = require('../lib/common.js');
+			var locationHashtable = common.FindLocationFromDescription(this.itemLocation, hl7Schema);
+			var test = highlightFields.GetDecorationList(vscode.window.activeTextEditor, locationHashtable);
+			assert.equal(392, test.length);
+		});
+*/
+
 	});
 
 });
