@@ -3,14 +3,11 @@
 
 // The module 'vscode' contains the VS Code extensibility API. 
 const vscode = require('vscode');
-//var window = vscode.window;
 var workspace = vscode.workspace;
-
 const path = require("path");
 
 // load local modules
 const common = require('./lib/common.js');
-//const HighlightFieldClass = require('./lib/HighlightField.js');
 const HighlightFields = require('./lib/HighlightField.js');
 const MaskIdentifiers = require('./lib/MaskIdentifiers.js');
 const FieldTreeView = require('./lib/FieldTreeView.js');
@@ -136,10 +133,10 @@ function activate(context) {
 				// the new document may be a different version of HL7, so load the appropriate version of schema
 				LoadHL7Schema();
 				UpdateFieldDescriptions();
-	//			if (highlightFields != undefined) {
-	//				highlightFields.ShowHighlights();
-	//			}
-				HighlightFields.ShowHighlights(currentItemLocation, hl7Schema, highlightFieldBackgroundColor);
+				var result = HighlightFields.ShowHighlights(currentItemLocation, hl7Schema, highlightFieldBackgroundColor);
+				//				if (result == HighlightFields.HighlightFieldReturnCode.ERROR_NO_FIELDS_FOUND) {
+				//					vscode.window.showWarningMessage("A field matching " + itemLocation + " could not be located in the message");
+				//				}
 
 				// if the AddLinebreakOnActivation user preference is set, call the 'Add LineBreaks to Segment' command
 				var hl7toolsConfig = vscode.workspace.getConfiguration('hl7tools');
@@ -180,15 +177,11 @@ function activate(context) {
 		// prompt the user for the location of the HL7 field (e.g. PID-3). Validate the location via regex.
 		var itemLocationPromise = vscode.window.showInputBox({ prompt: "Enter HL7 item location (e.g. 'PID-3'), or the partial field name (e.g. 'name')" });
 		itemLocationPromise.then(function (itemLocation) {
-			// clear any existing highlighted fields
-	//		if (highlightFields) {
-	//			highlightFields.ClearHighlights();
-//			}
-			// create a new HighlightField object
-//			highlightFields = new HighlightFieldClass.HighlightField(itemLocation, hl7Schema, highlightFieldBackgroundColor);
-//			highlightFields.ShowHighlights();
 			currentItemLocation = itemLocation;
-			HighlightFields.ShowHighlights(itemLocation, hl7Schema, highlightFieldBackgroundColor);
+			var result = HighlightFields.ShowHighlights(itemLocation, hl7Schema, highlightFieldBackgroundColor);
+			if (result == HighlightFields.HighlightFieldReturnCode.ERROR_NO_FIELDS_FOUND) {
+				vscode.window.showWarningMessage("A field matching " + itemLocation + " could not be located in the message");
+			}
 		});
 
 	});
@@ -199,10 +192,6 @@ function activate(context) {
 	// this function clears any highlighted HL7 items in the message
 	var ClearHighlightedFieldsCommand = vscode.commands.registerCommand('hl7tools.ClearHighlightedFields', function () {
 		console.log('In function ClearHighlightedFields');
-		// set the highlighted location to null, then call ShowHighlights. This will clear highlights on a null location parameter.
-	//	if (highlightFields != undefined) {
-	//		highlightFields.ClearHighlights();
-	//	}
 		currentItemLocation = null;
 		HighlightFields.ShowHighlights(currentItemLocation, hl7Schema, highlightFieldBackgroundColor);
 	});
@@ -265,14 +254,14 @@ function activate(context) {
 			return;
 		}
 		// get the end of line char from the config file to append to each line.
-		var config = vscode.workspace.getConfiguration();
-		var endOfLineChar = config.files.eol;
+//		var config = vscode.workspace.getConfiguration();
+//		var endOfLineChar = config.files.eol;
 
 		var newMessage = "";
 		var batchHeaderRegEx = new RegExp("(^FHS\\" + delimiters.FIELD + ")|(^BHS\\" + delimiters.FIELD + ")|(^BTS\\" + delimiters.FIELD + ")(^FTS\\" + delimiters.FIELD + ")", "i");
 		var mshRegEx = new RegExp("^MSH\\" + delimiters.FIELD, "i");
 		var currentDoc = activeEditor.document;
-		var messageCount = 0;
+//		var messageCount = 0;
 
 		var allMessages = currentDoc.getText();
 
@@ -521,7 +510,7 @@ function activate(context) {
 	// Register the command 'Find Next Field'
 	var FindNextFieldCommand = vscode.commands.registerCommand('hl7tools.FindNextField', function () {
 		console.log('Running command hl7tools.FindNextField');
-		
+
 		var findNextResult = findFieldLocation.FindNext();
 		// warn user when last match found, or no matches found, or when the 'Find Fields' function hasn't been called first.
 		if (findNextResult === findFieldLocation.findNextReturnCode.SUCCESS_LAST_FIELD_FOUND) {
@@ -579,7 +568,7 @@ function activate(context) {
 	//-------------------------------------------------------------------------------------------
 	// apply descriptions to each field as a hover decoration (tooltip)
 	function UpdateFieldDescriptions() {
-	
+
 		// exit if the editor is not active
 		var activeEditor = vscode.window.activeTextEditor;
 		if (!activeEditor) {
