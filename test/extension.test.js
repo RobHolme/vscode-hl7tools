@@ -318,28 +318,28 @@ suite("vscode-hl7tools Extension Tests", function () {
 	suite("HighlightField.js unit tests", function () {
 
 		hl7Schema = require('../schema/2.3/segments.js');
-/*		const HighlightFieldClass = require('../lib/HighlightField.js');
-		var highlightFields = new HighlightFieldClass.HighlightField("PID-3", hl7Schema);
-		test("Constructor()", function () {
-			assert.notEqual(undefined, highlightFields);
+		const HighlightField = require('../lib/HighlightField.js');
+	
+		test("ShowHighlights() - Field located", function () {
+			// test success case
+			assert.equal(HighlightField.HighlightFieldReturnCode.SUCCESS_FIELD_FOUND, HighlightField.ShowHighlights("PID-3", hl7Schema));
+			assert.equal(HighlightField.HighlightFieldReturnCode.SUCCESS_FIELD_FOUND, HighlightField.ShowHighlights("pid-3", hl7Schema));
+			assert.equal(HighlightField.HighlightFieldReturnCode.SUCCESS_FIELD_FOUND, HighlightField.ShowHighlights("PID-3", hl7Schema, 'rgba(255,0,0,0.3)'));	
+			assert.equal(HighlightField.HighlightFieldReturnCode.SUCCESS_FIELD_FOUND, HighlightField.ShowHighlights("Patient", hl7Schema));
+			assert.equal(HighlightField.HighlightFieldReturnCode.SUCCESS_FIELD_FOUND, HighlightField.ShowHighlights("Patient", hl7Schema, 'rgba(255,0,0,0.3)'));
 		});
-
-		test("ShowHighlights()", function () {
-			assert.equal(1, highlightFields.ShowHighlights());	
+		test("ShowHighlights() - Field not found", function () {	
+			// test field not found
+			assert.equal(HighlightField.HighlightFieldReturnCode.SUCCESS_NO_FIELD_FOUND, HighlightField.ShowHighlights("zzzzz", hl7Schema));
+			assert.equal(HighlightField.HighlightFieldReturnCode.SUCCESS_NO_FIELD_FOUND, HighlightField.ShowHighlights("zzzzz", hl7Schema, 'rgba(255,0,0,0.3)'));
+			assert.equal(HighlightField.HighlightFieldReturnCode.SUCCESS_NO_FIELD_FOUND, HighlightField.ShowHighlights("PID-99", hl7Schema));
+			assert.equal(HighlightField.HighlightFieldReturnCode.SUCCESS_NO_FIELD_FOUND, HighlightField.ShowHighlights("PID-99", hl7Schema, 'rgba(255,0,0,0.3)'));
 		});
-
-		test("ClearHighlights()", function() {
-			highlightFields.ClearHighlights();
-			assert.equal(0, highlightFields.fieldSelectionList.length);
+		test("ShowHighlights() - No field provided", function () {	
+			// test no field provided
+			assert.equal(HighlightField.HighlightFieldReturnCode.ERROR_NO_LOCATION_PROVIDED, HighlightField.ShowHighlights(null, hl7Schema));
+			assert.equal(HighlightField.HighlightFieldReturnCode.ERROR_NO_LOCATION_PROVIDED, HighlightField.ShowHighlights("", hl7Schema, 'rgba(255,0,0,0.3)'));
 		});
-
-		test("GetDecorationList()", function() {
-			const common = require('../lib/common.js');
-			var locationHashtable = common.FindLocationFromDescription(this.itemLocation, hl7Schema);
-			var test = highlightFields.GetDecorationList(vscode.window.activeTextEditor, locationHashtable);
-			assert.equal(392, test.length);
-		});
-*/
 
 	});
 
