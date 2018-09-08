@@ -343,4 +343,13 @@ suite("vscode-hl7tools Extension Tests", function () {
 
 	});
 
+	suite("HL7Message.js unit tests", function () {
+		const hl7message = require('../lib/HL7Message.js');
+
+		test("Component constructor", function () {
+		
+		});
+
+	});
+
 });
