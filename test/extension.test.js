@@ -352,21 +352,101 @@ suite("vscode-hl7tools Extension Tests", function () {
 
 	});
 
-/*	suite("HL7Message.js unit tests", function () {
+	suite("HL7Message.js unit tests", function() {
 		const hl7message = require('../lib/HL7Message.js');
 
 		// test component object
-		var component = new hl7Message.Component("Patient Name");
-		test("Component constructor", function () {
-			assert.notEqual(undefined, component);
+		var component = new hl7message.Component("Component Name");
+		test("Component constructor", function() {
+			assert.notEqual(component, undefined);
 		});
-		
-		test("Component Set & Get Value", function() {
+		test ("Component.Name()", function() {
+			assert.equal(component.Name, "Component Name");
+		});
+		test("Component Set & Get Value()", function() {
 			component.Value = "A123456"
-			assert.equal("A123456", )
+			assert.equal(component.Value, "A123456");
+		});
+
+		// test FieldItem object
+		var fieldItem = new hl7message.FieldItem("Field Name")
+		test("FieldItem Constructor", function() {
+			assert.notEqual(fieldItem, undefined);
+		});
+		test("FieldItem.Name()", function() {
+			assert.equal(fieldItem.Name, "Field Name");
+		});
+		test("FieldItem.AddComponent() and FieldItem.Components()", function() {
+			fieldItem.AddComponent(component);
+			assert.equal(fieldItem.Components[0], component);
+		});
+		test("FieldItem.MaxLength()", function() {
+			assert.equal(fieldItem.MaxLength, 31);
+		});
+		test("FieldItem set & get Name()", function() {
+			fieldItem.Name = "Another Longer Field Name";
+			assert.equal(fieldItem.Name, "Another Longer Field Name");
+			// confirm set Name() also updates the MaxLength property. 
+			assert.equal(fieldItem.MaxLength, 37);
+		});
+		test("FieldItem set & get Value()", function() {
+			fieldItem.Value = "Test Value";
+			assert.equal(fieldItem.Value, "Test Value");
+		});
+
+		// test Field Object
+		var field = new hl7message.Field();
+		test("Field Constructor", function() {
+			assert.notEqual(field, undefined);
+			assert.equal(field.maxLength, 0);
+			assert.deepEqual(field.fieldItems, []);
+		});
+		test("Field.AddFieldItem()", function() {
+			field.AddFieldItem(fieldItem);
+			assert.deepEqual(field.FieldItems[0], fieldItem);
+			assert.equal(field.MaxLength, 37);
+		});
+		test("Field.MaxLength()", function() {
+			assert.equal(field.MaxLength, 37);
+		});
+		test("Field.FieldItems()", function() {
+			field.AddFieldItem(fieldItem);
+			assert.deepEqual(field.FieldItems[1], fieldItem);
+			assert.equal(field.FieldItems.length, 2);
+		});
+
+		// test Segment Object
+		var segment = new hl7message.Segment("Segment Name");
+		test("Segment Constructor", function() {
+			assert.notEqual(segment, undefined);
+			assert.equal(segment.name, "Segment Name");
+			assert.equal(segment.description, "");
+			assert.equal(segment.maxLength, 0);
+			assert.deepEqual(segment.fields, []);
+		});
+		test("Segment set & get Description", function() {
+			segment.Description = "New Description";
+			assert.equal(segment.Description, "New Description");
+		});
+		test("Segment set & get Name", function() {
+			segment.Description = "New Segment Name";
+			assert.equal(segment.Description, "New Segment Name");
+		});
+		test("Segment.AddField()", function() {
+			segment.AddField(field);
+			assert.deepEqual(segment.fields[0], field);
+		});
+		test("Segment.Fields()", function() {
+			segment.AddField(field);
+			assert.deepEqual(segment.Fields[1], field);
+			assert.equal(segment.Fields.length, 2);
+		});
+		test("Segment.MaxLength()", function() {
+			segment.AddField(field);
+			assert.deepEqual(segment.MaxLength, 37);
 		});
 
 
 	});
-*/
+
 });
