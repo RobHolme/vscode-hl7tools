@@ -53,8 +53,8 @@ suite("vscode-hl7tools Extension Tests", function () {
 		});
 
 		test("GetFields()", function () {
-			assert.equal(common.GetFields("PID", 3).Results[0].value, "10006579^^^1^MRN^1");
-			assert.equal(common.GetFields("PID", 3).Results[1].value, "1234567890123456^^^1^IHI^1");
+			assert.equal(common.GetFields("PID", 3).Results[0].Value, "10006579^^^1^MRN^1");
+			assert.equal(common.GetFields("PID", 3).Results[1].Value, "1234567890123456^^^1^IHI^1");
 		});
 
 		test("IsItemLocationValid()", function () {
@@ -159,10 +159,18 @@ suite("vscode-hl7tools Extension Tests", function () {
 	});
 
 	suite("CheckRequiredFieldsResult.js unit tests", function () {
+		const missingRequiredFieldsClass = require('../lib/CheckRequiredFieldsResult.js');
+		missingRequiredFieldsClassTest = new missingRequiredFieldsClass.missingRequiredFieldResult(1, "MSH-1");
 		test("new missingRequiredFields()", function () {
-			const missingRequiredFieldsClass = require('../lib/CheckRequiredFieldsResult.js');
-			missingRequiredFieldsClassTest = new missingRequiredFieldsClass.missingRequiredFieldResult(1, "MSH-1");
+			assert.equal(missingRequiredFieldsClassTest._lineNumber, 1);
+			assert.equal(missingRequiredFieldsClassTest._fieldLocation, "MSH-1");
+		});
+
+		test("get LineNumber", function() {
 			assert.equal(missingRequiredFieldsClassTest.LineNumber, 1);
+		});
+
+		test("get FieldLocation", function() {
 			assert.equal(missingRequiredFieldsClassTest.FieldLocation, "MSH-1");
 		});
 	});
@@ -192,31 +200,39 @@ suite("vscode-hl7tools Extension Tests", function () {
 		var result = new resultClass.result("c:\\test\\test.hl7", "test")
 		var results = new resultClass.resultCollection();
 
-		test("new result()", function () {
+		test("new result() Constructor", function () {
 			assert.notEqual(result, undefined);
+			assert.equal(result._filename, "c:\\test\\test.hl7");
+			assert.equal(result._value, "test");
 		});
 
-		test("Get Filename()", function () {
+		test("Get Result.Filename()", function () {
 			assert.equal(result.Filename, "c:\\test\\test.hl7");
 		});
 
-		test("Get Value()", function () {
+		test("Get Result.Value()", function () {
 			assert.equal(result.Value, "test");
 		});
 
-		test("AddResult()", function () {
+		test("new ResultCollection() Constructor", function() {
+			assert.notEqual(results, undefined);
+			assert.equal(results._maxLength, 5);
+			assert.deepEqual(results._resultItems, []);
+		});
+
+		test("ResultCollection.AddResult()", function () {
 			results.AddResult(result);
 			assert.equal(results.Results.length, 1);
 		});
 
-		test("Get Results()", function () {
+		test("Get ResultCollection.Results()", function () {
 			results.AddResult(result);
-
+			assert.deepEqual(results.Results[0], result);
 			assert.equal(results.Results[0].Value, "test");
 			assert.equal(results.Results[0].Filename, "c:\\test\\test.hl7");
 		});
 
-		test("MaxLength()", function () {
+		test("ResultCollection.MaxLength()", function () {
 			assert.equal(results.MaxLength, 5);
 		});
 
@@ -359,6 +375,8 @@ suite("vscode-hl7tools Extension Tests", function () {
 		var component = new hl7message.Component("Component Name");
 		test("Component constructor", function() {
 			assert.notEqual(component, undefined);
+			assert.equal(component._value, "");
+			assert.equal(component._name, "Component Name");
 		});
 		test ("Component.Name()", function() {
 			assert.equal(component.Name, "Component Name");
@@ -372,6 +390,10 @@ suite("vscode-hl7tools Extension Tests", function () {
 		var fieldItem = new hl7message.FieldItem("Field Name")
 		test("FieldItem Constructor", function() {
 			assert.notEqual(fieldItem, undefined);
+			assert.deepEqual(fieldItem._components, []);
+			assert.equal(fieldItem._maxLength, 22);
+			assert.equal(fieldItem._name, "Field Name");
+			assert.equal(fieldItem._value, "");	
 		});
 		test("FieldItem.Name()", function() {
 			assert.equal(fieldItem.Name, "Field Name");
@@ -398,13 +420,13 @@ suite("vscode-hl7tools Extension Tests", function () {
 		var field = new hl7message.Field();
 		test("Field Constructor", function() {
 			assert.notEqual(field, undefined);
-			assert.equal(field.maxLength, 0);
-			assert.deepEqual(field.fieldItems, []);
+			assert.equal(field._maxLength, 0);
+			assert.deepEqual(field._fieldItems, []);
 		});
 		test("Field.AddFieldItem()", function() {
 			field.AddFieldItem(fieldItem);
-			assert.deepEqual(field.FieldItems[0], fieldItem);
-			assert.equal(field.MaxLength, 37);
+			assert.deepEqual(field._fieldItems[0], fieldItem);
+			assert.equal(field._maxLength, 37);
 		});
 		test("Field.MaxLength()", function() {
 			assert.equal(field.MaxLength, 37);
@@ -419,10 +441,10 @@ suite("vscode-hl7tools Extension Tests", function () {
 		var segment = new hl7message.Segment("Segment Name");
 		test("Segment Constructor", function() {
 			assert.notEqual(segment, undefined);
-			assert.equal(segment.name, "Segment Name");
-			assert.equal(segment.description, "");
-			assert.equal(segment.maxLength, 0);
-			assert.deepEqual(segment.fields, []);
+			assert.equal(segment._name, "Segment Name");
+			assert.equal(segment._description, "");
+			assert.equal(segment._maxLength, 0);
+			assert.deepEqual(segment._fields, []);
 		});
 		test("Segment set & get Description", function() {
 			segment.Description = "New Description";
@@ -434,7 +456,7 @@ suite("vscode-hl7tools Extension Tests", function () {
 		});
 		test("Segment.AddField()", function() {
 			segment.AddField(field);
-			assert.deepEqual(segment.fields[0], field);
+			assert.deepEqual(segment.Fields[0], field);
 		});
 		test("Segment.Fields()", function() {
 			segment.AddField(field);
