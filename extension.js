@@ -231,16 +231,22 @@ function activate(context) {
 		var selection = editor.selection;
 		var currentLineNum = selection.start.line;
 		const fileName = path.basename(currentDoc.uri.fsPath);
-		var currentSegment = currentDoc.lineAt(currentLineNum).text
-		var segmentArray = currentSegment.split(delimiters.FIELD);
-		var segmentName = segmentArray[0];
-		var output = FieldTreeView.DisplaySegmentAsTree(currentSegment, hl7Schema, hl7Fields);
+		var currentSegment = currentDoc.lineAt(currentLineNum).text;
+		if (common.IsSegmentValid(currentSegment, delimiters.FIELD)) {
+			var segmentArray = currentSegment.split(delimiters.FIELD);
+			var segmentName = segmentArray[0];
+			var output = FieldTreeView.DisplaySegmentAsTree(currentSegment, hl7Schema, hl7Fields);
+	
+			// write the results to visual studio code's output window
+			var channel = vscode.window.createOutputChannel('HL7 Fields - ' + segmentName + ' (' + fileName + ')');
+			channel.clear();
+			channel.appendLine(output);
+			channel.show(vscode.ViewColumn.Two);
+		}
+		else {
+			vscode.window.showWarningMessage("The current line does not appear to be a valid segment. Check for any characters prefixing the segment name.");
+		}
 
-		// write the results to visual studio code's output window
-		var channel = vscode.window.createOutputChannel('HL7 Fields - ' + segmentName + ' (' + fileName + ')');
-		channel.clear();
-		channel.appendLine(output);
-		channel.show(vscode.ViewColumn.Two);
 
 	});
 	context.subscriptions.push(displaySegmentCommand);
