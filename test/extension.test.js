@@ -52,6 +52,15 @@ suite("vscode-hl7tools Extension Tests", function () {
 			// TO DO: add test for when the document is not a HL7 file and should return false
 		});
 
+		test("IsSegmentValid()", function() {
+			assert.equal(common.IsSegmentValid("PID|1|456", "|"), true);
+			assert.equal(common.IsSegmentValid("ZA1|1|456", "|"), true);
+			assert.equal(common.IsSegmentValid("Z01|1|456", "|"), true);
+			assert.equal(common.IsSegmentValid("1 PID|1|456", "|"), false);
+			assert.equal(common.IsSegmentValid("1PID|1|456", "|"), false);
+			assert.equal(common.IsSegmentValid("P01|1|456", "|"), false);
+		});
+
 		test("GetFields()", function () {
 			assert.equal(common.GetFields("PID", 3).Results[0].Value, "10006579^^^1^MRN^1");
 			assert.equal(common.GetFields("PID", 3).Results[1].Value, "1234567890123456^^^1^IHI^1");
