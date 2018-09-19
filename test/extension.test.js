@@ -56,9 +56,11 @@ suite("vscode-hl7tools Extension Tests", function () {
 			assert.equal(common.IsSegmentValid("PID|1|456", "|"), true);
 			assert.equal(common.IsSegmentValid("ZA1|1|456", "|"), true);
 			assert.equal(common.IsSegmentValid("Z01|1|456", "|"), true);
+			assert.equal(common.IsSegmentValid("PID|1|456"), true);
 			assert.equal(common.IsSegmentValid("1 PID|1|456", "|"), false);
 			assert.equal(common.IsSegmentValid("1PID|1|456", "|"), false);
 			assert.equal(common.IsSegmentValid("P01|1|456", "|"), false);
+			assert.equal(common.IsSegmentValid("P01|1|456"), false);
 		});
 
 		test("GetFields()", function () {
@@ -476,7 +478,16 @@ suite("vscode-hl7tools Extension Tests", function () {
 			segment.AddField(field);
 			assert.deepEqual(segment.MaxLength, 37);
 		});
+	});
 
+	suite("MaskIdentifiers.js unit tests", function() {
+		const maskIdentifier = require('../lib/MaskIdentifiers.js');
+
+		test("MaskAll()", function() {
+			assert.equal(maskIdentifier._maskField("test^test2^test3"), "****^*****^*****");
+			assert.equal(maskIdentifier._maskField("test^test2^test3", 2), "test^*****^test3");
+			assert.equal(maskIdentifier._maskField("test^test2&test3"), "****^***********");
+		});
 
 	});
 
