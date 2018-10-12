@@ -227,15 +227,23 @@ function activate(context) {
 			return;
 		}
 
+		var segment = "";
 		var currentDoc = editor.document;
 		var selection = editor.selection;
 		var currentLineNum = selection.start.line;
 		const fileName = path.basename(currentDoc.uri.fsPath);
 		var currentSegment = currentDoc.lineAt(currentLineNum).text;
-		if (common.IsSegmentValid(currentSegment, delimiters.FIELD)) {
-			var segmentArray = currentSegment.split(delimiters.FIELD);
+		// extract the segment text from the line incase it is prefixed with line numbers etc.
+		delimiters = common.ParseDelimiters();
+		var segmentRegEx = new RegExp("([a-z]{2}([a-z]|([0-9]))|([z]([a-z]|[0-9]){2}))\\" + delimiters.FIELD + ".+", "i");
+		var match = segmentRegEx.exec(currentSegment);
+		if (match != null) {
+			segment = match[0];
+		}
+		if (common.IsSegmentValid(segment, delimiters.FIELD)) {
+			var segmentArray = segment.split(delimiters.FIELD);
 			var segmentName = segmentArray[0];
-			var output = FieldTreeView.DisplaySegmentAsTree(currentSegment, hl7Schema, hl7Fields);
+			var output = FieldTreeView.DisplaySegmentAsTree(segment, hl7Schema, hl7Fields);
 	
 			// write the results to visual studio code's output window
 			var channel = vscode.window.createOutputChannel('HL7 Fields - ' + segmentName + ' (' + fileName + ')');
