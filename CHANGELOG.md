@@ -87,3 +87,5 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 * added function 'Find Field' and 'Find Next Field'. HL7 fields are searched for in the message based on description (e.g. "Date of Birth") or location (e.g. "PV1-3"). 'Find Next' will loop through all matching fields in the file. The cursor will be moved to the start of the field, the field text will be selected (if not empty)
 ## 1.9.1 (19/09/2018)
 * minor fixes
+## 1.9.2 (12/10/2018)
+* updated 'Display Segment Fields' command to ignore any text prefixed to the line containing the segment - such as line numbers etc.
