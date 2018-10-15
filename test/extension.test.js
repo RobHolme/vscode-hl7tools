@@ -271,7 +271,7 @@ suite("vscode-hl7tools Extension Tests", function () {
 		hl7Fields = require('../schema/2.6/fields.js');
 		hl7Schema = require('../schema/2.6/segments.js');
 
-		test("ExtractAllFields()", function () {
+		test("DisplaySegmentAsTree()", function () {
 			var result = fieldTreeView.DisplaySegmentAsTree("NK1|1|DUCK^HUEY|SO|3583 DUCK RD^^FOWL^CA^999990000|8885552222||Y||||||||||||||", hl7Schema, hl7Fields)
 			// calculate the hash of the result, compare against the hash of the expected result
 			var hash = crypto.createHash('md5').update(result).digest('hex');
