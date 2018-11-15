@@ -132,18 +132,17 @@ function activate(context) {
 			if (common.IsHL7File(editor.document)) {
 				// the new document may be a different version of HL7, so load the appropriate version of schema
 				LoadHL7Schema();
-				UpdateFieldDescriptions();
-				var result = HighlightFields.ShowHighlights(currentItemLocation, hl7Schema, highlightFieldBackgroundColor);
-				//				if (result == HighlightFields.HighlightFieldReturnCode.ERROR_NO_FIELDS_FOUND) {
-				//					vscode.window.showWarningMessage("A field matching " + itemLocation + " could not be located in the message");
-				//				}
-
+				
 				// if the AddLinebreakOnActivation user preference is set, call the 'Add LineBreaks to Segment' command
 				var hl7toolsConfig = vscode.workspace.getConfiguration('hl7tools');
 				if (hl7toolsConfig['AddLinebreakOnActivation'] == true) {
 					AddLinebreaksToSegments();
 				}
-
+				
+				UpdateFieldDescriptions();
+				
+				var result = HighlightFields.ShowHighlights(currentItemLocation, hl7Schema, highlightFieldBackgroundColor);
+				
 				// create a new FindField object when the active editor changes
 				findFieldLocation = new FindFieldClass(vscode.window.activeTextEditor.document, hl7Schema);
 			}
@@ -434,6 +433,7 @@ function activate(context) {
 	var AddLinebreakToSegmentCommand = vscode.commands.registerCommand('hl7tools.AddLinebreakToSegment', function () {
 		console.log('Running command hl7tools.AddLinebreakToSegment');
 		AddLinebreaksToSegments();
+		UpdateFieldDescriptions();
 	});
 	context.subscriptions.push(AddLinebreakToSegmentCommand);
 
@@ -552,7 +552,11 @@ function activate(context) {
 		var currentDoc = activeEditor.document;
 		var hl7Message = currentDoc.getText();
 		var config = vscode.workspace.getConfiguration();
-		const endOfLineChar = config.files.eol;
+		var endOfLineChar = config.files.eol;
+		// fix for vscode v1.29 adding "auto" option to the config.files.eol setting. Default to \n regardless of platform (HL7 EOL default)
+		if ((endOfLineChar != "\n") && (endOfLineChar != "\r\n")) {
+			endOfLineChar = "\n"
+		}
 
 		// build the regex from the list of segment names in the schema
 		var regexString = "(?=";
