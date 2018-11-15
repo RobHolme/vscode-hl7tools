@@ -125,5 +125,8 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 ## 1.9.2 (12/10/2018)
 * updated 'Display Segment Fields' command to ignore any text prefixed to the line containing the segment - such as line numbers etc.
 
-## 1.9.3 (16/19/2018)
+## 1.9.3 (16/10/2018)
 * fixed issue with 'Display Segment Fields' command not displaying MSH-1 and MSH-2 correctly
+
+## 1.9.4 (15/11/2018)
+* vscode 1.29 changed the allowed values for the config.files.eol setting which broke the 'Add Linebreaks To Segments' command, this version adds a workaround to fix the issue.
