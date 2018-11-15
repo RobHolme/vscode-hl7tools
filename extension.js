@@ -266,15 +266,11 @@ function activate(context) {
 		if (!activeEditor) {
 			return;
 		}
-		// get the end of line char from the config file to append to each line.
-//		var config = vscode.workspace.getConfiguration();
-//		var endOfLineChar = config.files.eol;
 
 		var newMessage = "";
 		var batchHeaderRegEx = new RegExp("(^FHS\\" + delimiters.FIELD + ")|(^BHS\\" + delimiters.FIELD + ")|(^BTS\\" + delimiters.FIELD + ")(^FTS\\" + delimiters.FIELD + ")", "i");
 		var mshRegEx = new RegExp("^MSH\\" + delimiters.FIELD, "i");
 		var currentDoc = activeEditor.document;
-//		var messageCount = 0;
 
 		var allMessages = currentDoc.getText();
 
@@ -335,7 +331,12 @@ function activate(context) {
 		var currentDoc = activeEditor.document;
 		var hl7Message = currentDoc.getText();
 		var config = vscode.workspace.getConfiguration();
-		const endOfLineChar = config.files.eol;
+		var endOfLineChar = config.files.eol;
+		// fix for vscode v1.29 adding "auto" option to the config.files.eol setting. Default to \n regardless of platform (HL7 EOL default)
+		if ((endOfLineChar != "\n") && (endOfLineChar != "\r\n")) {
+			endOfLineChar = "\n"
+		}
+		
 		hl7Message.replace(endOfLineChar, String.fromCharCode(0x0d));
 
 		// get the user defaults for SendMessage
@@ -400,6 +401,10 @@ function activate(context) {
 		// get the EOL character(s)
 		var config = vscode.workspace.getConfiguration();
 		var endOfLine = config.files.eol;
+		// fix for vscode v1.29 adding "auto" option to the config.files.eol setting. Default to \n regardless of platform (HL7 EOL default)
+		if ((endOfLineChar != "\n") && (endOfLineChar != "\r\n")) {
+			endOfLineChar = "\n"
+		}
 
 		var extractedSegments = "";
 		var currentDoc = editor.document;
