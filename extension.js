@@ -402,8 +402,8 @@ function activate(context) {
 		var config = vscode.workspace.getConfiguration();
 		var endOfLine = config.files.eol;
 		// fix for vscode v1.29 adding "auto" option to the config.files.eol setting. Default to \n regardless of platform (HL7 EOL default)
-		if ((endOfLineChar != "\n") && (endOfLineChar != "\r\n")) {
-			endOfLineChar = "\n"
+		if ((endOfLine != "\n") && (endOfLine != "\r\n")) {
+			endOfLine = "\n"
 		}
 
 		var extractedSegments = "";
