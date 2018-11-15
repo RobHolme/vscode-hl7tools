@@ -130,3 +130,6 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 
 ## 1.9.4 (15/11/2018)
 * vscode 1.29 changed the allowed values for the config.files.eol setting which broke the 'Add Linebreaks To Segments' command, this version adds a workaround to fix the issue.
+
+## 1.9.5 (16/11/2018)
+* more fixes for other commands impacted by the  config.files.eol setting change. 
