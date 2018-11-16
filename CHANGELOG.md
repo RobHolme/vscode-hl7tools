@@ -129,7 +129,11 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 * fixed issue with 'Display Segment Fields' command not displaying MSH-1 and MSH-2 correctly
 
 ## 1.9.4 (15/11/2018)
-* vscode 1.29 changed the allowed values for the config.files.eol setting which broke the 'Add Linebreaks To Segments' command, this version adds a workaround to fix the issue.
+* vscode v1.29 changed the allowed values for the config.files.eol setting which broke the 'Add Linebreaks To Segments' command, this version adds a workaround to fix the issue.
 
 ## 1.9.5 (16/11/2018)
-* more fixes for other commands impacted by the  config.files.eol setting change. 
+* more fixes for other commands impacted by the config.files.eol setting change. 
+
+## 1.9.6 (16/11/2018)
+* changed the EOL detection not to rely on vscode's config settings.
+* fixed 'Highlight Field' command impacted by  config.files.eol setting change with vscode v1.29 
