@@ -330,13 +330,8 @@ function activate(context) {
 		// get the HL7 message from the active document. Convert EOL to <CR> only.
 		var currentDoc = activeEditor.document;
 		var hl7Message = currentDoc.getText();
-		var config = vscode.workspace.getConfiguration();
-		var endOfLineChar = config.files.eol;
-		// fix for vscode v1.29 adding "auto" option to the config.files.eol setting. Default to \n regardless of platform (HL7 EOL default)
-		if ((endOfLineChar != "\n") && (endOfLineChar != "\r\n")) {
-			endOfLineChar = "\n"
-		}
-		
+		// get the EOL character from the current document
+		endOfLineChar = common.GetEOLCharacter(currentDoc);
 		hl7Message.replace(endOfLineChar, String.fromCharCode(0x0d));
 
 		// get the user defaults for SendMessage
@@ -398,16 +393,11 @@ function activate(context) {
 			return;
 		}
 
-		// get the EOL character(s)
-		var config = vscode.workspace.getConfiguration();
-		var endOfLine = config.files.eol;
-		// fix for vscode v1.29 adding "auto" option to the config.files.eol setting. Default to \n regardless of platform (HL7 EOL default)
-		if ((endOfLine != "\n") && (endOfLine != "\r\n")) {
-			endOfLine = "\n"
-		}
-
-		var extractedSegments = "";
+		// get the EOL character from the current document
 		var currentDoc = editor.document;
+		endOfLineChar = common.GetEOLCharacter(currentDoc);
+	
+		var extractedSegments = "";
 		var selection = editor.selection;
 		var currentLineNum = selection.start.line;
 		const fileName = path.basename(currentDoc.uri.fsPath);
@@ -418,7 +408,7 @@ function activate(context) {
 		for (var i = 0; i < currentDoc.lineCount; i++) {
 			var currentLine = currentDoc.lineAt(i).text;
 			if (segmentRegEx.test(currentLine) == true) {
-				extractedSegments += currentLine + endOfLine;
+				extractedSegments += currentLine + endOfLineChar;
 			}
 		}
 
@@ -553,15 +543,10 @@ function activate(context) {
 			return;
 		}
 
-		// get the HL7 message from the active document. Convert EOL to <CR> only.
+		// get the EOL character from the current document
 		var currentDoc = activeEditor.document;
 		var hl7Message = currentDoc.getText();
-		var config = vscode.workspace.getConfiguration();
-		var endOfLineChar = config.files.eol;
-		// fix for vscode v1.29 adding "auto" option to the config.files.eol setting. Default to \n regardless of platform (HL7 EOL default)
-		if ((endOfLineChar != "\n") && (endOfLineChar != "\r\n")) {
-			endOfLineChar = "\n"
-		}
+		endOfLineChar = common.GetEOLCharacter(currentDoc);
 
 		// build the regex from the list of segment names in the schema
 		var regexString = "(?=";
@@ -604,13 +589,13 @@ function activate(context) {
 		var hl7toolsConfig = vscode.workspace.getConfiguration('hl7tools');
 		const maxLinesPreference = hl7toolsConfig['MaxLinesForFieldDescriptions'];
 		var maxLines = Math.min(currentDoc.lineCount, maxLinesPreference)
-
 		var regEx = new RegExp("\\" + delimiters.FIELD, "g");
 		var validSegmentRegEx = new RegExp("^[a-z][a-z]([a-z]|[0-9])\\" + delimiters.FIELD, "i");
-		var text = currentDoc.getText();
+		// get the EOL character from the current document
+		endOfLineChar = common.GetEOLCharacter(currentDoc);
+		
 		// calculate the number of characters at the end of line (<CR>, or <CR><LF>)
-		var config = vscode.workspace.getConfiguration();
-		var endOfLineLength = config.files.eol.length;
+		var endOfLineLength =endOfLineChar.length;
 
 		var hoverDecorationType = vscode.window.createTextEditorDecorationType({
 		});
