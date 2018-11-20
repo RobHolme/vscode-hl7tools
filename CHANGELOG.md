@@ -137,3 +137,7 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 ## 1.9.6 (16/11/2018)
 * changed the EOL detection not to rely on vscode's config settings.
 * fixed 'Highlight Field' command impacted by  config.files.eol setting change with vscode v1.29 
+
+## 1.9.7 (20/11/2018)
+* fixed issue with Extract Matching Segments command and Receive Message command only displaying the last message instead of all messages.
+* updated the end of line detection use the document.eol property, instead of searching for EOL characters.
