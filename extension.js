@@ -288,12 +288,7 @@ function activate(context) {
 						// TO DO: remove batch footers            
 						// open the message in a new document, user will be prompted to save on exit
 						var newMessage = "MSH" + delimiters.FIELD + split[i];
-						vscode.workspace.openTextDocument({ content: newMessage, language: "hl7" }).then((newDocument) => {
-							vscode.window.showTextDocument(newDocument, 1, false).then(e => {
-							});
-						}, (error) => {
-							console.error(error);
-						});
+						common.CreateNewDocument(newMessage, "hl7");
 					}
 				}
 			});
@@ -305,12 +300,7 @@ function activate(context) {
 				// TO DO: remove batch footers            
 				// open the message in a new document, user will be prompted to save on exit
 				var newMessage = "MSH" + delimiters.FIELD + split[i];
-				vscode.workspace.openTextDocument({ content: newMessage, language: "hl7" }).then((newDocument) => {
-					vscode.window.showTextDocument(newDocument, 1, false).then(e => {
-					});
-				}, (error) => {
-					console.error(error);
-				});
+				common.CreateNewDocument(newMessage, "hl7");
 			}
 		}
 	});
@@ -411,14 +401,8 @@ function activate(context) {
 				extractedSegments += currentLine + endOfLineChar;
 			}
 		}
-
-		vscode.workspace.openTextDocument({ content: extractedSegments, language: "hl7" }).then((newDocument) => {
-			vscode.window.showTextDocument(newDocument, 1, false).then(e => {
-			});
-		}, (error) => {
-			console.error(error);
-		});
-
+		// display the extracted segments in a new window
+		common.CreateNewDocument(extractedSegments, "hl7");
 	});
 	context.subscriptions.push(ExtractSegments);
 
