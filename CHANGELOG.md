@@ -141,3 +141,6 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 ## 1.9.7 (20/11/2018)
 * fixed issue with Extract Matching Segments command and Receive Message command only displaying the last message instead of all messages.
 * updated the end of line detection use the document.eol property, instead of searching for EOL characters.
+
+## 1.9.8 (25/06/2019)
+* when sending messages using CRLF line ending, these were not successfully converted to LF (replace was not global for the entire message). 
