@@ -322,7 +322,7 @@ function activate(context) {
 		var hl7Message = currentDoc.getText();
 		// get the EOL character from the current document
 		endOfLineChar = common.GetEOLCharacter(currentDoc);
-		hl7Message.replace(endOfLineChar, String.fromCharCode(0x0d));
+		hl7Message = hl7Message.replace(new RegExp(endOfLineChar, 'g'), String.fromCharCode(0x0d)); 
 
 		// get the user defaults for SendMessage
 		var hl7toolsConfig = vscode.workspace.getConfiguration('hl7tools');
