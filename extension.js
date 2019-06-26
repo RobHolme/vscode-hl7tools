@@ -332,17 +332,19 @@ function activate(context) {
 		var favouriteList = [];
 
 		for (i = 0; i < favouriteRemoteHosts.length; i++) {
-			favouriteList.push(favouriteRemoteHosts[i]);
+			favouriteList.push({"description": favouriteRemoteHosts[i].Description, "label": favouriteRemoteHosts[i].Hostname + ":" + favouriteRemoteHosts[i].Port});
 		}
-	
-		if (favouriteRemoteHosts.length > 0) {
-			if (favouriteRemoteHosts[0].length > 0) {
-				vscode.window.showQuickPick([{ description: "[test]", label: "192.168.0.1:5000" }, { description: "[UAT]", label: "192.168.0.1:5001" }]).then(selection => {
-					// the user canceled the selection
+
+		if (favouriteList.length > 0) {
+			if (favouriteList[0].description != undefined) {
+				// vscode.window.showQuickPick([{ description: "[test]", label: "192.168.0.1:5000" }, { description: "[UAT]", label: "192.168.0.1:5001" }]).then(selection => {
+				favouriteList.push({"label": "Enter other destination:"})
+				vscode.window.showQuickPick(favouriteList).then(selection => {
+
+					// the user cancelled the selection
 					if (!selection) {
 						return;
 					}
-
 				});
 			}
 		}
