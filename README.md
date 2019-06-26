@@ -89,6 +89,9 @@ This command sends the current message to a remote host (via TCP using MLLP fram
 
 ![SendMessage](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/SendMessage2.jpg)
  
+If the "hl7tools.FavouriteRemoteHosts" setting is populated you will be prompted to select from a list of user defined endpoints.
+
+![SendMessage](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/SendMessage3.jpg)
 
 User preferences applicable to this function include:  
 `// The TCP connection timeout (in seconds) when sending a HL7 message.`  
@@ -96,6 +99,21 @@ User preferences applicable to this function include:
   
 `// The default remote host and IP address to send HL7 messages to.`  
 `"hl7tools.DefaultRemoteHost": "127.0.0.1:5000"`  
+
+User preference to define a list of favourite endpoints.  
+`// list of favourite endpoints`  
+`"hl7tools.FavouriteRemoteHosts": [`  
+`{`  
+`	"Description": "Dev Server",`  
+`	"Hostname": "127.0.0.1",`  
+`	"Port": 5000`  
+`},`  
+`{`  
+`	"Description": "Test Server",`  
+`	"Hostname": "127.0.0.1",`  
+`	"Port": 6000`  
+`}]`  
+
 
 ### Receive HL7 Messages from Remote Host
 This command listens for HL7 messages sent from a remote host (via TCP using MLLP framing). All messages received are displayed in the editor as new documents. 
