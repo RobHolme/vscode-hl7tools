@@ -132,17 +132,17 @@ function activate(context) {
 			if (common.IsHL7File(editor.document)) {
 				// the new document may be a different version of HL7, so load the appropriate version of schema
 				LoadHL7Schema();
-				
+
 				// if the AddLinebreakOnActivation user preference is set, call the 'Add LineBreaks to Segment' command
 				var hl7toolsConfig = vscode.workspace.getConfiguration('hl7tools');
 				if (hl7toolsConfig['AddLinebreakOnActivation'] == true) {
 					AddLinebreaksToSegments();
 				}
-				
+
 				UpdateFieldDescriptions();
-				
+
 				var result = HighlightFields.ShowHighlights(currentItemLocation, hl7Schema, highlightFieldBackgroundColor);
-				
+
 				// create a new FindField object when the active editor changes
 				findFieldLocation = new FindFieldClass(vscode.window.activeTextEditor.document, hl7Schema);
 			}
@@ -243,7 +243,7 @@ function activate(context) {
 			var segmentArray = segment.split(delimiters.FIELD);
 			var segmentName = segmentArray[0];
 			var output = FieldTreeView.DisplaySegmentAsTree(segment, hl7Schema, hl7Fields);
-	
+
 			// write the results to visual studio code's output window
 			var channel = vscode.window.createOutputChannel('HL7 Fields - ' + segmentName + ' (' + fileName + ')');
 			channel.clear();
@@ -322,21 +322,40 @@ function activate(context) {
 		var hl7Message = currentDoc.getText();
 		// get the EOL character from the current document
 		endOfLineChar = common.GetEOLCharacter(currentDoc);
-		hl7Message = hl7Message.replace(new RegExp(endOfLineChar, 'g'), String.fromCharCode(0x0d)); 
+		hl7Message = hl7Message.replace(new RegExp(endOfLineChar, 'g'), String.fromCharCode(0x0d));
 
 		// get the user defaults for SendMessage
 		var hl7toolsConfig = vscode.workspace.getConfiguration('hl7tools');
 		const defaultEndPoint = hl7toolsConfig['DefaultRemoteHost'];
 		const tcpConnectionTimeout = hl7toolsConfig['ConnectionTimeout'] * 1000;
+		const favouriteRemoteHosts = hl7toolsConfig['FavouriteRemoteHosts'];
+		var favouriteList = [];
 
-		var remoteHostPromise = vscode.window.showInputBox({ prompt: "Enter the remote host and port ('RemoteHost:Port')'", value: defaultEndPoint });
-		remoteHostPromise.then(function (remoteEndpoint) {
-			// extract the hostname and port from the end point entered by the user
-			remoteHost = remoteEndpoint.split(":")[0];
-			remotePort = remoteEndpoint.split(":")[1];
-			// send the current message to the remote end point.
-			TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout);
-		});
+		for (i = 0; i < favouriteRemoteHosts.length; i++) {
+			favouriteList.push(favouriteRemoteHosts[i]);
+		}
+	
+		if (favouriteRemoteHosts.length > 0) {
+			if (favouriteRemoteHosts[0].length > 0) {
+				vscode.window.showQuickPick([{ description: "[test]", label: "192.168.0.1:5000" }, { description: "[UAT]", label: "192.168.0.1:5001" }]).then(selection => {
+					// the user canceled the selection
+					if (!selection) {
+						return;
+					}
+
+				});
+			}
+		}
+		else {
+			var remoteHostPromise = vscode.window.showInputBox({ prompt: "Enter the remote host and port ('RemoteHost:Port')'", value: defaultEndPoint });
+			remoteHostPromise.then(function (remoteEndpoint) {
+				// extract the hostname and port from the end point entered by the user
+				remoteHost = remoteEndpoint.split(":")[0];
+				remotePort = remoteEndpoint.split(":")[1];
+				// send the current message to the remote end point.
+				TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout);
+			});
+		}
 
 	});
 
@@ -386,7 +405,7 @@ function activate(context) {
 		// get the EOL character from the current document
 		var currentDoc = editor.document;
 		endOfLineChar = common.GetEOLCharacter(currentDoc);
-	
+
 		var extractedSegments = "";
 		var selection = editor.selection;
 		var currentLineNum = selection.start.line;
@@ -577,9 +596,9 @@ function activate(context) {
 		var validSegmentRegEx = new RegExp("^[a-z][a-z]([a-z]|[0-9])\\" + delimiters.FIELD, "i");
 		// get the EOL character from the current document
 		endOfLineChar = common.GetEOLCharacter(currentDoc);
-		
+
 		// calculate the number of characters at the end of line (<CR>, or <CR><LF>)
-		var endOfLineLength =endOfLineChar.length;
+		var endOfLineLength = endOfLineChar.length;
 
 		var hoverDecorationType = vscode.window.createTextEditorDecorationType({
 		});
