@@ -2,7 +2,7 @@
 	"name": "hl7tools",
 	"displayName": "HL7Tools",
 	"description": "HL7 tools for Visual Studio Code",
-	"version": "1.9.8",
+	"version": "1.10.0",
 	"icon": "images/hl7tools-icon.png",
 	"publisher": "RobHolme",
 	"bugs": {
@@ -199,7 +199,7 @@
 		],
 		"configuration": {
 			"type": "object",
-			"title": "HL7 Tools configuration",
+			"title": "HL7 Tools",
 			"properties": {
 				"hl7tools.highlightBackgroundColor": {
 					"type": "string",
@@ -210,6 +210,35 @@
 					"type": "string",
 					"default": "127.0.0.1:5000",
 					"description": "The default remote host and IP address to send HL7 messages to."
+				},
+				"hl7tools.FavouriteRemoteHosts": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"required": [
+							"Hostname",
+							"Port",
+							"Description"
+						],
+						"properties": {
+							"Hostname": {
+								"type": "string",
+								"description": "Specifies the remote hostname or IP address."
+							},
+							"Port": {
+								"type": "integer",
+								"description": "Specifies the remote port number."
+							},
+							"Description": {
+								"type": "string",
+								"description": "Provides a description to identify the connection."
+							}
+						}
+					},
+					"default": [
+						{}
+					],
+					"description": "Enter favourite endpoints for HL7Tools:Send Message"
 				},
 				"hl7tools.ConnectionTimeout": {
 					"type": "number",
