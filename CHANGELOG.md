@@ -144,3 +144,6 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 
 ## 1.9.8 (25/06/2019)
 * when sending messages using CRLF line ending, these were not successfully converted to LF (replace was not global for the entire message). 
+
+## 1.10.0 (26/06/2019)
+* Updated 'Send Message' command to optionally display a picklist of favourite endpoints (defined by the setting hl7tools.FavouriteRemoteHosts).
