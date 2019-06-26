@@ -332,33 +332,48 @@ function activate(context) {
 		var favouriteList = [];
 
 		for (i = 0; i < favouriteRemoteHosts.length; i++) {
-			favouriteList.push({"description": favouriteRemoteHosts[i].Description, "label": favouriteRemoteHosts[i].Hostname + ":" + favouriteRemoteHosts[i].Port});
+			favouriteList.push({ "description": favouriteRemoteHosts[i].Description, "label": favouriteRemoteHosts[i].Hostname + ":" + favouriteRemoteHosts[i].Port });
 		}
 
 		if (favouriteList.length > 0) {
 			if (favouriteList[0].description != undefined) {
 				// vscode.window.showQuickPick([{ description: "[test]", label: "192.168.0.1:5000" }, { description: "[UAT]", label: "192.168.0.1:5001" }]).then(selection => {
-				favouriteList.push({"label": "Enter other destination:"})
+				favouriteList.push({ "label": "Enter other destination:" })
 				vscode.window.showQuickPick(favouriteList).then(selection => {
 
 					// the user cancelled the selection
 					if (!selection) {
 						return;
 					}
+					else if (selection.label == "Enter other destination:") {
+						var remoteHostPromise = vscode.window.showInputBox({ prompt: "Enter the remote host and port ('RemoteHost:Port')'", value: defaultEndPoint });
+						remoteHostPromise.then(function (remoteEndpoint) {
+							// extract the hostname and port from the end point entered by the user
+							remoteHost = remoteEndpoint.split(":")[0];
+							remotePort = remoteEndpoint.split(":")[1];
+							// send the current message to the remote end point.
+							TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout);
+						});
+					}
+					else {
+						remoteHost = selection.label.split(":")[0];
+						remotePort = selection.label.split(":")[1];
+						// send the current message to the remote end point.
+						TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout);
+					}
+				});
+			}
+			else {
+				var remoteHostPromise = vscode.window.showInputBox({ prompt: "Enter the remote host and port ('RemoteHost:Port')'", value: defaultEndPoint });
+				remoteHostPromise.then(function (remoteEndpoint) {
+					// extract the hostname and port from the end point entered by the user
+					remoteHost = remoteEndpoint.split(":")[0];
+					remotePort = remoteEndpoint.split(":")[1];
+					// send the current message to the remote end point.
+					TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout);
 				});
 			}
 		}
-		else {
-			var remoteHostPromise = vscode.window.showInputBox({ prompt: "Enter the remote host and port ('RemoteHost:Port')'", value: defaultEndPoint });
-			remoteHostPromise.then(function (remoteEndpoint) {
-				// extract the hostname and port from the end point entered by the user
-				remoteHost = remoteEndpoint.split(":")[0];
-				remotePort = remoteEndpoint.split(":")[1];
-				// send the current message to the remote end point.
-				TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout);
-			});
-		}
-
 	});
 
 	context.subscriptions.push(SendMessageCommand);
