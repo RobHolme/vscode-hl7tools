@@ -89,22 +89,23 @@ This command sends the current message to a remote host (via TCP using MLLP fram
 
 ![SendMessage](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/SendMessage2.jpg)
  
-If the "hl7tools.FavouriteRemoteHosts" setting is populated you will be prompted to select from a list of user defined endpoints.
-
-![SendMessage](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/SendMessage3.jpg)
-
-User preferences applicable to this function include:  
+ User preferences applicable to this function include:  
 `// The TCP connection timeout (in seconds) when sending a HL7 message.`  
 `"hl7tools.ConnectionTimeout": 10`  
   
 `// The default remote host and IP address to send HL7 messages to.`  
-`"hl7tools.DefaultRemoteHost": "127.0.0.1:5000"`  
+`"hl7tools.DefaultRemoteHost": "127.0.0.1:5000"` 
 
-User preference to define a list of favourite endpoints.  
+If the "hl7tools.FavouriteRemoteHosts" setting is populated you will be prompted to select from a list of user defined endpoints.
+
+![SendMessage](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/SendMessage3.jpg)
+
+The 'favourite' endpoints are defined in settings.json - similar to the example below. Note the property names are case sensitive. It is an array of objects, each object defining the remote Hostname, Port, and a Description of the endpoint.
+
 `// list of favourite endpoints`  
 `"hl7tools.FavouriteRemoteHosts": [`  
 `{`  
-`	"Description": "Dev Server",`  
+`   "Description": "Dev Server",`  
 `	"Hostname": "127.0.0.1",`  
 `	"Port": 5000`  
 `},`  
@@ -112,7 +113,8 @@ User preference to define a list of favourite endpoints.
 `	"Description": "Test Server",`  
 `	"Hostname": "127.0.0.1",`  
 `	"Port": 6000`  
-`}]`  
+`}`  
+`]`  
 
 
 ### Receive HL7 Messages from Remote Host
