@@ -238,7 +238,7 @@
 					"default": [
 						{}
 					],
-					"description": "Enter favourite endpoints for HL7Tools:Send Message"
+					"description": "Enter favourite endpoints for Send Message command. Provide an array of objects, refer to Send Message section of https://github.com/RobHolme/vscode-hl7tools/blob/master/README.md for a sample config."
 				},
 				"hl7tools.ConnectionTimeout": {
 					"type": "number",
