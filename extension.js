@@ -335,16 +335,17 @@ function activate(context) {
 			favouriteList.push({ "description": favouriteRemoteHosts[i].Description, "label": favouriteRemoteHosts[i].Hostname + ":" + favouriteRemoteHosts[i].Port });
 		}
 
+		// the default setting is an array with an undefined object, so check length and if the first element is defined.
 		if (favouriteList.length > 0) {
 			if (favouriteList[0].description != undefined) {
-				// vscode.window.showQuickPick([{ description: "[test]", label: "192.168.0.1:5000" }, { description: "[UAT]", label: "192.168.0.1:5001" }]).then(selection => {
+				// push the last option of letting the user manually enter a destination
 				favouriteList.push({ "label": "Enter other destination:" })
 				vscode.window.showQuickPick(favouriteList).then(selection => {
-
-					// the user cancelled the selection
+					// The user cancelled the selection, so return (don't prompt to manually enter selection)
 					if (!selection) {
 						return;
 					}
+					// The user selected the option to manually enter the destination
 					else if (selection.label == "Enter other destination:") {
 						var remoteHostPromise = vscode.window.showInputBox({ prompt: "Enter the remote host and port ('RemoteHost:Port')'", value: defaultEndPoint });
 						remoteHostPromise.then(function (remoteEndpoint) {
@@ -355,6 +356,7 @@ function activate(context) {
 							TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout);
 						});
 					}
+					// The user selected one of the favourite endpoints from the picklist.
 					else {
 						remoteHost = selection.label.split(":")[0];
 						remotePort = selection.label.split(":")[1];
@@ -363,6 +365,7 @@ function activate(context) {
 					}
 				});
 			}
+			// No favourite endpoints defined in the settings.json file, so prompt user for destination.
 			else {
 				var remoteHostPromise = vscode.window.showInputBox({ prompt: "Enter the remote host and port ('RemoteHost:Port')'", value: defaultEndPoint });
 				remoteHostPromise.then(function (remoteEndpoint) {
