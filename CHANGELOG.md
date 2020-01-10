@@ -147,3 +147,6 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 
 ## 1.10.0 (26/06/2019)
 * Updated 'Send Message' command to optionally display a picklist of favourite endpoints (defined by the setting hl7tools.FavouriteRemoteHosts).
+
+## 1.11.0 (10/01/2020)
+* added support for defining the socket encoding when sending/receiving messages. Defaults to utf-8 (prior behaviour), but can now be optionally changed to ISO-8859-1. Set via "SocketEncoding" option in the extension preferences.

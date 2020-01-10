@@ -96,6 +96,10 @@ This command sends the current message to a remote host (via TCP using MLLP fram
 `// The default remote host and IP address to send HL7 messages to.`  
 `"hl7tools.DefaultRemoteHost": "127.0.0.1:5000"` 
 
+`// The socket encoding to apply when sending/receiving messages`
+`// Select from "UTF-8" or "ISO-8859-1" (default to UTF-8 if not set)`
+`"hl7tools.SocketEncoding: "UTF-8"`
+
 If the "hl7tools.FavouriteRemoteHosts" setting is populated you will be prompted to select from a list of user defined endpoints.
 
 ![SendMessage](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/SendMessage3.jpg)
