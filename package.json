@@ -264,6 +264,12 @@
 					"type": "boolean",
 					"default": false,
 					"description": "Apply the command 'Add Linebreak to Segments' every time a file is active in the editor"
+				},
+				"hl7tools.SocketEncoding": {
+					"type": "string",
+					"default": "utf-8",
+					"enum": ["UTF-8", "ISO-8859-1"],
+					"description": "The TCP socket encoding used when sending and receiving messages"
 				}
 			}
 		}
