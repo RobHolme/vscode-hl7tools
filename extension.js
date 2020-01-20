@@ -16,6 +16,7 @@ const TcpMllpListener = require('./lib/TCPListener.js');
 const ExtractFields = require('./lib/ExtractFields.js');
 const CheckRequiredFields = require('./lib/CheckRequiredFields.js');
 const FindFieldClass = require('./lib/FindField.js');
+const extensionPreferencesClass = require('./lib/./ExtensionPreferences.js');
 
 // the HL7 delimiters used by the message
 var delimiters;
@@ -134,8 +135,9 @@ function activate(context) {
 				LoadHL7Schema();
 
 				// if the AddLinebreakOnActivation user preference is set, call the 'Add LineBreaks to Segment' command
-				var hl7toolsConfig = vscode.workspace.getConfiguration('hl7tools');
-				if (hl7toolsConfig['AddLinebreakOnActivation'] == true) {
+				// load user preferences for the extension (SocketEncoding)
+				preferences = new extensionPreferencesClass.ExtensionPreferences();
+				if (preferences.AddLinebreakOnActivation == true){
 					AddLinebreaksToSegments();
 				}
 
