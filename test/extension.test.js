@@ -491,4 +491,37 @@ suite("vscode-hl7tools Extension Tests", function () {
 
 	});
 
+	suite("ExtensionPreferences.js unit tests", function() {
+		const extensionPreferencesClass = require('../lib/ExtensionPreferences.js');
+		preferences = new extensionPreferencesClass.ExtensionPreferences();
+
+		test("AddLineBreakOnActivation", function() {
+			assert.equal(preferences.AddLineBreakOnActivation, false);
+		});
+		test("ConnectionTimeOut", function() {
+			assert.equal(preferences.ConnectionTimeOut, 5);
+		});		
+		test("DefaultListenerPort", function() {
+			assert.equal(preferences.DefaultListenerPort, 5000);
+		});		
+		test("DefaultRemoteHost", function() {
+			assert.equal(preferences.DefaultRemoteHost, "127.0.0.1:5000");
+		});		
+		test("FavouriteRemoteHosts", function() {
+			assert.equal(preferences.FavouriteRemoteHosts, {});
+		});		
+		test("HighlightBackgroundColour", function() {
+			assert.equal(preferences.HighlightBackgroundColour, "rgba(0,255,0,0.3)");
+		});		
+		test("MaxLinesForFieldDescriptions", function() {
+			assert.equal(preferences.MaxLinesForFieldDescriptions, 200);
+		});		
+		test("SendAck", function() {
+			assert.equal(preferences.SendAck, true);
+		});
+		test("SocketEncodingPreference", function() {
+			assert.equal(preferences.SocketEncodingPreference, "UTF-8");
+		});
+	});
+
 });
