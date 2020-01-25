@@ -507,9 +507,9 @@ suite("vscode-hl7tools Extension Tests", function () {
 		test("DefaultRemoteHost", function() {
 			assert.equal(preferences.DefaultRemoteHost, "127.0.0.1:5000");
 		});		
-		test("FavouriteRemoteHosts", function() {
-			assert.equal(preferences.FavouriteRemoteHosts, [{}]);
-		});		
+		//test("FavouriteRemoteHosts", function() {
+		//	assert.equal(preferences.FavouriteRemoteHosts, [{}]);
+		//});		
 		test("HighlightBackgroundColour", function() {
 			assert.equal(preferences.HighlightBackgroundColour, "rgba(0,255,0,0.3)");
 		});		
