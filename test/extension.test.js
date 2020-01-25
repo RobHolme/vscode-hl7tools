@@ -508,7 +508,7 @@ suite("vscode-hl7tools Extension Tests", function () {
 			assert.equal(preferences.DefaultRemoteHost, "127.0.0.1:5000");
 		});		
 		test("FavouriteRemoteHosts", function() {
-			assert.equal(preferences.FavouriteRemoteHosts, {});
+			assert.equal(preferences.FavouriteRemoteHosts, [{}]);
 		});		
 		test("HighlightBackgroundColour", function() {
 			assert.equal(preferences.HighlightBackgroundColour, "rgba(0,255,0,0.3)");
@@ -520,7 +520,7 @@ suite("vscode-hl7tools Extension Tests", function () {
 			assert.equal(preferences.SendAck, true);
 		});
 		test("SocketEncodingPreference", function() {
-			assert.equal(preferences.SocketEncodingPreference, "UTF-8");
+			assert.equal(preferences.SocketEncodingPreference, "utf8");
 		});
 	});
 
