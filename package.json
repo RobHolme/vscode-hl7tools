@@ -201,7 +201,7 @@
 			"type": "object",
 			"title": "HL7 Tools",
 			"properties": {
-				"hl7tools.highlightBackgroundColour": {
+				"hl7tools.highlightBackgroundColor": {
 					"type": "string",
 					"default": "rgba(0,255,0,0.3)",
 					"description": "The background colour applied to highlighted HL7 fields. Requires a RGBA value."
