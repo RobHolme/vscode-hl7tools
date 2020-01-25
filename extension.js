@@ -33,21 +33,12 @@ var hoverDecorationList = [];
 //var currentDecoration;
 // stores the current hover decorations
 var currentHoverDecoration;
-// the value of the background colour for highlighted items (from the preferences file). Expects a RGBA value.
-var highlightFieldBackgroundColor;
 //  use this to prevent th active do hack from running more than once per session
 var activeDocHackRun = false;
 // store field locations used by Find and FindNext functions
 var findFieldLocation;
-// HighlightField object
-//var highlightFields; 
-
-//----------------------------------------------------
-// update the user configuration settings 
-function UpdateConfiguration() {
-	var config = vscode.workspace.getConfiguration('hl7tools');
-	highlightFieldBackgroundColor = config['highlightBackgroundColor'];
-}
+// retrieves user preferences for the extension
+preferences = new extensionPreferencesClass.ExtensionPreferences();
 
 
 //----------------------------------------------------
@@ -101,9 +92,6 @@ function activate(context) {
 	// update the HL7 delimiter characters from the current file
 	delimiters = common.ParseDelimiters();
 
-	// get user preferences for the extension
-	UpdateConfiguration();
-
 	var activeEditor = vscode.window.activeTextEditor
 	// only activate the field descriptions if it is identified as a HL7 file  
 	if (!common.IsHL7File(activeEditor.document)) {
@@ -143,7 +131,7 @@ function activate(context) {
 
 				UpdateFieldDescriptions();
 
-				var result = HighlightFields.ShowHighlights(currentItemLocation, hl7Schema, highlightFieldBackgroundColor);
+				var result = HighlightFields.ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour);
 
 				// create a new FindField object when the active editor changes
 				findFieldLocation = new FindFieldClass(vscode.window.activeTextEditor.document, hl7Schema);
@@ -167,10 +155,6 @@ function activate(context) {
 		}
 	}, null, context.subscriptions);
 
-	// user preferences have changed
-	workspace.onDidChangeConfiguration(UpdateConfiguration);
-	UpdateConfiguration();
-
 	//-------------------------------------------------------------------------------------------
 	// this function highlights HL7 items in the message based on item position identified by user.
 	var highlightFieldCommand = vscode.commands.registerCommand('hl7tools.HighlightHL7Item', function () {
@@ -179,7 +163,7 @@ function activate(context) {
 		var itemLocationPromise = vscode.window.showInputBox({ prompt: "Enter HL7 item location (e.g. 'PID-3'), or the partial field name (e.g. 'name')" });
 		itemLocationPromise.then(function (itemLocation) {
 			currentItemLocation = itemLocation;
-			var result = HighlightFields.ShowHighlights(itemLocation, hl7Schema, highlightFieldBackgroundColor);
+			var result = HighlightFields.ShowHighlights(itemLocation, hl7Schema, preferences.HighlightBackgroundColour);
 			if (result == HighlightFields.HighlightFieldReturnCode.ERROR_NO_FIELDS_FOUND) {
 				vscode.window.showWarningMessage("A field matching " + itemLocation + " could not be located in the message");
 			}
@@ -194,7 +178,7 @@ function activate(context) {
 	var ClearHighlightedFieldsCommand = vscode.commands.registerCommand('hl7tools.ClearHighlightedFields', function () {
 		console.log('In function ClearHighlightedFields');
 		currentItemLocation = null;
-		HighlightFields.ShowHighlights(currentItemLocation, hl7Schema, highlightFieldBackgroundColor);
+		HighlightFields.ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour);
 	});
 	context.subscriptions.push(ClearHighlightedFieldsCommand);
 
@@ -326,15 +310,13 @@ function activate(context) {
 		endOfLineChar = common.GetEOLCharacter(currentDoc);
 		hl7Message = hl7Message.replace(new RegExp(endOfLineChar, 'g'), String.fromCharCode(0x0d));
 
-		// get the user defaults for SendMessage
-		var hl7toolsConfig = vscode.workspace.getConfiguration('hl7tools');
-		const defaultEndPoint = hl7toolsConfig['DefaultRemoteHost'];
-		const tcpConnectionTimeout = hl7toolsConfig['ConnectionTimeout'] * 1000;
-		const favouriteRemoteHosts = hl7toolsConfig['FavouriteRemoteHosts'];
-		var favouriteList = [];
+		// get the user defaults for TCP Connection timeout & FavouriteRemoteHosts
+		const tcpConnectionTimeout = preferences.ConnectionTimeOut * 1000;
 
-		for (i = 0; i < favouriteRemoteHosts.length; i++) {
-			favouriteList.push({ "description": favouriteRemoteHosts[i].Description, "label": favouriteRemoteHosts[i].Hostname + ":" + favouriteRemoteHosts[i].Port });
+		// parse the user settings for list of favourite remote hosts
+		var favouriteList = [];
+		for (i = 0; i < preferences.FavouriteRemoteHosts.length; i++) {
+			favouriteList.push({ "description": preferences.FavouriteRemoteHosts[i].Description, "label": preferences.FavouriteRemoteHosts[i].Hostname + ":" + preferences.FavouriteRemoteHosts[i].Port });
 		}
 
 		// the default setting is an array with an undefined object, so check length and if the first element is defined.
@@ -349,7 +331,7 @@ function activate(context) {
 					}
 					// The user selected the option to manually enter the destination
 					else if (selection.label == "Enter other destination:") {
-						var remoteHostPromise = vscode.window.showInputBox({ prompt: "Enter the remote host and port ('RemoteHost:Port')'", value: defaultEndPoint });
+						var remoteHostPromise = vscode.window.showInputBox({ prompt: "Enter the remote host and port ('RemoteHost:Port')'", value: preferences.DefaultRemoteHost });
 						remoteHostPromise.then(function (remoteEndpoint) {
 							// extract the hostname and port from the end point entered by the user
 							remoteHost = remoteEndpoint.split(":")[0];
@@ -369,7 +351,7 @@ function activate(context) {
 			}
 			// No favourite endpoints defined in the settings.json file, so prompt user for destination.
 			else {
-				var remoteHostPromise = vscode.window.showInputBox({ prompt: "Enter the remote host and port ('RemoteHost:Port')'", value: defaultEndPoint });
+				var remoteHostPromise = vscode.window.showInputBox({ prompt: "Enter the remote host and port ('RemoteHost:Port')'", value: preferences.DefaultRemoteHost });
 				remoteHostPromise.then(function (remoteEndpoint) {
 					// extract the hostname and port from the end point entered by the user
 					remoteHost = remoteEndpoint.split(":")[0];
@@ -392,11 +374,7 @@ function activate(context) {
 			return;
 		}
 
-		// get the user defaults for port to listen on
-		var hl7toolsConfig = vscode.workspace.getConfiguration('hl7tools');
-		const defaultPort = hl7toolsConfig['DefaultListenerPort'];
-
-		var listenerPromise = vscode.window.showInputBox({ prompt: "Enter the TCP port to listen on for messages", value: defaultPort });
+		var listenerPromise = vscode.window.showInputBox({ prompt: "Enter the TCP port to listen on for messages", value: preferences.DefaultListenerPort });
 		listenerPromise.then(function (listenerPort) {
 			TcpMllpListener.StartListener(listenerPort);
 		});
@@ -611,9 +589,7 @@ function activate(context) {
 		// don't apply descriptions if file is too large (i.e. large hl7 batch files). 
 		// Performance can be impacted on systems with low resources
 		var currentDoc = activeEditor.document;
-		var hl7toolsConfig = vscode.workspace.getConfiguration('hl7tools');
-		const maxLinesPreference = hl7toolsConfig['MaxLinesForFieldDescriptions'];
-		var maxLines = Math.min(currentDoc.lineCount, maxLinesPreference)
+		var maxLines = Math.min(currentDoc.lineCount, preferences.MaxLinesForFieldDescriptions);
 		var regEx = new RegExp("\\" + delimiters.FIELD, "g");
 		var validSegmentRegEx = new RegExp("^[a-z][a-z]([a-z]|[0-9])\\" + delimiters.FIELD, "i");
 		// get the EOL character from the current document
