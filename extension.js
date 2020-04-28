@@ -556,8 +556,10 @@ function activate(context) {
 		Object.entries(hl7Schema).forEach(([key]) => {
 			regexString += key + "\\" + delimiters.FIELD + "|";
 		});
-		// include support for custom 'Z' segments (not in the schema)
-		regexString += "Z[A-Z]\\w\\|)";
+		// include support for custom 'Z' segments (not in the schema).
+		// these are prone to false positives - e.g. a field with the name ZOE would still match the definition of a Z segment. 
+		// assuming there will always be a space in front to reduce false positives
+		regexString += "\sZ[A-Z]\\w\\|)";
 		var segmentRegEx = new RegExp(regexString, 'g');
 
 		// split the message into segments using the regex, then join elements back together with the EOL character separating segments.
