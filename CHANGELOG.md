@@ -150,3 +150,6 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 
 ## 1.11.0 (10/01/2020)
 * added support for defining the socket encoding when sending/receiving messages. Defaults to utf-8 (prior behaviour), but can now be optionally changed to ISO-8859-1. Set via "SocketEncoding" option in the extension preferences.
+
+## 1.12.0 (28/04/2020)
+* The 'Add Linebreak to segments' may find false positive matches for 'Z' segments - such as names like ZOE, ZAK, etc. It now requires a space the precede the Zxx string to be detected as a segment. Still prone to some false detections.
