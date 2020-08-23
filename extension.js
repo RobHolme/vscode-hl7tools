@@ -5,6 +5,7 @@
 const vscode = require('vscode');
 var workspace = vscode.workspace;
 const path = require("path");
+const fs = require('fs')
 
 // load local modules
 const common = require('./lib/common.js');
@@ -75,11 +76,21 @@ function LoadHL7Schema() {
 			statusbarHL7Version.tooltip = hl7SchemaTooltip;
 			statusbarHL7Version.show();
 		}
-		// if the first line is not a MSH segment (this would be unexpected), default to the 2.7.1 schema
+		// if the first line is not a MSH segment (this would be unexpected), default to the most recent known schema
 		else {
 			hl7Schema = require('./schema/2.7.1/segments.js');
 			hl7Fields = require('./schema/2.7.1/fields.js');
 			statusbarHL7Version.hide();
+		}
+
+		// load custom segment schemas
+		preferences = new extensionPreferencesClass.ExtensionPreferences();
+		if (preferences.CustomSegmentSchema != '') {
+			if (fs.existsSync(preferences.CustomSegmentSchema)) {
+				customSchema = require(preferences.CustomSegmentSchema);
+				hl7Schema = { ...hl7Schema, ...customSchema } // append the custom segments
+				var test = 1;
+			}
 		}
 	}
 }
@@ -125,7 +136,7 @@ function activate(context) {
 				// if the AddLinebreakOnActivation user preference is set, call the 'Add LineBreaks to Segment' command
 				// load user preferences for the extension (SocketEncoding)
 				preferences = new extensionPreferencesClass.ExtensionPreferences();
-				if (preferences.AddLinebreakOnActivation == true){
+				if (preferences.AddLinebreakOnActivation == true) {
 					AddLinebreaksToSegments();
 				}
 
@@ -200,8 +211,6 @@ function activate(context) {
 
 	//-------------------------------------------------------------------------------------------
 	// This function outputs the field tokens that make up the segment.
-	// The function is based on TokenizeLine from https://github.com/pagebrooks/vscode-hl7 . Modified to 
-	// support repeating fields and make field indexes start at 1 (instead of 0) to match the HL7 field naming scheme. 
 	var displaySegmentCommand = vscode.commands.registerCommand('hl7tools.DisplaySegmentFields', function () {
 
 		console.log('In function DisplaySegmentFields');
