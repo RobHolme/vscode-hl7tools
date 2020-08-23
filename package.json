@@ -2,7 +2,7 @@
 	"name": "hl7tools",
 	"displayName": "HL7Tools",
 	"description": "HL7 tools for Visual Studio Code",
-	"version": "1.12.0",
+	"version": "1.13.0",
 	"icon": "images/hl7tools-icon.png",
 	"publisher": "RobHolme",
 	"bugs": {
@@ -273,6 +273,10 @@
 						"ISO-8859-1"
 					],
 					"description": "The TCP socket encoding used when sending and receiving messages"
+				},
+				"hl7tools.CustomSegmentSchema": {
+					"type": "string",
+					"description": "Full path and filename of custom Schema.js file (Z segment definitions). Applied in addition to standard schema."
 				}
 			}
 		}
