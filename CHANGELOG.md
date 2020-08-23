@@ -153,3 +153,6 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 
 ## 1.12.0 (28/04/2020)
 * The 'Add Linebreak to segments' may find false positive matches for 'Z' segments - such as names like ZOE, ZAK, etc. It now requires a space the precede the Zxx string to be detected as a segment. Still prone to some false detections.
+
+## 1.12.0 (23/08/2020)
+* Support for custom segment definitions
