@@ -89,7 +89,9 @@ function LoadHL7Schema() {
 			if (fs.existsSync(preferences.CustomSegmentSchema)) {
 				customSchema = require(preferences.CustomSegmentSchema);
 				hl7Schema = { ...hl7Schema, ...customSchema } // append the custom segments
-				var test = 1;
+			} 
+			else {
+				vscode.window.showWarningMessage("Could not load the custom schema file: " + preferences.CustomSegmentSchema);
 			}
 		}
 	}
