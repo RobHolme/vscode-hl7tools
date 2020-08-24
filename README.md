@@ -33,6 +33,16 @@ By default only the first 200 segments of each message will include hover descri
 
 `"hl7tools.MaxLinesForFieldDescriptions"`
 
+__Custom Segment Support__
+ 
+ Support for custom 'Z' segments can be included by providing a custom schema definition. The custom schema file must follow the same format as the default segment schemas included in this extension ([extension folder]\\schema\2.x\segments.js). Each segment fields requires values for "datatype", "desc", and "opt" fields. Set the value of the 'CustomSegmentSchema' user preference to reference the file containing the custom segment schema (full path and file name). e.g.
+
+`"hl7tools.CustomSegmentSchema": c:\schemas\CustomSchema.js`  
+
+The custom schema should not modify segments defined in the HL7 v2.x specification, this is intended for 'Z' segment definitions only. It is assumed all custom segments will use standard data types.
+
+The custom segments schema will be available to all extension commands that use field descriptions.
+
 ### Field highlighting
 This command prompts for a HL7 field location (e.g. PID-3), or partial field description (e.g. name). The corresponding field(s) are then highlighted in the editor. The field highlighting will be applied to other HL7 messages when they become the active document. The background colour applied to highlighted fields can be configured via the user preference "hl7tools.highlightBackgroundColor". This preference requires a RGBA colour value, specified as: rgba(red, green, blue, alpha). The alpha parameter is a number between 0.0 (fully transparent) and 1.0 (fully opaque).
 
