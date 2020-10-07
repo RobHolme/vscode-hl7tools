@@ -76,7 +76,8 @@ function LoadHL7Schema() {
 			statusbarHL7Version.tooltip = hl7SchemaTooltip;
 			statusbarHL7Version.show();
 		}
-		// if the first line is not a MSH segment (this would be unexpected), default to the most recent known schema
+		// if the first line is not a MSH segment (this would be unexpected), default to the most recent known schema. 
+		// TO DO: batch files will start with FHS or BHS.
 		else {
 			hl7Schema = require('./schema/2.7.1/segments.js');
 			hl7Fields = require('./schema/2.7.1/fields.js');
@@ -637,8 +638,8 @@ function activate(context) {
 				positionOffset += currentLine.length + endOfLineLength;
 				continue;
 			}
-			// the first delimiter is a field for MSH segments
-			if (segmentName.toUpperCase() == "MSH") {
+			// the first delimiter is a field for MSH, FHS, and BHS segments
+			if (segmentName.toUpperCase() == 'MSH' || segmentName.toUpperCase() == 'FHS' || segmentName.toUpperCase() == 'BHS') {
 				fieldCount++;
 			}
 			// get the location of field delimiter characters
