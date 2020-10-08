@@ -49,40 +49,42 @@ function LoadHL7Schema() {
 	var activeEditor = vscode.window.activeTextEditor;
 	var supportedSchemas = ["2.1", "2.2", "2.3", "2.3.1", "2.4", "2.5", "2.5.1", "2.6", "2.7", "2.7.1"];
 	var hl7SchemaTooltip = "";
+	const defaultSchemaVersion = "2.7.1";
+	var hl7Version = defaultSchemaVersion;
 
 	if (!activeEditor) {
 		return;
 	}
 	else {
-		msh = activeEditor.document.lineAt(0).text;
-		if (msh.split(delimiters.FIELD)[0].toUpperCase() == "MSH") {
-			var hl7Version = msh.split(delimiters.FIELD)[11];
+		// search for the first line starting with MSH. Extract the HL7 version info from this first header segment found 
+		var currentMessage = activeEditor.document.getText();
+		var hl7HeaderRegex = /^MSH.+$/im;
+		var result = hl7HeaderRegex.exec(currentMessage);
+
+		if (result != null) {
+			hl7Version = result[0].split(delimiters.FIELD)[11];
 			if (supportedSchemas.includes(hl7Version)) {
-				// Load the segment descriptions from the HL7-Dictionary module
-				hl7Schema = require('./schema/' + hl7Version + '/segments.js');
-				hl7Fields = require('./schema/' + hl7Version + '/fields.js');
 				hl7SchemaTooltip = "HL7 v" + hl7Version + " (auto detected)";
 			}
-			// default to the 2.7.1 schema if there is a not a schema available for the version reported (e.g. future releases)
+			// HL7 version detected is not supported (more recent than current schema definitions known by this extension)
 			else {
-				hl7Version = "2.7.1";
-				hl7SchemaTooltip = "HL7 version not detected. Defaulting to v" + hl7Version;
-				hl7Schema = require('./schema/2.7.1/segments.js');
-				hl7Fields = require('./schema/2.7.1/fields.js');
+				hl7Version = defaultSchemaVersion;
+				hl7SchemaTooltip = "HL7 version detected is not supported. Defaulting to v" + hl7Version;
 			}
-			// show HL7 version in status bar
-			statusbarHL7Version.color = 'white';
-			statusbarHL7Version.text = "$(info) HL7 schema: v" + hl7Version;  // $(info) - GitHub Octicon - https://octicons.github.com/
-			statusbarHL7Version.tooltip = hl7SchemaTooltip;
-			statusbarHL7Version.show();
 		}
-		// if the first line is not a MSH segment (this would be unexpected), default to the most recent known schema. 
-		// TO DO: batch files will start with FHS or BHS.
+		// Hl7 version not detected. Default to the most recent schema known by the extension 
 		else {
-			hl7Schema = require('./schema/2.7.1/segments.js');
-			hl7Fields = require('./schema/2.7.1/fields.js');
-			statusbarHL7Version.hide();
+			hl7Version = defaultSchemaVersion;
+			hl7SchemaTooltip = "HL7 version not detected. Defaulting to v" + hl7Version;
 		}
+		// load the schema based on the HL7 version detected
+		hl7Schema = require('./schema/' + hl7Version + '/segments.js');
+		hl7Fields = require('./schema/' + hl7Version + '/fields.js');
+		// show HL7 version in status bar
+		statusbarHL7Version.color = 'white';
+		statusbarHL7Version.text = "$(info) HL7 schema: v" + hl7Version;  // $(info) - GitHub Octicon - https://octicons.github.com/
+		statusbarHL7Version.tooltip = hl7SchemaTooltip;
+		statusbarHL7Version.show();
 
 		// load custom segment schemas
 		preferences = new extensionPreferencesClass.ExtensionPreferences();
@@ -90,7 +92,7 @@ function LoadHL7Schema() {
 			if (fs.existsSync(preferences.CustomSegmentSchema)) {
 				customSchema = require(preferences.CustomSegmentSchema);
 				hl7Schema = { ...hl7Schema, ...customSchema } // append the custom segments
-			} 
+			}
 			else {
 				vscode.window.showWarningMessage("Could not load the custom schema file: " + preferences.CustomSegmentSchema);
 			}
