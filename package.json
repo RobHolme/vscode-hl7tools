@@ -2,9 +2,10 @@
 	"name": "hl7tools",
 	"displayName": "HL7Tools",
 	"description": "HL7 tools for Visual Studio Code",
-	"version": "1.13.1",
+	"version": "1.13.2",
 	"icon": "images/hl7tools-icon.png",
 	"publisher": "RobHolme",
+	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/RobHolme/vscode-hl7tools/issues"
 	},
@@ -292,5 +293,6 @@
 		"id": "b919e7cc-6fa1-454b-ab7f-216ed8d48f19",
 		"publisherId": "be56bacd-8aad-4010-8775-e3f3abf3f41d",
 		"publisherDisplayName": "Rob Holme"
-	}
+	},
+	"dependencies": {}
 }
