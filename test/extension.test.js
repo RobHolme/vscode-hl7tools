@@ -20,15 +20,15 @@ suite("vscode-hl7tools Extension Tests", function () {
 
 		// Defines a Mocha unit test
 		test("PadLeft()", function () {
-			assert.equal(common.padLeft("padtest", 10), "   padtest");
-			assert.equal(common.padLeft("padtest", 10, '-'), "---padtest");
-			assert.equal(common.padLeft("padtest", 2), "padtest");
+			assert.strictEqual(common.padLeft("padtest", 10), "   padtest");
+			assert.strictEqual(common.padLeft("padtest", 10, '-'), "---padtest");
+			assert.strictEqual(common.padLeft("padtest", 2), "padtest");
 		});
 
 		test("PadRight()", function () {
-			assert.equal(common.padRight("padtest", 10), "padtest   ");
-			assert.equal(common.padRight("padtest", 10, '-'), "padtest---");
-			assert.equal(common.padRight("padtest", 2), "padtest");
+			assert.strictEqual(common.padRight("padtest", 10), "padtest   ");
+			assert.strictEqual(common.padRight("padtest", 10, '-'), "padtest---");
+			assert.strictEqual(common.padRight("padtest", 2), "padtest");
 		});
 
 		test("ParseDelimiters()", function () {
@@ -42,55 +42,55 @@ suite("vscode-hl7tools Extension Tests", function () {
 			};
 
 			// parse the delimiters from a string
-			assert.deepEqual(common.ParseDelimiters("MSH|^~\\&|AccMgr|1|||20050110045504||ADT^A01|599102|P|2.3|||\nEVN|A01|20050110045502|||||"), delimiters);
+			assert.deepStrictEqual(common.ParseDelimiters("MSH|^~\\&|AccMgr|1|||20050110045504||ADT^A01|599102|P|2.3|||\nEVN|A01|20050110045502|||||"), delimiters);
 			// parse the delimiters from the current document (requires the test launcher to open a file)
 			assert.deepEqual(common.ParseDelimiters(), delimiters);
 		});
 
 		test("IsHL7File()", function () {
-			assert.equal(common.IsHL7File(vscode.window.activeTextEditor.document), true);
+			assert.strictEqual(common.IsHL7File(vscode.window.activeTextEditor.document), true);
 			// TO DO: add test for when the document is not a HL7 file and should return false
 		});
 
 		test("IsSegmentValid()", function() {
-			assert.equal(common.IsSegmentValid("PID|1|456", "|"), true);
-			assert.equal(common.IsSegmentValid("ZA1|1|456", "|"), true);
-			assert.equal(common.IsSegmentValid("Z01|1|456", "|"), true);
-			assert.equal(common.IsSegmentValid("PID|1|456"), true);
-			assert.equal(common.IsSegmentValid("1 PID|1|456", "|"), false);
-			assert.equal(common.IsSegmentValid("1PID|1|456", "|"), false);
-			assert.equal(common.IsSegmentValid("P01|1|456", "|"), false);
-			assert.equal(common.IsSegmentValid("P01|1|456"), false);
+			assert.strictEqual(common.IsSegmentValid("PID|1|456", "|"), true);
+			assert.strictEqual(common.IsSegmentValid("ZA1|1|456", "|"), true);
+			assert.strictEqual(common.IsSegmentValid("Z01|1|456", "|"), true);
+			assert.strictEqual(common.IsSegmentValid("PID|1|456"), true);
+			assert.strictEqual(common.IsSegmentValid("1 PID|1|456", "|"), false);
+			assert.strictEqual(common.IsSegmentValid("1PID|1|456", "|"), false);
+			assert.strictEqual(common.IsSegmentValid("P01|1|456", "|"), false);
+			assert.strictEqual(common.IsSegmentValid("P01|1|456"), false);
 		});
 
 		test("GetFields()", function () {
-			assert.equal(common.GetFields("PID", 3).Results[0].Value, "10006579^^^1^MRN^1");
-			assert.equal(common.GetFields("PID", 3).Results[1].Value, "1234567890123456^^^1^IHI^1");
+			assert.strictEqual(common.GetFields("PID", 3).Results[0].Value, "10006579^^^1^MRN^1");
+			assert.strictEqual(common.GetFields("PID", 3).Results[1].Value, "1234567890123456^^^1^IHI^1");
 		});
 
 		test("IsItemLocationValid()", function () {
 			// true cases
-			assert.equal(common.IsItemLocationValid("PID-3"), true);
-			assert.equal(common.IsItemLocationValid("pid-3"), true);
-			assert.equal(common.IsItemLocationValid("PV1-30"), true);
-			assert.equal(common.IsItemLocationValid("ZAL-1"), true);
-			assert.equal(common.IsItemLocationValid("ZAL-999"), true);
+			assert.strictEqual(common.IsItemLocationValid("PID-3"), true);
+			assert.strictEqual(common.IsItemLocationValid("pid-3"), true);
+			assert.strictEqual(common.IsItemLocationValid("PV1-30"), true);
+			assert.strictEqual(common.IsItemLocationValid("ZAL-1"), true);
+			assert.strictEqual(common.IsItemLocationValid("ZAL-999"), true);
 			// false cases
-			assert.equal(common.IsItemLocationValid("ID-3"), false);
-			assert.equal(common.IsItemLocationValid("PID-0"), false);
-			assert.equal(common.IsItemLocationValid("PID-A"), false);
-			assert.equal(common.IsItemLocationValid("000-1"), false);
+			assert.strictEqual(common.IsItemLocationValid("ID-3"), false);
+			assert.strictEqual(common.IsItemLocationValid("PID-0"), false);
+			assert.strictEqual(common.IsItemLocationValid("PID-A"), false);
+			assert.strictEqual(common.IsItemLocationValid("000-1"), false);
 		});
 
 		test("GetFieldIndex()", function () {
-			assert.equal(common.GetFieldIndex("PID-1"), 1);
-			assert.equal(common.GetFieldIndex("ZAL-100"), 100);
-			assert.equal(common.GetFieldIndex("PID-1.2"), 1);
+			assert.strictEqual(common.GetFieldIndex("PID-1"), 1);
+			assert.strictEqual(common.GetFieldIndex("ZAL-100"), 100);
+			assert.strictEqual(common.GetFieldIndex("PID-1.2"), 1);
 		});
 
 		test("GetSegmentNameFromLocationString()", function () {
-			assert.equal(common.GetSegmentNameFromLocationString("PID-1"), "PID");
-			assert.equal(common.GetSegmentNameFromLocationString("PID-1.2"), "PID");
+			assert.strictEqual(common.GetSegmentNameFromLocationString("PID-1"), "PID");
+			assert.strictEqual(common.GetSegmentNameFromLocationString("PID-1.2"), "PID");
 		});
 
 		test("FindLocationFromDescription() v2.1 schema", function () {
@@ -159,10 +159,10 @@ suite("vscode-hl7tools Extension Tests", function () {
 		setTimeout(function () {
 			test("CheckRequiredFields() test2.hl7", function () {
 				var result2 = CheckRequiredFields.CheckAllFields(hl7Schema);
-				assert.equal(result2[0].LineNumber, 5);
-				assert.equal(result2[0].FieldLocation, "PV1-2");
-				assert.equal(result2[1].LineNumber, 8);
-				assert.equal(result2[1].FieldLocation, "IN1-1");
+				assert.strictEqual(result2[0].LineNumber, 5);
+				assert.strictEqual(result2[0].FieldLocation, "PV1-2");
+				assert.strictEqual(result2[1].LineNumber, 8);
+				assert.strictEqual(result2[1].FieldLocation, "IN1-1");
 				vscode.commands.executeCommand('workbench.action.nextEditor');
 			});
 		}, 250);
@@ -173,16 +173,16 @@ suite("vscode-hl7tools Extension Tests", function () {
 		const missingRequiredFieldsClass = require('../lib/CheckRequiredFieldsResult.js');
 		missingRequiredFieldsClassTest = new missingRequiredFieldsClass.missingRequiredFieldResult(1, "MSH-1");
 		test("new missingRequiredFields()", function () {
-			assert.equal(missingRequiredFieldsClassTest._lineNumber, 1);
-			assert.equal(missingRequiredFieldsClassTest._fieldLocation, "MSH-1");
+			assert.strictEqual(missingRequiredFieldsClassTest._lineNumber, 1);
+			assert.strictEqual(missingRequiredFieldsClassTest._fieldLocation, "MSH-1");
 		});
 
 		test("get LineNumber", function() {
-			assert.equal(missingRequiredFieldsClassTest.LineNumber, 1);
+			assert.strictEqual(missingRequiredFieldsClassTest.LineNumber, 1);
 		});
 
 		test("get FieldLocation", function() {
-			assert.equal(missingRequiredFieldsClassTest.FieldLocation, "MSH-1");
+			assert.strictEqual(missingRequiredFieldsClassTest.FieldLocation, "MSH-1");
 		});
 	});
 
@@ -193,16 +193,16 @@ suite("vscode-hl7tools Extension Tests", function () {
 
 		test("Get CursorPosition()", function () {
 			var cursorResult = testCursor.CursorPosition;
-			assert.equal(cursorResult.line, 0);
-			assert.equal(cursorResult.character, 0);
+			assert.strictEqual(cursorResult.line, 0);
+			assert.strictEqual(cursorResult.character, 0);
 		});
 
 		test("Set CursorPosition()", function () {
 			var findFieldResult = new findFieldResultClass.FindFieldResult(2, 1, 3);
 			testCursor.CursorPosition = findFieldResult;
 			var cursorResult = testCursor.CursorPosition;
-			assert.equal(cursorResult.line, 2);
-			assert.equal(cursorResult.character, 3);
+			assert.strictEqual(cursorResult.line, 2);
+			assert.strictEqual(cursorResult.character, 3);
 		});
 	});
 
@@ -213,38 +213,38 @@ suite("vscode-hl7tools Extension Tests", function () {
 
 		test("new result() Constructor", function () {
 			assert.notEqual(result, undefined);
-			assert.equal(result._filename, "c:\\test\\test.hl7");
-			assert.equal(result._value, "test");
+			assert.strictEqual(result._filename, "c:\\test\\test.hl7");
+			assert.strictEqual(result._value, "test");
 		});
 
 		test("Get Result.Filename()", function () {
-			assert.equal(result.Filename, "c:\\test\\test.hl7");
+			assert.strictEqual(result.Filename, "c:\\test\\test.hl7");
 		});
 
 		test("Get Result.Value()", function () {
-			assert.equal(result.Value, "test");
+			assert.strictEqual(result.Value, "test");
 		});
 
 		test("new ResultCollection() Constructor", function() {
 			assert.notEqual(results, undefined);
-			assert.equal(results._maxLength, 5);
+			assert.strictEqual(results._maxLength, 5);
 			assert.deepEqual(results._resultItems, []);
 		});
 
 		test("ResultCollection.AddResult()", function () {
 			results.AddResult(result);
-			assert.equal(results.Results.length, 1);
+			assert.strictEqual(results.Results.length, 1);
 		});
 
 		test("Get ResultCollection.Results()", function () {
 			results.AddResult(result);
 			assert.deepEqual(results.Results[0], result);
-			assert.equal(results.Results[0].Value, "test");
-			assert.equal(results.Results[0].Filename, "c:\\test\\test.hl7");
+			assert.strictEqual(results.Results[0].Value, "test");
+			assert.strictEqual(results.Results[0].Filename, "c:\\test\\test.hl7");
 		});
 
 		test("ResultCollection.MaxLength()", function () {
-			assert.equal(results.MaxLength, 5);
+			assert.strictEqual(results.MaxLength, 5);
 		});
 
 	});
@@ -253,15 +253,15 @@ suite("vscode-hl7tools Extension Tests", function () {
 		const extractFields = require('../lib/ExtractFields.js');
 
 		test("ExtractReturnCode", function () {
-			assert.equal(extractFields.ExtractReturnCode.ERROR_NO_LOCATION_PROVIDED, 0);
-			assert.equal(extractFields.ExtractReturnCode.ERROR_LOCATION_NOT_VALID, 1);
-			assert.equal(extractFields.ExtractReturnCode.SUCCESS, 2);
+			assert.strictEqual(extractFields.ExtractReturnCode.ERROR_NO_LOCATION_PROVIDED, 0);
+			assert.strictEqual(extractFields.ExtractReturnCode.ERROR_LOCATION_NOT_VALID, 1);
+			assert.strictEqual(extractFields.ExtractReturnCode.SUCCESS, 2);
 		});
 
 		test("ExtractAllFields()", function () {
-			assert.equal(extractFields.ExtractAllFields("PID-3"), extractFields.ExtractReturnCode.SUCCESS);
-			assert.equal(extractFields.ExtractAllFields(), extractFields.ExtractReturnCode.ERROR_NO_LOCATION_PROVIDED);
-			assert.equal( extractFields.ExtractAllFields("PID-0"), extractFields.ExtractReturnCode.ERROR_LOCATION_NOT_VALID);
+			assert.strictEqual(extractFields.ExtractAllFields("PID-3"), extractFields.ExtractReturnCode.SUCCESS);
+			assert.strictEqual(extractFields.ExtractAllFields(), extractFields.ExtractReturnCode.ERROR_NO_LOCATION_PROVIDED);
+			assert.strictEqual( extractFields.ExtractAllFields("PID-0"), extractFields.ExtractReturnCode.ERROR_LOCATION_NOT_VALID);
 		});
 	});
 
@@ -275,7 +275,7 @@ suite("vscode-hl7tools Extension Tests", function () {
 			var result = fieldTreeView.DisplaySegmentAsTree("NK1|1|DUCK^HUEY|SO|3583 DUCK RD^^FOWL^CA^999990000|8885552222||Y||||||||||||||", hl7Schema, hl7Fields)
 			// calculate the hash of the result, compare against the hash of the expected result
 			var hash = crypto.createHash('md5').update(result).digest('hex');
-			assert.equal(hash, "d20e64530854996141aabae69135ea40");
+			assert.strictEqual(hash, "d20e64530854996141aabae69135ea40");
 		});
 	});
 
@@ -289,20 +289,20 @@ suite("vscode-hl7tools Extension Tests", function () {
 		});
 
 		test("FindNextReturnCode", function () {
-			assert.equal(findFieldLocation.findNextReturnCode.ERROR_NO_SEARCH_DEFINED, 0);
-			assert.equal(findFieldLocation.findNextReturnCode.ERROR_NO_FIELDS_FOUND, 1);
-			assert.equal(findFieldLocation.findNextReturnCode.SUCCESS_FIELD_FOUND, 2);
-			assert.equal(findFieldLocation.findNextReturnCode.SUCCESS_LAST_FIELD_FOUND, 3);
+			assert.strictEqual(findFieldLocation.findNextReturnCode.ERROR_NO_SEARCH_DEFINED, 0);
+			assert.strictEqual(findFieldLocation.findNextReturnCode.ERROR_NO_FIELDS_FOUND, 1);
+			assert.strictEqual(findFieldLocation.findNextReturnCode.SUCCESS_FIELD_FOUND, 2);
+			assert.strictEqual(findFieldLocation.findNextReturnCode.SUCCESS_LAST_FIELD_FOUND, 3);
 		});
 
 		test("Find()", function () {
 			findFieldLocation = new FindFieldClass(vscode.window.activeTextEditor.document, hl7Schema);
 			// test for a valid field
 			var findResult = findFieldLocation.Find("PID-3")
-			assert.equal(findResult, findFieldLocation.findNextReturnCode.SUCCESS_FIELD_FOUND);
+			assert.strictEqual(findResult, findFieldLocation.findNextReturnCode.SUCCESS_FIELD_FOUND);
 			// test for field not found
 			findResult = findFieldLocation.Find("PID-100")
-			assert.equal(findResult, findFieldLocation.findNextReturnCode.ERROR_NO_FIELDS_FOUND);
+			assert.strictEqual(findResult, findFieldLocation.findNextReturnCode.ERROR_NO_FIELDS_FOUND);
 		});
 
 		test("FindNext()", function () {
@@ -311,22 +311,22 @@ suite("vscode-hl7tools Extension Tests", function () {
 
 			// test for a failure since Find() hasn't been called yet
 			findResult = findFieldLocation.FindNext();
-			assert.equal(findResult, findFieldLocation.findNextReturnCode.ERROR_NO_SEARCH_DEFINED);
+			assert.strictEqual(findResult, findFieldLocation.findNextReturnCode.ERROR_NO_SEARCH_DEFINED);
 
 			// test for last field found
 			findFieldLocation.Find("PID-3")
 			findResult = findFieldLocation.FindNext();
-			assert.equal(findResult, findFieldLocation.findNextReturnCode.SUCCESS_LAST_FIELD_FOUND);
+			assert.strictEqual(findResult, findFieldLocation.findNextReturnCode.SUCCESS_LAST_FIELD_FOUND);
 
 			// test for next field found
 			findFieldLocation.Find("date");
 			findResult = findFieldLocation.FindNext();
-			assert.equal(findResult, findFieldLocation.findNextReturnCode.SUCCESS_FIELD_FOUND);
+			assert.strictEqual(findResult, findFieldLocation.findNextReturnCode.SUCCESS_FIELD_FOUND);
 
 			// test for failure to find a field
 			findFieldLocation.Find("PID-100");
 			findResult = findFieldLocation.FindNext();
-			assert.equal(findResult, findFieldLocation.findNextReturnCode.ERROR_NO_FIELDS_FOUND);
+			assert.strictEqual(findResult, findFieldLocation.findNextReturnCode.ERROR_NO_FIELDS_FOUND);
 		});
 	});
 
@@ -339,15 +339,15 @@ suite("vscode-hl7tools Extension Tests", function () {
 		});
 
 		test("Get Line()", function () {
-			assert.equal(fieldResult.Line, 1);
+			assert.strictEqual(fieldResult.Line, 1);
 		});
 
 		test("Get StartCharacter()", function () {
-			assert.equal(fieldResult.StartCharacter, 2);
+			assert.strictEqual(fieldResult.StartCharacter, 2);
 		});
 
 		test("Get EndCharacter()", function () {
-			assert.equal(fieldResult.EndCharacter, 3);
+			assert.strictEqual(fieldResult.EndCharacter, 3);
 		});
 	});
 
@@ -358,23 +358,23 @@ suite("vscode-hl7tools Extension Tests", function () {
 	
 		test("ShowHighlights() - Field located", function () {
 			// test success case
-			assert.equal(HighlightField.ShowHighlights("PID-3", hl7Schema), HighlightField.HighlightFieldReturnCode.SUCCESS_FIELD_FOUND);
-			assert.equal(HighlightField.ShowHighlights("pid-3", hl7Schema), HighlightField.HighlightFieldReturnCode.SUCCESS_FIELD_FOUND);
-			assert.equal(HighlightField.ShowHighlights("PID-3", hl7Schema, 'rgba(255,0,0,0.3)'), HighlightField.HighlightFieldReturnCode.SUCCESS_FIELD_FOUND);	
-			assert.equal(HighlightField.ShowHighlights("Patient", hl7Schema), HighlightField.HighlightFieldReturnCode.SUCCESS_FIELD_FOUND);
-			assert.equal(HighlightField.ShowHighlights("Patient", hl7Schema, 'rgba(255,0,0,0.3)'), HighlightField.HighlightFieldReturnCode.SUCCESS_FIELD_FOUND);
+			assert.strictEqual(HighlightField.ShowHighlights("PID-3", hl7Schema), HighlightField.HighlightFieldReturnCode.SUCCESS_FIELD_FOUND);
+			assert.strictEqual(HighlightField.ShowHighlights("pid-3", hl7Schema), HighlightField.HighlightFieldReturnCode.SUCCESS_FIELD_FOUND);
+			assert.strictEqual(HighlightField.ShowHighlights("PID-3", hl7Schema, 'rgba(255,0,0,0.3)'), HighlightField.HighlightFieldReturnCode.SUCCESS_FIELD_FOUND);	
+			assert.strictEqual(HighlightField.ShowHighlights("Patient", hl7Schema), HighlightField.HighlightFieldReturnCode.SUCCESS_FIELD_FOUND);
+			assert.strictEqual(HighlightField.ShowHighlights("Patient", hl7Schema, 'rgba(255,0,0,0.3)'), HighlightField.HighlightFieldReturnCode.SUCCESS_FIELD_FOUND);
 		});
 		test("ShowHighlights() - Field not found", function () {	
 			// test field not found
-			assert.equal(HighlightField.ShowHighlights("zzzzz", hl7Schema), HighlightField.HighlightFieldReturnCode.SUCCESS_NO_FIELD_FOUND);
-			assert.equal(HighlightField.ShowHighlights("zzzzz", hl7Schema, 'rgba(255,0,0,0.3)'), HighlightField.HighlightFieldReturnCode.SUCCESS_NO_FIELD_FOUND);
-			assert.equal(HighlightField.ShowHighlights("PID-99", hl7Schema), HighlightField.HighlightFieldReturnCode.SUCCESS_NO_FIELD_FOUND);
-			assert.equal(HighlightField.ShowHighlights("PID-99", hl7Schema, 'rgba(255,0,0,0.3)'), HighlightField.HighlightFieldReturnCode.SUCCESS_NO_FIELD_FOUND);
+			assert.strictEqual(HighlightField.ShowHighlights("zzzzz", hl7Schema), HighlightField.HighlightFieldReturnCode.SUCCESS_NO_FIELD_FOUND);
+			assert.strictEqual(HighlightField.ShowHighlights("zzzzz", hl7Schema, 'rgba(255,0,0,0.3)'), HighlightField.HighlightFieldReturnCode.SUCCESS_NO_FIELD_FOUND);
+			assert.strictEqual(HighlightField.ShowHighlights("PID-99", hl7Schema), HighlightField.HighlightFieldReturnCode.SUCCESS_NO_FIELD_FOUND);
+			assert.strictEqual(HighlightField.ShowHighlights("PID-99", hl7Schema, 'rgba(255,0,0,0.3)'), HighlightField.HighlightFieldReturnCode.SUCCESS_NO_FIELD_FOUND);
 		});
 		test("ShowHighlights() - No field provided", function () {	
 			// test no field provided
-			assert.equal(HighlightField.ShowHighlights(null, hl7Schema), HighlightField.HighlightFieldReturnCode.ERROR_NO_LOCATION_PROVIDED);
-			assert.equal(HighlightField.ShowHighlights("", hl7Schema, 'rgba(255,0,0,0.3)'), HighlightField.HighlightFieldReturnCode.ERROR_NO_LOCATION_PROVIDED);
+			assert.strictEqual(HighlightField.ShowHighlights(null, hl7Schema), HighlightField.HighlightFieldReturnCode.ERROR_NO_LOCATION_PROVIDED);
+			assert.strictEqual(HighlightField.ShowHighlights("", hl7Schema, 'rgba(255,0,0,0.3)'), HighlightField.HighlightFieldReturnCode.ERROR_NO_LOCATION_PROVIDED);
 		});
 
 	});
@@ -386,15 +386,15 @@ suite("vscode-hl7tools Extension Tests", function () {
 		var component = new hl7message.Component("Component Name");
 		test("Component constructor", function() {
 			assert.notEqual(component, undefined);
-			assert.equal(component._value, "");
-			assert.equal(component._name, "Component Name");
+			assert.strictEqual(component._value, "");
+			assert.strictEqual(component._name, "Component Name");
 		});
 		test ("Component.Name()", function() {
-			assert.equal(component.Name, "Component Name");
+			assert.strictEqual(component.Name, "Component Name");
 		});
 		test("Component Set & Get Value()", function() {
 			component.Value = "A123456"
-			assert.equal(component.Value, "A123456");
+			assert.strictEqual(component.Value, "A123456");
 		});
 
 		// test FieldItem object
@@ -402,68 +402,68 @@ suite("vscode-hl7tools Extension Tests", function () {
 		test("FieldItem Constructor", function() {
 			assert.notEqual(fieldItem, undefined);
 			assert.deepEqual(fieldItem._components, []);
-			assert.equal(fieldItem._maxLength, 22);
-			assert.equal(fieldItem._name, "Field Name");
-			assert.equal(fieldItem._value, "");	
+			assert.strictEqual(fieldItem._maxLength, 22);
+			assert.strictEqual(fieldItem._name, "Field Name");
+			assert.strictEqual(fieldItem._value, "");	
 		});
 		test("FieldItem.Name()", function() {
-			assert.equal(fieldItem.Name, "Field Name");
+			assert.strictEqual(fieldItem.Name, "Field Name");
 		});
 		test("FieldItem.AddComponent() and FieldItem.Components()", function() {
 			fieldItem.AddComponent(component);
-			assert.equal(fieldItem.Components[0], component);
+			assert.strictEqual(fieldItem.Components[0], component);
 		});
 		test("FieldItem.MaxLength()", function() {
-			assert.equal(fieldItem.MaxLength, 31);
+			assert.strictEqual(fieldItem.MaxLength, 31);
 		});
 		test("FieldItem set & get Name()", function() {
 			fieldItem.Name = "Another Longer Field Name";
-			assert.equal(fieldItem.Name, "Another Longer Field Name");
+			assert.strictEqual(fieldItem.Name, "Another Longer Field Name");
 			// confirm set Name() also updates the MaxLength property. 
-			assert.equal(fieldItem.MaxLength, 37);
+			assert.strictEqual(fieldItem.MaxLength, 37);
 		});
 		test("FieldItem set & get Value()", function() {
 			fieldItem.Value = "Test Value";
-			assert.equal(fieldItem.Value, "Test Value");
+			assert.strictEqual(fieldItem.Value, "Test Value");
 		});
 
 		// test Field Object
 		var field = new hl7message.Field();
 		test("Field Constructor", function() {
 			assert.notEqual(field, undefined);
-			assert.equal(field._maxLength, 0);
+			assert.strictEqual(field._maxLength, 0);
 			assert.deepEqual(field._fieldItems, []);
 		});
 		test("Field.AddFieldItem()", function() {
 			field.AddFieldItem(fieldItem);
 			assert.deepEqual(field._fieldItems[0], fieldItem);
-			assert.equal(field._maxLength, 37);
+			assert.strictEqual(field._maxLength, 37);
 		});
 		test("Field.MaxLength()", function() {
-			assert.equal(field.MaxLength, 37);
+			assert.strictEqual(field.MaxLength, 37);
 		});
 		test("Field.FieldItems()", function() {
 			field.AddFieldItem(fieldItem);
 			assert.deepEqual(field.FieldItems[1], fieldItem);
-			assert.equal(field.FieldItems.length, 2);
+			assert.strictEqual(field.FieldItems.length, 2);
 		});
 
 		// test Segment Object
 		var segment = new hl7message.Segment("Segment Name");
 		test("Segment Constructor", function() {
 			assert.notEqual(segment, undefined);
-			assert.equal(segment._name, "Segment Name");
-			assert.equal(segment._description, "");
-			assert.equal(segment._maxLength, 0);
+			assert.strictEqual(segment._name, "Segment Name");
+			assert.strictEqual(segment._description, "");
+			assert.strictEqual(segment._maxLength, 0);
 			assert.deepEqual(segment._fields, []);
 		});
 		test("Segment set & get Description", function() {
 			segment.Description = "New Description";
-			assert.equal(segment.Description, "New Description");
+			assert.strictEqual(segment.Description, "New Description");
 		});
 		test("Segment set & get Name", function() {
 			segment.Description = "New Segment Name";
-			assert.equal(segment.Description, "New Segment Name");
+			assert.strictEqual(segment.Description, "New Segment Name");
 		});
 		test("Segment.AddField()", function() {
 			segment.AddField(field);
@@ -472,7 +472,7 @@ suite("vscode-hl7tools Extension Tests", function () {
 		test("Segment.Fields()", function() {
 			segment.AddField(field);
 			assert.deepEqual(segment.Fields[1], field);
-			assert.equal(segment.Fields.length, 2);
+			assert.strictEqual(segment.Fields.length, 2);
 		});
 		test("Segment.MaxLength()", function() {
 			segment.AddField(field);
@@ -484,9 +484,9 @@ suite("vscode-hl7tools Extension Tests", function () {
 		const maskIdentifier = require('../lib/MaskIdentifiers.js');
 
 		test("MaskAll()", function() {
-			assert.equal(maskIdentifier._maskField("test^test2^test3"), "****^*****^*****");
-			assert.equal(maskIdentifier._maskField("test^test2^test3", 2), "test^*****^test3");
-			assert.equal(maskIdentifier._maskField("test^test2&test3"), "****^***********");
+			assert.strictEqual(maskIdentifier._maskField("test^test2^test3"), "****^*****^*****");
+			assert.strictEqual(maskIdentifier._maskField("test^test2^test3", 2), "test^*****^test3");
+			assert.strictEqual(maskIdentifier._maskField("test^test2&test3"), "****^***********");
 		});
 
 	});
@@ -496,31 +496,31 @@ suite("vscode-hl7tools Extension Tests", function () {
 		preferences = new extensionPreferencesClass.ExtensionPreferences();
 
 		test("AddLineBreakOnActivation", function() {
-			assert.equal(preferences.AddLineBreakOnActivation, false);
+			assert.strictEqual(preferences.AddLineBreakOnActivation, false);
 		});
 		test("ConnectionTimeOut", function() {
-			assert.equal(preferences.ConnectionTimeOut, 5);
+			assert.strictEqual(preferences.ConnectionTimeOut, 5);
 		});		
 		test("DefaultListenerPort", function() {
-			assert.equal(preferences.DefaultListenerPort, 5000);
+			assert.strictEqual(preferences.DefaultListenerPort, 5000);
 		});		
 		test("DefaultRemoteHost", function() {
-			assert.equal(preferences.DefaultRemoteHost, "127.0.0.1:5000");
+			assert.strictEqual(preferences.DefaultRemoteHost, "127.0.0.1:5000");
 		});		
 		//test("FavouriteRemoteHosts", function() {
-		//	assert.equal(preferences.FavouriteRemoteHosts, [{}]);
+		//	assert.strictEqual(preferences.FavouriteRemoteHosts, [{}]);
 		//});		
 		test("HighlightBackgroundColour", function() {
-			assert.equal(preferences.HighlightBackgroundColour, "rgba(0,255,0,0.3)");
+			assert.strictEqual(preferences.HighlightBackgroundColour, "rgba(0,255,0,0.3)");
 		});		
 		test("MaxLinesForFieldDescriptions", function() {
-			assert.equal(preferences.MaxLinesForFieldDescriptions, 200);
+			assert.strictEqual(preferences.MaxLinesForFieldDescriptions, 200);
 		});		
 		test("SendAck", function() {
-			assert.equal(preferences.SendAck, true);
+			assert.strictEqual(preferences.SendACK, true);
 		});
 		test("SocketEncodingPreference", function() {
-			assert.equal(preferences.SocketEncodingPreference, "utf8");
+			assert.strictEqual(preferences.SocketEncodingPreference, "utf8");
 		});
 	});
 
