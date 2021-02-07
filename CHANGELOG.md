@@ -157,6 +157,9 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 ## 1.13.0 (23/08/2020)
 * Support for custom segment definitions
 
-## 1.13.1 (07/10/202)
+## 1.13.1 (07/10/2020)
 * fixed issue with descriptions for FHS and BHS segments
 * fixed issue where HL7 version was not detected if MSH was not the first line of the file. Now searches for the first occurrence of a MSH segment.
+
+## 1.13.2 (07/02/2021)
+* fixed issue that resulted in the SendACK preference always returning false.
