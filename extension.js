@@ -330,7 +330,7 @@ function activate(context) {
 		// parse the user settings for list of favourite remote hosts
 		var favouriteList = [];
 		for (i = 0; i < preferences.FavouriteRemoteHosts.length; i++) {
-			favouriteList.push({ "description": preferences.FavouriteRemoteHosts[i].Description, "label": preferences.FavouriteRemoteHosts[i].Hostname + ":" + preferences.FavouriteRemoteHosts[i].Port });
+			favouriteList.push({ "description": preferences.FavouriteRemoteHosts[i].Description, "label": preferences.FavouriteRemoteHosts[i].Hostname + ":" + preferences.FavouriteRemoteHosts[i].Port + ":TLS=" + preferences.FavouriteRemoteHosts[i].UseTLS});
 		}
 
 		// the default setting is an array with an undefined object, so check length and if the first element is defined.
@@ -350,16 +350,30 @@ function activate(context) {
 							// extract the hostname and port from the end point entered by the user
 							remoteHost = remoteEndpoint.split(":")[0];
 							remotePort = remoteEndpoint.split(":")[1];
-							// send the current message to the remote end point.
-							TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout);
+							useTLS = remoteEndpoint.split(":")[2];
+							if (useTLS == 'TLS=true') {
+								// send the current message to the remote end point. Request TLS.
+								TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout, true);
+							}
+							else {
+								// send the current message to the remote end point. No TLS.
+								TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout, false);
+							}
 						});
 					}
 					// The user selected one of the favourite endpoints from the picklist.
 					else {
 						remoteHost = selection.label.split(":")[0];
 						remotePort = selection.label.split(":")[1];
-						// send the current message to the remote end point.
-						TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout);
+						useTLS = selection.label.split(":")[2];
+						if (useTLS == 'TLS=true') {
+							// send the current message to the remote end point. Request TLS.
+							TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout, true);
+						}
+						else {
+							// send the current message to the remote end point. No TLS.
+							TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout, false);
+						}
 					}
 				});
 			}
@@ -370,8 +384,15 @@ function activate(context) {
 					// extract the hostname and port from the end point entered by the user
 					remoteHost = remoteEndpoint.split(":")[0];
 					remotePort = remoteEndpoint.split(":")[1];
-					// send the current message to the remote end point.
-					TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout);
+					useTLS = remoteEndpoint.split(":")[2];
+					if (useTLS == 'TLS=true') {
+						// send the current message to the remote end point. Request TLS.
+						TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout, true);
+					}
+					else {
+						// send the current message to the remote end point. No TLS.
+						TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout, false);
+					}
 				});
 			}
 		}
