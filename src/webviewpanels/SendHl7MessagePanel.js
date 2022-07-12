@@ -46,7 +46,7 @@ class SendHl7MessagePanel {
 			<link href="${stylesMainUri}" rel="stylesheet">
 		</head>
 		<body>
-			Send the current HL7 message to:<br><br>
+			Send the HL7 message to the following remote host:<br><br>
   				<label for="hostname">Hostname or IP:</label>
   				<input type="text" id="hostname" name="hostname"><br>
   				<label for="port">Port:</label>
