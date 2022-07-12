@@ -17,7 +17,8 @@ class SendHl7MessagePanel {
 		this._message = hl7Message;
 		if (this._panel) {
 			this._panel.reveal(vscode.ViewColumn.Two);
-		} else {
+		} 
+		else {
 			var panel = vscode.window.createWebviewPanel("SendHL7Message", "Send HL7 Message", vscode.ViewColumn.Two, {
 			});
 			this._panel = panel

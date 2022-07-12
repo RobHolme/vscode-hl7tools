@@ -326,7 +326,6 @@ function activate(context) {
 		hl7Message = hl7Message.replace(new RegExp(endOfLineChar, 'g'), String.fromCharCode(0x0d));
 
 		// test web view
-		//var sendMessagePanel = new SendHl7MessagePanelClass(hl7Message, vscode.extensions.getExtension('RobHolme.hl7tools').extensionUri);
 
 SendHl7MessagePanelClass.render(hl7Message, vscode.extensions.getExtension('RobHolme.hl7tools').extensionUri);
 
