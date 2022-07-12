@@ -18,6 +18,7 @@ const ExtractFields = require('./lib/ExtractFields.js');
 const CheckRequiredFields = require('./lib/CheckRequiredFields.js');
 const FindFieldClass = require('./lib/FindField.js');
 const extensionPreferencesClass = require('./lib/./ExtensionPreferences.js');
+const SendHl7MessagePanelClass = require('./lib/webviewpanels/SendHl7MessagePanel.js');
 
 // the HL7 delimiters used by the message
 var delimiters;
@@ -323,6 +324,10 @@ function activate(context) {
 		// get the EOL character from the current document
 		endOfLineChar = common.GetEOLCharacter(currentDoc);
 		hl7Message = hl7Message.replace(new RegExp(endOfLineChar, 'g'), String.fromCharCode(0x0d));
+
+		// test web view
+SendHl7MessagePanelClass.render(hl7Message);
+
 
 		// get the user defaults for TCP Connection timeout & FavouriteRemoteHosts
 		const tcpConnectionTimeout = preferences.ConnectionTimeOut * 1000;
