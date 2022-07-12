@@ -48,6 +48,7 @@ input:not([type='checkbox'],[type='button']),
 textarea {
 	width:100%;
 	border: none;
+	text-align:left;
 	font-family: var(--vscode-editor-font-family);
 	padding: var(--input-padding-vertical) var(--input-padding-horizontal);
 	color: var(--vscode-input-foreground);

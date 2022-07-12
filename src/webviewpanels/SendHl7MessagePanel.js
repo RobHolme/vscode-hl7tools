@@ -22,7 +22,6 @@ class SendHl7MessagePanel {
 			});
 			this._panel = panel
 			panel.webview.html = this.getHtmlForWebview(this._panel.webview, extensionUri);
-			this._extensionUri;
 		}
 	}
 
@@ -52,12 +51,12 @@ class SendHl7MessagePanel {
   				<input type="text" id="hostname" name="hostname"><br>
   				<label for="port">Port:</label>
   				<input type="text" id="port" name="port"><br>
-				<label for="useTls">TLS required:</label>
+				<label for="useTls">Use TLS:</label>
 				<input type="checkbox" id="useTls" name = "useTls"> <br><br>
   				<input type="button" value="Send Message" onclick = "sendHL7Message();"</input><br><br>
 				<label for="hl7Message">Message:</label>
 				<textarea name="hl7Message" wrap='off'>
-				${this._message} 
+${this._message} 
 				</textarea>
 		</body>
 		</html>`;
