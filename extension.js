@@ -8,17 +8,17 @@ const path = require("path");
 const fs = require('fs')
 
 // load local modules
-const common = require('./lib/common.js');
-const HighlightFields = require('./lib/HighlightField.js');
-const MaskIdentifiers = require('./lib/MaskIdentifiers.js');
-const FieldTreeView = require('./lib/FieldTreeView.js');
-const TcpMllpClient = require('./lib/SendHl7Message.js');
-const TcpMllpListener = require('./lib/TCPListener.js');
-const ExtractFields = require('./lib/ExtractFields.js');
-const CheckRequiredFields = require('./lib/CheckRequiredFields.js');
-const FindFieldClass = require('./lib/FindField.js');
-const extensionPreferencesClass = require('./lib/./ExtensionPreferences.js');
-const SendHl7MessagePanelClass = require('./lib/webviewpanels/SendHl7MessagePanel.js');
+const common = require('./src/common.js');
+const HighlightFields = require('./src/HighlightField.js');
+const MaskIdentifiers = require('./src/MaskIdentifiers.js');
+const FieldTreeView = require('./src/FieldTreeView.js');
+const TcpMllpClient = require('./src/SendHl7Message.js');
+const TcpMllpListener = require('./src/TCPListener.js');
+const ExtractFields = require('./src/ExtractFields.js');
+const CheckRequiredFields = require('./src/CheckRequiredFields.js');
+const FindFieldClass = require('./src/FindField.js');
+const extensionPreferencesClass = require('./src/ExtensionPreferences.js');
+const SendHl7MessagePanelClass = require('./src/webviewpanels/SendHl7MessagePanel.js');
 
 // the HL7 delimiters used by the message
 var delimiters;

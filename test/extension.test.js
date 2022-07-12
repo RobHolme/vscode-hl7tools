@@ -16,7 +16,7 @@ var vscode = require('vscode');
 suite("vscode-hl7tools Extension Tests", function () {
 
 	suite("common.js unit tests", function () {
-		var common = require('../lib/common.js');
+		var common = require('../src/common.js');
 
 		// Defines a Mocha unit test
 		test("PadLeft()", function () {
@@ -145,7 +145,7 @@ suite("vscode-hl7tools Extension Tests", function () {
 	});
 
 	suite("CheckRequiredFields.js unit tests", function () {
-		const CheckRequiredFields = require('../lib/CheckRequiredFields.js');
+		const CheckRequiredFields = require('../src/CheckRequiredFields.js');
 		var hl7Schema = require('../schema/2.3/segments.js');
 
 		test("CheckRequiredFields() test.hl7", function () {
@@ -170,7 +170,7 @@ suite("vscode-hl7tools Extension Tests", function () {
 	});
 
 	suite("CheckRequiredFieldsResult.js unit tests", function () {
-		const missingRequiredFieldsClass = require('../lib/CheckRequiredFieldsResult.js');
+		const missingRequiredFieldsClass = require('../src/CheckRequiredFieldsResult.js');
 		missingRequiredFieldsClassTest = new missingRequiredFieldsClass.missingRequiredFieldResult(1, "MSH-1");
 		test("new missingRequiredFields()", function () {
 			assert.strictEqual(missingRequiredFieldsClassTest._lineNumber, 1);
@@ -187,8 +187,8 @@ suite("vscode-hl7tools Extension Tests", function () {
 	});
 
 	suite("CursorManager.js unit tests", function () {
-		const cursorManagerClass = require('../lib/CursorManager.js');
-		const findFieldResultClass = require('../lib/FindFieldResult.js');
+		const cursorManagerClass = require('../src/CursorManager.js');
+		const findFieldResultClass = require('../src/FindFieldResult.js');
 		var testCursor = new cursorManagerClass.CursorManager();
 
 		test("Get CursorPosition()", function () {
@@ -207,7 +207,7 @@ suite("vscode-hl7tools Extension Tests", function () {
 	});
 
 	suite("ExtractFieldResult.js unit tests", function () {
-		const resultClass = require('../lib/ExtractFieldResult.js');
+		const resultClass = require('../src/ExtractFieldResult.js');
 		var result = new resultClass.result("c:\\test\\test.hl7", "test")
 		var results = new resultClass.resultCollection();
 
@@ -250,7 +250,7 @@ suite("vscode-hl7tools Extension Tests", function () {
 	});
 
 	suite("ExtractFields.js unit tests", function () {
-		const extractFields = require('../lib/ExtractFields.js');
+		const extractFields = require('../src/ExtractFields.js');
 
 		test("ExtractReturnCode", function () {
 			assert.strictEqual(extractFields.ExtractReturnCode.ERROR_NO_LOCATION_PROVIDED, 0);
@@ -266,7 +266,7 @@ suite("vscode-hl7tools Extension Tests", function () {
 	});
 
 	suite("FieldTreeView.js unit tests", function () {
-		const fieldTreeView = require('../lib/FieldTreeView.js');
+		const fieldTreeView = require('../src/FieldTreeView.js');
 		var crypto = require('crypto');
 		hl7Fields = require('../schema/2.6/fields.js');
 		hl7Schema = require('../schema/2.6/segments.js');
@@ -280,7 +280,7 @@ suite("vscode-hl7tools Extension Tests", function () {
 	});
 
 	suite("FindField.js unit tests", function () {
-		const FindFieldClass = require('../lib/FindField.js');
+		const FindFieldClass = require('../src/FindField.js');
 		hl7Schema = require('../schema/2.3/segments.js');
 
 		test("FindField() Constructor", function () {
@@ -331,7 +331,7 @@ suite("vscode-hl7tools Extension Tests", function () {
 	});
 
 	suite("FindFieldResult.js unit tests", function () {
-		const findFieldResultClass = require('../lib/FindFieldResult.js');
+		const findFieldResultClass = require('../src/FindFieldResult.js');
 		var fieldResult = new findFieldResultClass.FindFieldResult(1, 2, 3);
 
 		test("FindFieldResult() constructor", function () {
@@ -354,7 +354,7 @@ suite("vscode-hl7tools Extension Tests", function () {
 	suite("HighlightField.js unit tests", function () {
 
 		hl7Schema = require('../schema/2.3/segments.js');
-		const HighlightField = require('../lib/HighlightField.js');
+		const HighlightField = require('../src/HighlightField.js');
 	
 		test("ShowHighlights() - Field located", function () {
 			// test success case
@@ -380,7 +380,7 @@ suite("vscode-hl7tools Extension Tests", function () {
 	});
 
 	suite("HL7Message.js unit tests", function() {
-		const hl7message = require('../lib/HL7Message.js');
+		const hl7message = require('../src/HL7Message.js');
 
 		// test component object
 		var component = new hl7message.Component("Component Name");
@@ -481,7 +481,7 @@ suite("vscode-hl7tools Extension Tests", function () {
 	});
 
 	suite("MaskIdentifiers.js unit tests", function() {
-		const maskIdentifier = require('../lib/MaskIdentifiers.js');
+		const maskIdentifier = require('../src/MaskIdentifiers.js');
 
 		test("MaskAll()", function() {
 			assert.strictEqual(maskIdentifier._maskField("test^test2^test3"), "****^*****^*****");
@@ -492,7 +492,7 @@ suite("vscode-hl7tools Extension Tests", function () {
 	});
 
 	suite("ExtensionPreferences.js unit tests", function() {
-		const extensionPreferencesClass = require('../lib/ExtensionPreferences.js');
+		const extensionPreferencesClass = require('../src/ExtensionPreferences.js');
 		preferences = new extensionPreferencesClass.ExtensionPreferences();
 
 		test("AddLineBreakOnActivation", function() {
