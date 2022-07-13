@@ -20,6 +20,7 @@ class SendHl7MessagePanel {
 		} 
 		else {
 			var panel = vscode.window.createWebviewPanel("SendHL7Message", "Send HL7 Message", vscode.ViewColumn.Two, {
+				enableScripts: true
 			});
 			this._panel = panel
 			panel.webview.html = this.getHtmlForWebview(this._panel.webview, extensionUri);
@@ -32,6 +33,7 @@ class SendHl7MessagePanel {
 		const stylesPathMainPath = vscode.Uri.joinPath(extensionUri, 'media', 'stylesheet.css');
 		const stylesMainUri = webview.asWebviewUri(stylesPathMainPath);
 
+
 		return `<!DOCTYPE html>
 		<html lang="en">
 		<head>
@@ -40,13 +42,20 @@ class SendHl7MessagePanel {
 				Use a content security policy to only allow loading images from https or from our extension directory,
 				and only allow scripts that have a specific nonce.
 			-->
-			<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; img-src ${webview.cspSource} https:; script-src 'nonce-${nonce}';">
 			
+			<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; img-src ${webview.cspSource} https:; script-src 'nonce-${nonce}';">
 			<meta name="viewport" content="width=device-width, initial-scale=1.0">
 			<title>Send HL7 Message</title>
 			<link href="${stylesMainUri}" rel="stylesheet">
+
 		</head>
 		<body>
+			<script nonce="${nonce}">
+			function sendHL7Message() {
+				document.getElementById("result").value = "test";
+			}
+			</script>
+
 			Send the HL7 message to the following remote host:<br><br>
   				<label for="hostname">Hostname or IP:</label>
   				<input type="text" id="hostname" name="hostname"><br>
@@ -54,10 +63,14 @@ class SendHl7MessagePanel {
   				<input type="text" id="port" name="port"><br>
 				<label for="useTls">Use TLS:</label>
 				<input type="checkbox" id="useTls" name = "useTls"> <br><br>
-  				<input type="button" value="Send Message" onclick = "sendHL7Message();"</input><br><br>
+  				<button onclick="sendHL7Message()">Send Message</button><br><br>
 				<label for="hl7Message">Message:</label>
 				<textarea name="hl7Message" wrap='off'>
 ${this._message} 
+				</textarea><br><br>
+				<label for="result">Result:</label>
+				<textarea name="result" wrap='off'>
+result
 				</textarea>
 		</body>
 		</html>`;
