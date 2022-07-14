@@ -313,6 +313,9 @@ function activate(context) {
 
 		console.log("Sending HL7 message to remote host");
 
+		// get the user defaults for TCP Connection timeout & FavouriteRemoteHosts
+		const tcpConnectionTimeout = preferences.ConnectionTimeOut * 1000;
+
 		var activeEditor = vscode.window.activeTextEditor;
 		if (!activeEditor) {
 			return;
@@ -325,20 +328,37 @@ function activate(context) {
 		endOfLineChar = common.GetEOLCharacter(currentDoc);
 		hl7Message = hl7Message.replace(new RegExp(endOfLineChar, 'g'), String.fromCharCode(0x0d));
 
-		// test web view
+		// display the webview panel
+		SendHl7MessageWebView = new SendHl7MessagePanelClass(vscode.extensions.getExtension('RobHolme.hl7tools').extensionUri);
+		SendHl7MessageWebView.render(hl7Message);
+		// handle messages from the webview
+		SendHl7MessageWebView.panel.webview.onDidReceiveMessage(
+			message => {
+				switch (message.command) {
+					case 'sendMessage':
+						console.log(message);
+						TcpMllpClient.SendMessage(message.host, message.port, message.hl7, tcpConnectionTimeout, false);
+						return;
+					case 'exit':
+						SendHl7MessageWebView.panel.dispose();
+						return;
+				}
+			},
+			undefined,
+			context.subscriptions
+		);
 
-SendHl7MessagePanelClass.render(hl7Message, vscode.extensions.getExtension('RobHolme.hl7tools').extensionUri);
 
 
-		// get the user defaults for TCP Connection timeout & FavouriteRemoteHosts
-		const tcpConnectionTimeout = preferences.ConnectionTimeOut * 1000;
+		
 
 		// parse the user settings for list of favourite remote hosts
 		var favouriteList = [];
 		for (i = 0; i < preferences.FavouriteRemoteHosts.length; i++) {
-			favouriteList.push({ "description": preferences.FavouriteRemoteHosts[i].Description, "label": preferences.FavouriteRemoteHosts[i].Hostname + ":" + preferences.FavouriteRemoteHosts[i].Port + ":TLS=" + preferences.FavouriteRemoteHosts[i].UseTLS});
+			favouriteList.push({ "description": preferences.FavouriteRemoteHosts[i].Description, "label": preferences.FavouriteRemoteHosts[i].Hostname + ":" + preferences.FavouriteRemoteHosts[i].Port + ":TLS=" + preferences.FavouriteRemoteHosts[i].UseTLS });
 		}
 
+/*		
 		// the default setting is an array with an undefined object, so check length and if the first element is defined.
 		if (favouriteList.length > 0) {
 			if (favouriteList[0].description != undefined) {
@@ -402,6 +422,7 @@ SendHl7MessagePanelClass.render(hl7Message, vscode.extensions.getExtension('RobH
 				});
 			}
 		}
+*/
 	});
 
 	context.subscriptions.push(SendMessageCommand);

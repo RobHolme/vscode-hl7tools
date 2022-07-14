@@ -32,7 +32,8 @@ function SendMessage(Host, Port, HL7Message, Timeout, UseTls) {
 
 	sendMessageOutputChannel.show();
 	var editor = vscode.window.activeTextEditor;
-	const fileName = path.basename(editor.document.uri.fsPath);
+	const filename = "<<fix this>>";
+//	const fileName = path.basename(editor.document.uri.fsPath);
 
 	// Establish a TCP socket connection to the remote host, write the HL7 message to the socket. 
 	var net = require('net');
