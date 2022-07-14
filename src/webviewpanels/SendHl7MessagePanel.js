@@ -29,13 +29,19 @@ class SendHl7MessagePanel {
 		return this.#panel;
 	}
 
-
-		// private method to render the HTML for the web view
+	// post a status message update to the webview panel
+	updateStatus(statusMessage) {
+		this.#panel.webview.postMessage({
+			command: 'status',
+			statusMessage: statusMessage
+		});
+	}
+	
+	// private method to render the HTML for the web view
 	#getHtmlForWebview(webview, extensionUri) {
 		const nonce = this.#getNonce();
 		const stylesPathMainPath = vscode.Uri.joinPath(extensionUri, 'media', 'stylesheet.css');
 		const stylesMainUri = webview.asWebviewUri(stylesPathMainPath);
-
 
 		return `<!DOCTYPE html>
 		<html lang="en">
@@ -60,6 +66,7 @@ FIX THE CSP ERRORS - nonce not working !!
 
 			// post the message content back to vscode to send. 
 			function sendHL7Message(){
+				document.getElementById("result").value = "";
 				var _hl7MessageValue = document.getElementById("hl7Message").value;
 				var _hostname = document.getElementById("hostname").value;
 				var _port = document.getElementById("port").value;
@@ -79,6 +86,16 @@ FIX THE CSP ERRORS - nonce not working !!
 					command: 'exit'
 				})
 			}
+
+			// Handle messages sent to the webview
+			window.addEventListener('message', event => {
+			const message = event.data; // The JSON data our extension sent
+				switch (message.command) {
+					case 'status':
+						document.getElementById("result").value += message.statusMessage;
+						break;
+				}
+			});
 			</script>
 
 			Send the HL7 message to the following remote host:<br><br>
@@ -96,9 +113,7 @@ FIX THE CSP ERRORS - nonce not working !!
 ${this.#hl7Message} 
 				</textarea><br><br>
 				<label for="result">Result:</label>
-				<textarea name="result" id="result" wrap='off' rows="6">
-				</textarea><br><br>
-				
+				<textarea name="result" id="result" wrap='off' rows="6"></textarea><br><br>
 		</body>
 		</html>`;
 	}

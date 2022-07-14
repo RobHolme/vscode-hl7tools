@@ -321,6 +321,13 @@ function activate(context) {
 			return;
 		}
 
+
+//		// parse the user settings for list of favourite remote hosts
+//		var favouriteList = [];
+//		for (i = 0; i < preferences.FavouriteRemoteHosts.length; i++) {
+//			favouriteList.push({ "description": preferences.FavouriteRemoteHosts[i].Description, "label": preferences.FavouriteRemoteHosts[i].Hostname + ":" + preferences.FavouriteRemoteHosts[i].Port + ":TLS=" + preferences.FavouriteRemoteHosts[i].UseTLS });
+//		}
+
 		// get the HL7 message from the active document. Convert EOL to <CR> only.
 		var currentDoc = activeEditor.document;
 		var hl7Message = currentDoc.getText();
@@ -336,8 +343,7 @@ function activate(context) {
 			message => {
 				switch (message.command) {
 					case 'sendMessage':
-						console.log(message);
-						TcpMllpClient.SendMessage(message.host, message.port, message.hl7, tcpConnectionTimeout, false);
+						TcpMllpClient.SendMessage(message.host, message.port, message.hl7, tcpConnectionTimeout, message.tls, SendHl7MessageWebView);
 						return;
 					case 'exit':
 						SendHl7MessageWebView.panel.dispose();
@@ -347,82 +353,6 @@ function activate(context) {
 			undefined,
 			context.subscriptions
 		);
-
-
-
-		
-
-		// parse the user settings for list of favourite remote hosts
-		var favouriteList = [];
-		for (i = 0; i < preferences.FavouriteRemoteHosts.length; i++) {
-			favouriteList.push({ "description": preferences.FavouriteRemoteHosts[i].Description, "label": preferences.FavouriteRemoteHosts[i].Hostname + ":" + preferences.FavouriteRemoteHosts[i].Port + ":TLS=" + preferences.FavouriteRemoteHosts[i].UseTLS });
-		}
-
-/*		
-		// the default setting is an array with an undefined object, so check length and if the first element is defined.
-		if (favouriteList.length > 0) {
-			if (favouriteList[0].description != undefined) {
-				// push the last option of letting the user manually enter a destination
-				favouriteList.push({ "label": "Enter other destination:" })
-				vscode.window.showQuickPick(favouriteList).then(selection => {
-					// The user cancelled the selection, so return (don't prompt to manually enter selection)
-					if (!selection) {
-						return;
-					}
-					// The user selected the option to manually enter the destination
-					else if (selection.label == "Enter other destination:") {
-						var remoteHostPromise = vscode.window.showInputBox({ prompt: "Enter the remote host and port ('RemoteHost:Port')'", value: preferences.DefaultRemoteHost });
-						remoteHostPromise.then(function (remoteEndpoint) {
-							// extract the hostname and port from the end point entered by the user
-							remoteHost = remoteEndpoint.split(":")[0];
-							remotePort = remoteEndpoint.split(":")[1];
-							useTLS = remoteEndpoint.split(":")[2];
-							if (useTLS == 'TLS=true') {
-								// send the current message to the remote end point. Request TLS.
-								TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout, true);
-							}
-							else {
-								// send the current message to the remote end point. No TLS.
-								TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout, false);
-							}
-						});
-					}
-					// The user selected one of the favourite endpoints from the picklist.
-					else {
-						remoteHost = selection.label.split(":")[0];
-						remotePort = selection.label.split(":")[1];
-						useTLS = selection.label.split(":")[2];
-						if (useTLS == 'TLS=true') {
-							// send the current message to the remote end point. Request TLS.
-							TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout, true);
-						}
-						else {
-							// send the current message to the remote end point. No TLS.
-							TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout, false);
-						}
-					}
-				});
-			}
-			// No favourite endpoints defined in the settings.json file, so prompt user for destination.
-			else {
-				var remoteHostPromise = vscode.window.showInputBox({ prompt: "Enter the remote host and port ('RemoteHost:Port')'", value: preferences.DefaultRemoteHost });
-				remoteHostPromise.then(function (remoteEndpoint) {
-					// extract the hostname and port from the end point entered by the user
-					remoteHost = remoteEndpoint.split(":")[0];
-					remotePort = remoteEndpoint.split(":")[1];
-					useTLS = remoteEndpoint.split(":")[2];
-					if (useTLS == 'TLS=true') {
-						// send the current message to the remote end point. Request TLS.
-						TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout, true);
-					}
-					else {
-						// send the current message to the remote end point. No TLS.
-						TcpMllpClient.SendMessage(remoteHost, remotePort, hl7Message, tcpConnectionTimeout, false);
-					}
-				});
-			}
-		}
-*/
 	});
 
 	context.subscriptions.push(SendMessageCommand);
