@@ -68,6 +68,18 @@ input[type=button]
 	background: var(--vscode-button-background);
 }
 
+button
+{
+	width:15ch;
+	border: none;
+	padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+	text-align: center;
+	outline: 1px solid transparent;
+	outline-offset: 2px !important;
+	color: var(--vscode-button-foreground);
+	background: var(--vscode-button-background);
+}
+
 button:hover {
 	cursor: pointer;
 	background: var(--vscode-button-hoverBackground);
@@ -84,12 +96,6 @@ button.secondary {
 
 button.secondary:hover {
 	background: var(--vscode-button-secondaryHoverBackground);
-}
-
-
-
-textarea {
-	height:400px;
 }
 
 input::placeholder,
