@@ -136,7 +136,6 @@ textarea::placeholder {
 
 label.field {
 	text-align: left;
-	vertical-align: middle;
 	width: 15ch;
 	float: left;
 }
