@@ -51,8 +51,12 @@ class ExtensionPreferences {
 		switch (this._config['SocketEncoding']) {
 			case "UTF-8":
 				return "utf8";
+			case "UTF-16LE":
+				return "utf16le";
 			case "ISO-8859-1":
 				return "latin1";
+			case "ASCII":
+				return "ascii";
 			default:
 				return "utf8"
 		}

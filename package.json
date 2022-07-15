@@ -271,7 +271,9 @@
 					"default": "utf-8",
 					"enum": [
 						"UTF-8",
-						"ISO-8859-1"
+						"UTF-16LE",
+						"ISO-8859-1",
+						"ASCII"
 					],
 					"description": "The TCP socket encoding used when sending and receiving messages"
 				},
