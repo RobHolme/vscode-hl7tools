@@ -99,20 +99,23 @@ FIX THE CSP ERRORS - nonce not working !!
 			</script>
 
 			Send the HL7 message to the following remote host:<br><br>
-  				<label for="hostname">Hostname or IP:</label>
-  				<input type="text" id="hostname" name="hostname"><br>
-  				<label for="port">Port:</label>
-  				<input type="text" id="port" name="port"><br>
-				<label for="useTls">Use TLS:</label>
-				<input type="checkbox" id="useTls" name = "useTls"> <br><br>
+  				<label class=field for="hostname">Hostname or IP: </label><input type="text" class=textbox-50 id="hostname" name="hostname"><br>
+  				<label class=field for="port">Port: </label><input type="text" class=textbox-50 id="port" name="port"><br>
+				<label class=field for="encoding">Encoding: </label>
+				<select class=select-50 name="encoding" id="encoding">
+					<option value="utf8">UTF-8</option>
+					<option value="utf16le">UTF-16LE</option>
+					<option value="latin1">ISO-8859-1 (latin1)"</option>
+					<option value="ascii">ASCII</option>
+				</select><br>
+				<label class=field for="useTls">Use TLS: </label><input type="checkbox" id="useTls" name = "useTls"><br><br>
   				<button onclick="sendHL7Message()">Send Message</button>&nbsp;&nbsp;&nbsp;
 				<button onclick="exit()">Exit</button>
 				<br><br>
-				<label for="hl7Message">Message:</label>
-				<textarea name="hl7Message" id="hl7Message" wrap='off' rows="15">
+				<label class=field for="hl7Message">Message: </label><textarea name="hl7Message" id="hl7Message" wrap='off' rows="15">
 ${this.#hl7Message} 
 				</textarea><br><br>
-				<label for="result">Result:</label>
+				<label for="result">Result: </label>
 				<textarea name="result" id="result" wrap='off' rows="6"></textarea><br><br>
 		</body>
 		</html>`;

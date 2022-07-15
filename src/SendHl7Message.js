@@ -38,15 +38,17 @@ function SendMessage(Host, Port, HL7Message, Timeout, UseTls, webViewPanel) {
 	// connect with TLS
 	if (UseTls) {
 		var client = tls.connect(Port, Host, null, function () {
-
-			webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Connected to ' + Host + ':' + Port + ' using TLS');
-			client.write((VT + HL7Message + FS + CR), preferences.SocketEncodingPreference);
-			webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Message sent');
-
+			// check for certificate validation errors
+			if (client.authorized) {
+				webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Connected to ' + Host + ':' + Port + ' using TLS \r\n');
+				client.write((VT + HL7Message + FS + CR), preferences.SocketEncodingPreference);
+				webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Message sent \r\n');
+			}
+			else {
+				webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] TLS connection to ' + Host + ':' + Port + ' failed \r\n');
+			}
 		});
-		if (!client.authorized) {
-			webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] TLS connection to ' + Host + ':' + Port + ' failed \r\n');
-		}
+
 	}
 	// connect without TLS
 	else {
