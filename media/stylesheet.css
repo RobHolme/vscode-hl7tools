@@ -82,7 +82,7 @@ input.textbox-50
 
 select.select-50 
 {
-	width:50ch;
+	width:51ch;
 	border: none;
 	text-align:left;
 	font-family: var(--vscode-editor-font-family);
