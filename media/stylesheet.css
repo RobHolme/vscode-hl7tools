@@ -68,6 +68,30 @@ input[type=button]
 	background: var(--vscode-button-background);
 }
 
+input.textbox-50
+{
+	width:50ch;
+	border: none;
+	text-align:left;
+	font-family: var(--vscode-editor-font-family);
+	padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+	color: var(--vscode-input-foreground);
+	outline-color: var(--vscode-input-border);
+	background-color: var(--vscode-input-background);
+}
+
+select.select-50 
+{
+	width:50ch;
+	border: none;
+	text-align:left;
+	font-family: var(--vscode-editor-font-family);
+	padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+	color: var(--vscode-input-foreground);
+	outline-color: var(--vscode-input-border);
+	background-color: var(--vscode-input-background);	
+}
+
 button
 {
 	width:15ch;
@@ -101,4 +125,11 @@ button.secondary:hover {
 input::placeholder,
 textarea::placeholder {
 	color: var(--vscode-input-placeholderForeground);
+}
+
+label.field {
+	text-align: left;
+	vertical-align: middle;
+	width: 15ch;
+	float: left;
 }
