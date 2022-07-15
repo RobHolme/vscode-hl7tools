@@ -5,6 +5,7 @@ class SendHl7MessagePanel {
 	#panel;
 	#extensionUri;
 	#hl7Message;
+	#encodingPreference;
 
 	// constructor
 	constructor(extensionUri) {
@@ -23,6 +24,11 @@ class SendHl7MessagePanel {
 		this.#panel.webview.html = this.#getHtmlForWebview(this.#panel.webview, this.#extensionUri);
 	}
 
+	// set the preferred encoding methods for strings
+	// if set this will be used to set the default value for the encoding drop down list.
+	set encodingPreference(encoding) {
+		this.#encodingPreference = encoding;
+	}
 
 	// getter method to return the panel supporting the webview
 	get panel() {
@@ -42,6 +48,7 @@ class SendHl7MessagePanel {
 		const nonce = this.#getNonce();
 		const stylesPathMainPath = vscode.Uri.joinPath(extensionUri, 'media', 'stylesheet.css');
 		const stylesMainUri = webview.asWebviewUri(stylesPathMainPath);
+		const encodingPreference = this.#encodingPreference;
 
 		return `<!DOCTYPE html>
 		<html lang="en">
@@ -71,12 +78,14 @@ FIX THE CSP ERRORS - nonce not working !!
 				var _hostname = document.getElementById("hostname").value;
 				var _port = document.getElementById("port").value;
 				var _tls = document.getElementById("useTls").checked;
+				var _encoding = document.getElementById("encoding").value;
 				vscode.postMessage({
 					command: 'sendMessage',
 					hl7: _hl7MessageValue,
 					host: _hostname,
 					port: _port,
-					tls: _tls
+					tls: _tls,
+					encoding: _encoding 
 				})
 			}
 
@@ -96,6 +105,12 @@ FIX THE CSP ERRORS - nonce not working !!
 						break;
 				}
 			});
+
+			// set default value for encoding if nominated in user preferences
+			window.onload=function(){
+					document.getElementById("encoding").value = "${encodingPreference}";
+			}
+			
 			</script>
 
 			Send the HL7 message to the following remote host:<br><br>
@@ -105,7 +120,7 @@ FIX THE CSP ERRORS - nonce not working !!
 				<select class=select-50 name="encoding" id="encoding">
 					<option value="utf8">UTF-8</option>
 					<option value="utf16le">UTF-16LE</option>
-					<option value="latin1">ISO-8859-1 (latin1)"</option>
+					<option value="latin1">ISO-8859-1</option>
 					<option value="ascii">ASCII</option>
 				</select><br>
 				<label class=field for="useTls">Use TLS: </label><input type="checkbox" id="useTls" name = "useTls"><br><br>

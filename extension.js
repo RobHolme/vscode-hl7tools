@@ -88,7 +88,7 @@ function LoadHL7Schema() {
 		statusbarHL7Version.show();
 
 		// load custom segment schemas
-		preferences = new extensionPreferencesClass.ExtensionPreferences();
+//		preferences = new extensionPreferencesClass.ExtensionPreferences();
 		if (preferences.CustomSegmentSchema != '') {
 			if (fs.existsSync(preferences.CustomSegmentSchema)) {
 				customSchema = require(preferences.CustomSegmentSchema);
@@ -141,7 +141,7 @@ function activate(context) {
 
 				// if the AddLinebreakOnActivation user preference is set, call the 'Add LineBreaks to Segment' command
 				// load user preferences for the extension (SocketEncoding)
-				preferences = new extensionPreferencesClass.ExtensionPreferences();
+//				preferences = new extensionPreferencesClass.ExtensionPreferences();
 				if (preferences.AddLinebreakOnActivation == true) {
 					AddLinebreaksToSegments();
 				}
@@ -337,13 +337,17 @@ function activate(context) {
 
 		// display the webview panel
 		SendHl7MessageWebView = new SendHl7MessagePanelClass(vscode.extensions.getExtension('RobHolme.hl7tools').extensionUri);
+		if (preferences.SocketEncodingPreference) {
+			SendHl7MessageWebView.encodingPreference = preferences.SocketEncodingPreference;
+		}
 		SendHl7MessageWebView.render(hl7Message);
+		
 		// handle messages from the webview
 		SendHl7MessageWebView.panel.webview.onDidReceiveMessage(
 			message => {
 				switch (message.command) {
 					case 'sendMessage':
-						TcpMllpClient.SendMessage(message.host, message.port, message.hl7, tcpConnectionTimeout, message.tls, SendHl7MessageWebView);
+						TcpMllpClient.SendMessage(message.host, message.port, message.hl7, tcpConnectionTimeout, message.tls, message.encoding, SendHl7MessageWebView);
 						return;
 					case 'exit':
 						SendHl7MessageWebView.panel.dispose();

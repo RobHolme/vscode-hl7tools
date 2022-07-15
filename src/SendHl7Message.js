@@ -11,7 +11,6 @@ const CR = String.fromCharCode(0x0d);
 // required modules
 const vscode = require('vscode');
 const path = require("path");
-const extensionPreferencesClass = require('./ExtensionPreferences.js');
 
 // create a persistent output channel for results from SendMessage function
 var sendMessageOutputChannel = vscode.window.createOutputChannel('Send Message Output');
@@ -24,13 +23,10 @@ var sendMessageOutputChannel = vscode.window.createOutputChannel('Send Message O
 // @param {int} Timeout - the timeout value for the TCP socket in milliseconds. Defaults to 5000 if not supplied. 
 // @param {bool} UseTLS - if true connect using TLS
 // @param {object} webViewPanel - reference to webview panel object so that status update messages can be returned
-function SendMessage(Host, Port, HL7Message, Timeout, UseTls, webViewPanel) {
+function SendMessage(Host, Port, HL7Message, Timeout, UseTls, encoding, webViewPanel) {
 
 	// default to 5 second timeout for TCP socket if not supplied as a parameter
 	Timeout = Timeout || 5000;
-
-	// load user preferences for the extension (SocketEncoding)
-	preferences = new extensionPreferencesClass.ExtensionPreferences();
 
 	// Establish a TCP socket connection to the remote host, write the HL7 message to the socket. 
 	var net = require('net');
@@ -41,7 +37,7 @@ function SendMessage(Host, Port, HL7Message, Timeout, UseTls, webViewPanel) {
 			// check for certificate validation errors
 			if (client.authorized) {
 				webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Connected to ' + Host + ':' + Port + ' using TLS \r\n');
-				client.write((VT + HL7Message + FS + CR), preferences.SocketEncodingPreference);
+				client.write((VT + HL7Message + FS + CR), encoding);
 				webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Message sent \r\n');
 			}
 			else {
@@ -54,10 +50,10 @@ function SendMessage(Host, Port, HL7Message, Timeout, UseTls, webViewPanel) {
 	else {
 		var client = new net.Socket();
 		client.setTimeout(Timeout);
-		client.setEncoding(preferences.SocketEncodingPreference);
+		client.setEncoding(encoding);
 		client.connect(Port, Host, function () {
 			webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Connected to ' + Host + ':' + Port + '\r\n');
-			client.write((VT + HL7Message + FS + CR), preferences.SocketEncodingPreference);
+			client.write((VT + HL7Message + FS + CR), encoding);
 			webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Message sent \r\n');
 		});
 	}
@@ -86,7 +82,7 @@ function SendMessage(Host, Port, HL7Message, Timeout, UseTls, webViewPanel) {
 	// receive ACK, log to console 
 	client.on('data', function (data) {
 		// convert the ACK response to string, remove the MLLP header and footer characters. 
-		Ack = data.toString(preferences.SocketEncodingPreference);
+		Ack = data.toString(encoding);
 		webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] ACK Received: \r\n');
 		Ack = Ack.replace(VT, "");
 		Ack = Ack.replace(FS + CR, "");
