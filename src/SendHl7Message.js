@@ -23,7 +23,7 @@ var sendMessageOutputChannel = vscode.window.createOutputChannel('Send Message O
 // @param {int} Timeout - the timeout value for the TCP socket in milliseconds. Defaults to 5000 if not supplied. 
 // @param {bool} UseTLS - if true connect using TLS
 // @param {object} webViewPanel - reference to webview panel object so that status update messages can be returned
-function SendMessage(Host, Port, HL7Message, Timeout, UseTls, encoding, webViewPanel) {
+function SendMessage(Host, Port, HL7Message, Timeout, UseTls, encoding, ignoreCertError, webViewPanel) {
 
 	// default to 5 second timeout for TCP socket if not supplied as a parameter
 	Timeout = Timeout || 5000;
@@ -33,7 +33,15 @@ function SendMessage(Host, Port, HL7Message, Timeout, UseTls, encoding, webViewP
 	var tls = require('tls');
 	// connect with TLS
 	if (UseTls) {
-		var client = tls.connect(Port, Host, null, function () {
+//		const tlsOptions = {
+//			host: Host,
+//			rejectUnauthorized: !ignoreCertError
+//		}
+		const tlsOptions = {
+			host: Host,
+			rejectUnauthorized: true
+		}
+		var client = tls.connect(Port, tlsOptions, function () {
 			// check for certificate validation errors
 			if (client.authorized) {
 				webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Connected to ' + Host + ':' + Port + ' using TLS \r\n');

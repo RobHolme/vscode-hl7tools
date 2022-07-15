@@ -341,13 +341,13 @@ function activate(context) {
 			SendHl7MessageWebView.encodingPreference = preferences.SocketEncodingPreference;
 		}
 		SendHl7MessageWebView.render(hl7Message);
-		
+
 		// handle messages from the webview
 		SendHl7MessageWebView.panel.webview.onDidReceiveMessage(
 			message => {
 				switch (message.command) {
 					case 'sendMessage':
-						TcpMllpClient.SendMessage(message.host, message.port, message.hl7, tcpConnectionTimeout, message.tls, message.encoding, SendHl7MessageWebView);
+						TcpMllpClient.SendMessage(message.host, message.port, message.hl7, tcpConnectionTimeout, message.tls, message.encoding, message.ignoreCertError, SendHl7MessageWebView);
 						return;
 					case 'exit':
 						SendHl7MessageWebView.panel.dispose();

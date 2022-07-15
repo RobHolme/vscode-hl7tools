@@ -79,13 +79,15 @@ FIX THE CSP ERRORS - nonce not working !!
 				var _port = document.getElementById("port").value;
 				var _tls = document.getElementById("useTls").checked;
 				var _encoding = document.getElementById("encoding").value;
+//				var _ignoreCerErr = document.getElementById("ignoreCertError").checked;
 				vscode.postMessage({
 					command: 'sendMessage',
 					hl7: _hl7MessageValue,
 					host: _hostname,
 					port: _port,
 					tls: _tls,
-					encoding: _encoding 
+					encoding: _encoding, 
+					ignoreCertError: false
 				})
 			}
 
@@ -105,25 +107,38 @@ FIX THE CSP ERRORS - nonce not working !!
 						break;
 				}
 			});
+			
+//			// respond when the use TLS checkbox is changed - enable or disable the cert warning option
+//			function tlsCheckBoxChange(tlsCheckBox) {
+//				if (tlsCheckBox.checked) {
+//					document.getElementById("ignoreCertError").disabled = false;	
+//				}
+//				else {
+//					document.getElementById("ignoreCertError").disabled = true;	
+//				}
+//			}
+	
 
-			// set default value for encoding if nominated in user preferences
+			// set default value for encoding if nominated in user preferences. Disable cert warning checkbox.
 			window.onload=function(){
+					document.getElementById("ignoreCertError").disabled = true;				
 					document.getElementById("encoding").value = "${encodingPreference}";
-			}
+			};
 			
 			</script>
 
 			Send the HL7 message to the following remote host:<br><br>
-  				<label class=field for="hostname">Hostname or IP: </label><input type="text" class=textbox-50 id="hostname" name="hostname"><br>
-  				<label class=field for="port">Port: </label><input type="text" class=textbox-50 id="port" name="port"><br>
-				<label class=field for="encoding">Encoding: </label>
+  				<label class=field for="hostname">Hostname or IP:</label><input type="text" class=textbox-50 id="hostname" name="hostname"><br>
+  				<label class=field for="port">Port:</label><input type="text" class=textbox-50 id="port" name="port"><br>
+				<label class=field for="encoding">Encoding:</label>
 				<select class=select-50 name="encoding" id="encoding">
 					<option value="utf8">UTF-8</option>
 					<option value="utf16le">UTF-16LE</option>
 					<option value="latin1">ISO-8859-1</option>
 					<option value="ascii">ASCII</option>
 				</select><br>
-				<label class=field for="useTls">Use TLS: </label><input type="checkbox" id="useTls" name = "useTls"><br><br>
+				<label class=field for="useTls">Use TLS:</label><input type="checkbox" id="useTls" name="useTls" onchange="tlsCheckBoxChange(this)"><br><br>
+<!--				<label class=field for="ignoreCertError">Ignore cert errors:</label><input type="checkbox" id="ignoreCertError" name="ignoreCertError"><br><br>  -->
   				<button onclick="sendHL7Message()">Send Message</button>&nbsp;&nbsp;&nbsp;
 				<button onclick="exit()">Exit</button>
 				<br><br>
