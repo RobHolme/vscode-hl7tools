@@ -273,6 +273,7 @@
 						"UTF-8",
 						"UTF-16LE",
 						"ISO-8859-1",
+						"LATIN 1",
 						"ASCII"
 					],
 					"description": "The TCP socket encoding used when sending and receiving messages"
