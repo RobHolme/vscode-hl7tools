@@ -340,6 +340,8 @@ function activate(context) {
 		if (preferences.SocketEncodingPreference) {
 			SendHl7MessageWebView.encodingPreference = preferences.SocketEncodingPreference;
 		}
+		SendHl7MessageWebView.favouriteEndpoints = preferences.FavouriteRemoteHosts;
+
 		SendHl7MessageWebView.render(hl7Message);
 
 		// handle messages from the webview

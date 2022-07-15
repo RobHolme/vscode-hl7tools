@@ -6,6 +6,7 @@ class SendHl7MessagePanel {
 	#extensionUri;
 	#hl7Message;
 	#encodingPreference;
+	#favourites;
 
 	// constructor
 	constructor(extensionUri) {
@@ -16,11 +17,11 @@ class SendHl7MessagePanel {
 	}
 
 	// render the panel with a supplied HL7 Message
-	render(hl7Message){
+	render(hl7Message) {
 		this.#hl7Message = hl7Message;
 		if (this.#panel) {
 			this.#panel.reveal(vscode.ViewColumn.Two);
-		} 
+		}
 		this.#panel.webview.html = this.#getHtmlForWebview(this.#panel.webview, this.#extensionUri);
 	}
 
@@ -28,6 +29,12 @@ class SendHl7MessagePanel {
 	// if set this will be used to set the default value for the encoding drop down list.
 	set encodingPreference(encoding) {
 		this.#encodingPreference = encoding;
+	}
+
+
+	// set favourite endpoints.
+	set favouriteEndpoints(favourites) {
+		this.#favourites = favourites;
 	}
 
 	// getter method to return the panel supporting the webview
@@ -42,13 +49,15 @@ class SendHl7MessagePanel {
 			statusMessage: statusMessage
 		});
 	}
-	
+
 	// private method to render the HTML for the web view
 	#getHtmlForWebview(webview, extensionUri) {
 		const nonce = this.#getNonce();
 		const stylesPathMainPath = vscode.Uri.joinPath(extensionUri, 'media', 'stylesheet.css');
 		const stylesMainUri = webview.asWebviewUri(stylesPathMainPath);
 		const encodingPreference = this.#encodingPreference;
+		const favouriteEndpoints = this.#favourites;
+		
 
 		return `<!DOCTYPE html>
 		<html lang="en">
@@ -121,13 +130,33 @@ FIX THE CSP ERRORS - nonce not working !!
 
 			// set default value for encoding if nominated in user preferences. Disable cert warning checkbox.
 			window.onload=function(){
-					document.getElementById("ignoreCertError").disabled = true;				
-					document.getElementById("encoding").value = "${encodingPreference}";
+				var favs = {};
+				favs = ${favouriteEndpoints};
+				var favouritesList = document.getElementById("favourites");
+				for (i=0;i < favs.length; i++) {
+					console.log(favs[1]);
+					var option = document.createElement('option');
+					option.text = ($favs[i]).Description;
+					option.value = $favs[i];
+					favouritesList.add(option, i);
+
+				}
+				if (favouritesList.length == 0) {
+					favouritesList.disabled = true;
+					var option = document.createElement('option');
+       				option.text = option.value = "no favourites found in extension preferences";;
+       				favouritesList.add(option, 0);
+				}
+//					document.getElementById("ignoreCertError").disabled = true;				
+				document.getElementById("encoding").value = "${encodingPreference}";
 			};
 			
 			</script>
 
 			Send the HL7 message to the following remote host:<br><br>
+				<label class=field for="favourites">Favourites:</label>
+				<select class=select-50 name="favourites" id="favourites">
+				</select><br>
   				<label class=field for="hostname">Hostname or IP:</label><input type="text" class=textbox-50 id="hostname" name="hostname"><br>
   				<label class=field for="port">Port:</label><input type="text" class=textbox-50 id="port" name="port"><br>
 				<label class=field for="encoding">Encoding:</label>
