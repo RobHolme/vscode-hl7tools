@@ -44,7 +44,6 @@ code {
 	font-family: var(--vscode-editor-font-family);
 }
 
-input:not([type='checkbox'],[type='button']),
 textarea {
 	width:100%;
 	border: none;
@@ -80,7 +79,6 @@ input.textbox-50
 	width:50ch;
 	border: none;
 	text-align:left;
-	font-family: var(--vscode-editor-font-family);
 	padding: var(--input-padding-vertical) var(--input-padding-horizontal);
 	color: var(--vscode-input-foreground);
 	outline-color: var(--vscode-input-border);
@@ -90,13 +88,11 @@ input.textbox-50
 select.select-50 
 {
 	width:51ch;
-	border: none;
 	text-align:left;
-	font-family: var(--vscode-editor-font-family);
 	padding: var(--input-padding-vertical) var(--input-padding-horizontal);
 	color: var(--vscode-input-foreground);
 	outline-color: var(--vscode-input-border);
-	background-color: var(--vscode-input-background);	
+	background-color: var(--vscode-input-background);
 }
 
 button
