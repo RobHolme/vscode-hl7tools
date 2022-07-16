@@ -6,7 +6,6 @@ class SendHl7MessagePanel {
 	#extensionUri;
 	#hl7Message;
 	#encodingPreference;
-	#favourites;
 
 	// constructor
 	constructor(extensionUri) {
@@ -14,6 +13,8 @@ class SendHl7MessagePanel {
 		this.#panel = vscode.window.createWebviewPanel("SendHL7Message", "Send HL7 Message", vscode.ViewColumn.Two, {
 			enableScripts: true
 		});
+
+		this.#panel.onDidDispose(this.dispose, null, this._disposables);
 	}
 
 	// render the panel with a supplied HL7 Message
@@ -31,12 +32,6 @@ class SendHl7MessagePanel {
 		this.#encodingPreference = encoding;
 	}
 
-
-	// set favourite endpoints.
-	set favouriteEndpoints(favourites) {
-		this.#favourites = favourites;
-	}
-
 	// getter method to return the panel supporting the webview
 	get panel() {
 		return this.#panel;
@@ -50,14 +45,30 @@ class SendHl7MessagePanel {
 		});
 	}
 
+	// send a message to populate the favourites drop list if any are set
+	updateFavourites(favourites) {
+		if (favourites) {
+			this.#panel.webview.postMessage({
+				command: 'setFavourites',
+				favouriteList: favourites
+			});
+		}
+	}
+
+	dispose() {
+		this.#extensionUri = undefined;
+		this.#hl7Message = undefined;
+		this.#encodingPreference = undefined;
+		this.#panel.dispose();
+	}
+
 	// private method to render the HTML for the web view
 	#getHtmlForWebview(webview, extensionUri) {
 		const nonce = this.#getNonce();
 		const stylesPathMainPath = vscode.Uri.joinPath(extensionUri, 'media', 'stylesheet.css');
 		const stylesMainUri = webview.asWebviewUri(stylesPathMainPath);
 		const encodingPreference = this.#encodingPreference;
-		const favouriteEndpoints = this.#favourites;
-		
+
 
 		return `<!DOCTYPE html>
 		<html lang="en">
@@ -107,13 +118,39 @@ FIX THE CSP ERRORS - nonce not working !!
 				})
 			}
 
+			function applyFavourite(favouriteSelect) {
+				const favValue = favouriteSelect[favouriteSelect.selectedIndex]
+				// parse the value back to a JSON object. Copy values to the relevant fields on the form.
+				const endPoint = JSON.parse(favValue.value);
+				document.getElementById("hostname").value = endPoint.Hostname;
+				document.getElementById("port").value = endPoint.Port;
+				if (endPoint.UseTLS == true) {
+					document.getElementById("useTls").checked = true;
+				}
+				else {
+					document.getElementById("useTls").checked = false;
+				}
+			}
+
 			// Handle messages sent to the webview
 			window.addEventListener('message', event => {
-			const message = event.data; // The JSON data our extension sent
-				switch (message.command) {
-					case 'status':
-						document.getElementById("result").value += message.statusMessage;
-						break;
+			const message = event.data; 
+			switch (message.command) {
+				case 'status':
+					document.getElementById("result").value += message.statusMessage;
+					break;
+				case 'setFavourites':
+					const favouritesDropList = document.getElementById("favourites");
+					favouritesDropList[0].innerHTML = "Select from favourites list, or enter details below";
+					favouritesDropList.disabled = false;
+					for (i=0;i < message.favouriteList.length; i++) {
+						var option = document.createElement('option');
+						option.text = message.favouriteList[i].Description;
+						// option value doesn't support objects, so need to convert the JSON object to a string, convert back to JSON on retrieval
+						option.value = JSON.stringify(message.favouriteList[i]);
+						favouritesDropList.add(option,i);
+					}
+					break;
 				}
 			});
 			
@@ -130,24 +167,7 @@ FIX THE CSP ERRORS - nonce not working !!
 
 			// set default value for encoding if nominated in user preferences. Disable cert warning checkbox.
 			window.onload=function(){
-				var favs = {};
-				favs = ${favouriteEndpoints};
-				var favouritesList = document.getElementById("favourites");
-				for (i=0;i < favs.length; i++) {
-					console.log(favs[1]);
-					var option = document.createElement('option');
-					option.text = ($favs[i]).Description;
-					option.value = $favs[i];
-					favouritesList.add(option, i);
-
-				}
-				if (favouritesList.length == 0) {
-					favouritesList.disabled = true;
-					var option = document.createElement('option');
-       				option.text = option.value = "no favourites found in extension preferences";;
-       				favouritesList.add(option, 0);
-				}
-//					document.getElementById("ignoreCertError").disabled = true;				
+			//	document.getElementById("ignoreCertError").disabled = true;				
 				document.getElementById("encoding").value = "${encodingPreference}";
 			};
 			
@@ -155,7 +175,8 @@ FIX THE CSP ERRORS - nonce not working !!
 
 			Send the HL7 message to the following remote host:<br><br>
 				<label class=field for="favourites">Favourites:</label>
-				<select class=select-50 name="favourites" id="favourites">
+				<select class=select-50 name="favourites" id="favourites" disabled=true onchange="applyFavourite(this)">
+					<option value="" disabled selected hidden>no favourites found in extension preferences</option>
 				</select><br>
   				<label class=field for="hostname">Hostname or IP:</label><input type="text" class=textbox-50 id="hostname" name="hostname"><br>
   				<label class=field for="port">Port:</label><input type="text" class=textbox-50 id="port" name="port"><br>

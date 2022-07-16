@@ -340,9 +340,9 @@ function activate(context) {
 		if (preferences.SocketEncodingPreference) {
 			SendHl7MessageWebView.encodingPreference = preferences.SocketEncodingPreference;
 		}
-		SendHl7MessageWebView.favouriteEndpoints = preferences.FavouriteRemoteHosts;
-
 		SendHl7MessageWebView.render(hl7Message);
+		// add any favourites from the user preferences to the webpanel's dropdown list
+		SendHl7MessageWebView.updateFavourites(preferences.FavouriteRemoteHosts);
 
 		// handle messages from the webview
 		SendHl7MessageWebView.panel.webview.onDidReceiveMessage(
