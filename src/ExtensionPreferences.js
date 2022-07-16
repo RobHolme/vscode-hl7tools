@@ -31,7 +31,13 @@ class ExtensionPreferences {
 	}
 
 	get FavouriteRemoteHosts() {
-		return this._config['FavouriteRemoteHosts']
+		// return null if no preferences set (based on the first item not containing a description) 
+		if (this._config['FavouriteRemoteHosts'][0].Description) {
+			return this._config['FavouriteRemoteHosts'] 
+		}
+		else {
+			return null;
+		}
 	}
 
 	get HighlightBackgroundColour() {
