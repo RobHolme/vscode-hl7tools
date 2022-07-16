@@ -83,7 +83,7 @@ This command sends the current message to a remote host (via TCP using MLLP fram
 
 If the "hl7tools.FavouriteRemoteHosts" setting is populated you will be able to select the hosts from the 'favourites' drop-down list.
 
-![SendMessage](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/sendmessage2.jpg)
+![SendMessage](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/sendmessage2.png)
 
 The 'favourite' endpoints are defined in settings.json - similar to the example below. Note the property names are case sensitive. It is an array of objects, each object defining the remote Hostname (string), Port (number), and a Description (string) of the endpoint. The UseTLS option (boolean) is optional. 
 
