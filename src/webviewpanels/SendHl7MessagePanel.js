@@ -13,8 +13,6 @@ class SendHl7MessagePanel {
 		this.#panel = vscode.window.createWebviewPanel("SendHL7Message", "Send HL7 Message", vscode.ViewColumn.Two, {
 			enableScripts: true
 		});
-
-		this.#panel.onDidDispose(this.dispose, null, this._disposables);
 	}
 
 	// render the panel with a supplied HL7 Message
@@ -56,9 +54,6 @@ class SendHl7MessagePanel {
 	}
 
 	dispose() {
-		this.#extensionUri = undefined;
-		this.#hl7Message = undefined;
-		this.#encodingPreference = undefined;
 		this.#panel.dispose();
 	}
 
@@ -78,10 +73,8 @@ class SendHl7MessagePanel {
 				Use a content security policy to only allow loading images from https or from our extension directory,
 				and only allow scripts that have a specific nonce.
 			-->
-			<!--
-FIX THE CSP ERRORS - nonce not working !!			
+			
 			<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; img-src ${webview.cspSource} https:; script-src 'nonce-${nonce}';">
-			-->
 			<meta name="viewport" content="width=device-width, initial-scale=1.0">
 			<title>Send HL7 Message</title>
 			<link href="${stylesMainUri}" rel="stylesheet">
@@ -90,6 +83,14 @@ FIX THE CSP ERRORS - nonce not working !!
 		<body>
 			<script nonce="${nonce}">
 			const vscode = acquireVsCodeApi();
+
+			// add event listeners here, to comply with CSP nonce requirements (inline event handlers are blocked)
+			document.addEventListener('DOMContentLoaded', function () {
+				document.getElementById('btnSend').addEventListener('click', function callEventhandler() {sendHL7Message()});
+				document.getElementById("btnExit").addEventListener('click', function callEventhandler() {exit()});
+				document.getElementById("favourites").addEventListener('change', function callEventhandler() {applyFavourite()});
+				document.getElementById("useTls").addEventListener('change', function callEventhandler() {tlsCheckBoxChange()});
+			});
 
 			// post the message content back to vscode to send. 
 			function sendHL7Message(){
@@ -118,7 +119,8 @@ FIX THE CSP ERRORS - nonce not working !!
 				})
 			}
 
-			function applyFavourite(favouriteSelect) {
+			function applyFavourite() {
+				favouriteSelect = document.getElementById("favourites")
 				const favValue = favouriteSelect[favouriteSelect.selectedIndex]
 				// parse the value back to a JSON object. Copy values to the relevant fields on the form.
 				const endPoint = JSON.parse(favValue.value);
@@ -155,14 +157,15 @@ FIX THE CSP ERRORS - nonce not working !!
 			});
 			
 //			// respond when the use TLS checkbox is changed - enable or disable the cert warning option
-//			function tlsCheckBoxChange(tlsCheckBox) {
+			function tlsCheckBoxChange(tlsCheckBox) {
+// DO NOTHING until option to ignore cert errors is implemented				
 //				if (tlsCheckBox.checked) {
 //					document.getElementById("ignoreCertError").disabled = false;	
 //				}
 //				else {
 //					document.getElementById("ignoreCertError").disabled = true;	
 //				}
-//			}
+			}
 	
 
 			// set default value for encoding if nominated in user preferences. Disable cert warning checkbox.
@@ -175,7 +178,7 @@ FIX THE CSP ERRORS - nonce not working !!
 
 			Send the HL7 message to the following remote host:<br><br>
 				<label class=field for="favourites">Favourites:</label>
-				<select class=select-50 name="favourites" id="favourites" disabled=true onchange="applyFavourite(this)">
+				<select class=select-50 name="favourites" id="favourites" disabled=true">
 					<option value="" disabled selected hidden>no favourites found in extension preferences</option>
 				</select><br>
   				<label class=field for="hostname">Hostname or IP:</label><input type="text" class=textbox-50 id="hostname" name="hostname"><br>
@@ -187,10 +190,10 @@ FIX THE CSP ERRORS - nonce not working !!
 					<option value="latin1">ISO-8859-1</option>
 					<option value="ascii">ASCII</option>
 				</select><br>
-				<label class=field for="useTls">Use TLS:</label><input type="checkbox" id="useTls" name="useTls" onchange="tlsCheckBoxChange(this)"><br><br>
+				<label class=field for="useTls">Use TLS:</label><input type="checkbox" id="useTls" name="useTls"><br><br>
 <!--				<label class=field for="ignoreCertError">Ignore cert errors:</label><input type="checkbox" id="ignoreCertError" name="ignoreCertError"><br><br>  -->
-  				<button onclick="sendHL7Message()">Send Message</button>&nbsp;&nbsp;&nbsp;
-				<button onclick="exit()">Exit</button>
+  				<button id="btnSend">Send Message</button>&nbsp;&nbsp;&nbsp;
+				<button id="btnExit">Exit</button>
 				<br><br>
 				<label class=field for="hl7Message">Message: </label><textarea name="hl7Message" id="hl7Message" wrap='off' rows="15">
 ${this.#hl7Message} 
