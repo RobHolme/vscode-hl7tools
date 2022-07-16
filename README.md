@@ -60,6 +60,59 @@ This command prompts for a HL7 field location (e.g. PID-3), or partial field des
 
 > Note: the field highlighting may be shifted by a character if the document end of line character is changed from EOL preference defined by the editor settings.
 
+
+### Send HL7 Message to Remote Host
+This command sends the current message to a remote host (via TCP using MLLP framing). 
+* Press F1 --> HL7 Tools: Send Message
+* Enter the destination hostname (or IP address) and the port number. Click on the SendMessage button.
+* Optionally select a socket encoding (defaults to UTF-8, or user defined default configured in settings file)
+* Optionally require TLS for the connection to the remote host (remote host cert chain must be valid & trusted)
+
+![SendMessage](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/sendmessage.png)
+
+* The status will be displayed in the results text box. If an ACK message is returned it is also displayed. If no ACK is returned, the connection will time out and close (default timeout is 5 seconds). Status information will be cleared each time a message is sent.
+
+
+ User preferences applicable to this function include:  
+`// The TCP connection timeout (in seconds) when sending a HL7 message.`  
+`"hl7tools.ConnectionTimeout": 10`  
+  
+`// The default socket encoding to apply when sending/receiving messages`
+`// Select from "UTF-8" or "ISO-8859-1" (default to UTF-8 if not set)`
+`"hl7tools.SocketEncoding: "UTF-8"`
+
+If the "hl7tools.FavouriteRemoteHosts" setting is populated you will be able to select the hosts from the 'favourites' drop-down list.
+
+![SendMessage](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/sendmessage2.jpg)
+
+The 'favourite' endpoints are defined in settings.json - similar to the example below. Note the property names are case sensitive. It is an array of objects, each object defining the remote Hostname (string), Port (number), and a Description (string) of the endpoint. The UseTLS option (boolean) is optional. 
+
+`// list of favourite endpoints`  
+`"hl7tools.FavouriteRemoteHosts": [`  
+`{`  
+`   "Description": "Dev Server",`  
+`	"Hostname": "127.0.0.1",`  
+`	"Port": 5000,`
+`	"UseTLS: true"`
+`},`  
+`{`  
+`	"Description": "Test Server",`  
+`	"Hostname": "127.0.0.1",`  
+`	"Port": 6000`  
+`}`  
+`]`  
+
+
+### Receive HL7 Messages from Remote Host
+This command listens for HL7 messages sent from a remote host (via TCP using MLLP framing). All messages received are displayed in the editor as new documents. 
+* Press F1 --> HL7 Tools: Start Message Listener
+* To stop receiving messages, Press F1 --> HL7 Tools: Stop Message Listener
+
+User preferences applicable to this function include:  
+`// Send a ACK in response to messages received (HL7 Tools: Start Message Listener).`  
+`"hl7tools.SendACK": true`  
+
+
 ### Display segment fields
 This function lists all fields from the currently selected segment in a hierarchial list. If a field contains components they will be displayed beneath the parent field. Any repeating field values are included.
 * Select the segment in the message using the cursor.
@@ -87,59 +140,6 @@ This function lists all fields from the currently selected segment in a hierarch
 ### Split HL7 Batch files
 If a single file contains multiple HL7 messages, this function splits each message into a new document. Each document is opened in the editor as an untitled file, it will be the user's responsibility to save the files. Large batch files will take longer to process.
 * Press F1 --> HL7 Tools: Split HL7 Batch Files.
-
-### Send HL7 Message to Remote Host
-This command sends the current message to a remote host (via TCP using MLLP framing). 
-* Press F1 --> HL7 Tools: Send Message
-* Enter the destination hostname (or IP address) and the port number (Host:Port).
-
-![SendMessage](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/SendMessage1.jpg)
-
-* The status will be displayed in the output window. If an ACK message is returned it is also displayed. If no ACK is returned, the connection will time out and close (default timeout is 5 seconds).
-
-![SendMessage](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/SendMessage2.jpg)
- 
- User preferences applicable to this function include:  
-`// The TCP connection timeout (in seconds) when sending a HL7 message.`  
-`"hl7tools.ConnectionTimeout": 10`  
-  
-`// The default remote host and IP address to send HL7 messages to.`  
-`"hl7tools.DefaultRemoteHost": "127.0.0.1:5000"` 
-
-`// The socket encoding to apply when sending/receiving messages`
-`// Select from "UTF-8" or "ISO-8859-1" (default to UTF-8 if not set)`
-`"hl7tools.SocketEncoding: "UTF-8"`
-
-If the "hl7tools.FavouriteRemoteHosts" setting is populated you will be prompted to select from a list of user defined endpoints.
-
-![SendMessage](https://github.com/RobHolme/vscode-hl7tools/raw/master/images/SendMessage3.jpg)
-
-The 'favourite' endpoints are defined in settings.json - similar to the example below. Note the property names are case sensitive. It is an array of objects, each object defining the remote Hostname, Port, and a Description of the endpoint.
-
-`// list of favourite endpoints`  
-`"hl7tools.FavouriteRemoteHosts": [`  
-`{`  
-`   "Description": "Dev Server",`  
-`	"Hostname": "127.0.0.1",`  
-`	"Port": 5000`  
-`},`  
-`{`  
-`	"Description": "Test Server",`  
-`	"Hostname": "127.0.0.1",`  
-`	"Port": 6000`  
-`}`  
-`]`  
-
-
-### Receive HL7 Messages from Remote Host
-This command listens for HL7 messages sent from a remote host (via TCP using MLLP framing). All messages received are displayed in the editor as new documents. 
-* Press F1 --> HL7 Tools: Start Message Listener
-* To stop receiving messages, Press F1 --> HL7 Tools: Stop Message Listener
-
-User preferences applicable to this function include:  
-`// Send a ACK in response to messages received (HL7 Tools: Start Message Listener).`  
-`"hl7tools.SendACK": true`  
-
 ### Extract Similar Segments
 This command will open a copy of all segments the same name the one currently selected in the message. e.g. if the cursor is in the NK1 segment, all NK1 segments in the current file will be copied to a new window. Suited more for files containing multiple HL7 messages.
 * move the cursor to the segment type you want to extract
