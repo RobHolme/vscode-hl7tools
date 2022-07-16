@@ -238,13 +238,12 @@
 								"description": "Provides a description to identify the connection."
 							},
 							"UseTLS": {
-								"type": "bool",
+								"type": "boolean",
 								"description": "Set to true to enable TLS for the connection."
 							}
 						}
 					},
 					"default": [
-						{}
 					],
 					"description": "Enter favourite endpoints for Send Message command. Provide an array of objects, refer to Send Message section of https://github.com/RobHolme/vscode-hl7tools/blob/master/README.md for a sample config."
 				},
