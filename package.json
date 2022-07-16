@@ -221,6 +221,9 @@
 							"Port",
 							"Description"
 						],
+						"optional":[
+							"UseTLS"
+						],
 						"properties": {
 							"Hostname": {
 								"type": "string",
@@ -233,6 +236,10 @@
 							"Description": {
 								"type": "string",
 								"description": "Provides a description to identify the connection."
+							},
+							"UseTLS": {
+								"type": "bool",
+								"description": "Set to true to enable TLS for the connection."
 							}
 						}
 					},
