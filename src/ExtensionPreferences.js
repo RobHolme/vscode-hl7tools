@@ -15,25 +15,25 @@ class ExtensionPreferences {
 	}
 
 	get AddLineBreakOnActivation() {
-		return this._config['AddLinebreakOnActivation'] 
+		return this._config['AddLinebreakOnActivation'] ;
 	}
 
 	get ConnectionTimeOut() {
-		return this._config['ConnectionTimeout']
+		return this._config['ConnectionTimeout'];
 	}
 
 	get DefaultListenerPort() {
-		return this._config['DefaultListenerPort']
+		return this._config['DefaultListenerPort'];
 	}
 
 	get DefaultRemoteHost() {
-		return this._config['DefaultRemoteHost']
+		return this._config['DefaultRemoteHost'];
 	}
 
 	get FavouriteRemoteHosts() {
 		// return null if no preferences set (based on the first item not containing a description) 
 		if (this._config['FavouriteRemoteHosts'][0].Description) {
-			return this._config['FavouriteRemoteHosts'] 
+			return this._config['FavouriteRemoteHosts'];
 		}
 		else {
 			return null;
@@ -41,15 +41,15 @@ class ExtensionPreferences {
 	}
 
 	get HighlightBackgroundColour() {
-		return this._config['highlightBackgroundColor']
+		return this._config['highlightBackgroundColor'];
 	}
 
 	get MaxLinesForFieldDescriptions() {
-		return this._config['MaxLinesForFieldDescriptions']
+		return this._config['MaxLinesForFieldDescriptions'];
 	}
 
 	get SendACK() {
-		return this._config['SendACK']
+		return this._config['SendACK'];
 	}
 
 	get SocketEncodingPreference() {
@@ -64,16 +64,16 @@ class ExtensionPreferences {
 			case "ASCII":
 				return "ascii";
 			default:
-				return "utf8"
+				return "utf8";
 		}
 	}
 
 	get CustomSegmentSchema() {
-		return this._config['CustomSegmentSchema']
+		return this._config['CustomSegmentSchema'];
 	}
 
 	get TrustedCertificateAuthorities() {
-		return this._config['TrustedCertificateAuthorities']
+		return this._config['TrustedCertificateAuthorities'];
 	}
 
 }
