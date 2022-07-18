@@ -289,7 +289,7 @@
 					"description": "Full path and filename of custom Schema.js file (Z segment definitions). Applied in addition to standard schema."
 				},
 				"hl7tools.TrustedCertificateAuthorities": {
-					"type":"array"
+					"type":"array",
 					"description": "An array of paths to trusted Certificate Authorities (CA). Supports connections to endpoints using internal Enterprise CAs."
 				}
 			}
