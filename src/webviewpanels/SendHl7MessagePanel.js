@@ -1,3 +1,11 @@
+/*
+    Rob Holme
+
+    Class used to display and render a webview panel, to support the sending of HL7 messages to a remote host.
+    
+*/
+
+
 const vscode = require('vscode');
 
 class SendHl7MessagePanel {

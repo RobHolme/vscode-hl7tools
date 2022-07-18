@@ -10,10 +10,8 @@ const CR = String.fromCharCode(0x0d);
 
 // required modules
 const vscode = require('vscode');
-const path = require("path");
-
-// create a persistent output channel for results from SendMessage function
-var sendMessageOutputChannel = vscode.window.createOutputChannel('Send Message Output');
+const fs = require('fs')
+const extensionPreferencesClass = require('./ExtensionPreferences.js');
 
 //----------------------------------------------------
 // Send a HL7 v2.x message to a remote host using MLLP framing.
@@ -41,6 +39,16 @@ function SendMessage(Host, Port, HL7Message, Timeout, UseTls, encoding, ignoreCe
 			host: Host,
 			rejectUnauthorized: true
 		}
+
+		// load custom trusted CAs defined in user preferences
+		trustedCAList = extensionPreferencesClass.TrustedCertificateAuthorities
+		const secureContext = tls.createSecureContext();
+		if (trustedCAList.length > 0) {
+			for (const ca of trustedCAList) {
+				secureContext.context.addCACert(fs.readFileSync(ca))
+			}
+		}
+
 		var client = tls.connect(Port, tlsOptions, function () {
 			// check for certificate validation errors
 			if (client.authorized) {
