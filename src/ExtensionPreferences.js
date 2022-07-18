@@ -72,6 +72,10 @@ class ExtensionPreferences {
 		return this._config['CustomSegmentSchema']
 	}
 
+	get TrustedCertificateAuthorities() {
+		return this._config['TrustedCertificateAuthorities']
+	}
+
 }
 
 exports.ExtensionPreferences = ExtensionPreferences;
