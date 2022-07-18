@@ -10,7 +10,7 @@ const CR = String.fromCharCode(0x0d);
 
 // required modules
 const vscode = require('vscode');
-const fs = require('fs')
+const fs = require('fs');
 const extensionPreferencesClass = require('./ExtensionPreferences.js');
 
 //----------------------------------------------------
@@ -32,51 +32,69 @@ function SendMessage(Host, Port, HL7Message, Timeout, UseTls, encoding, ignoreCe
 	preferences = new extensionPreferencesClass.ExtensionPreferences();
 	// connect with TLS
 	if (UseTls) {
-//		const tlsOptions = {
-//			host: Host,
-//			rejectUnauthorized: !ignoreCertError
-//		}
+		//		const tlsOptions = {
+		//			host: Host,
+		//			rejectUnauthorized: !ignoreCertError
+		//		}
 		const tlsOptions = {
 			host: Host,
 			rejectUnauthorized: true
 		}
 
-/*
-const tls = require("tls");
-
-const origCreateSecureContext = tls.createSecureContext;
-
-tls.createSecureContext = options => {
-  const context = origCreateSecureContext(options);
-
-  const pem = fs
-    .readFileSync("./rootCA.crt", { encoding: "ascii" })
-    .replace(/\r\n/g, "\n");
-
-  const certs = pem.match(/-----BEGIN CERTIFICATE-----\n[\s\S]+?\n-----END CERTIFICATE-----/g);
-
-  if (!certs) {
-    throw new Error(`Could not parse certificate ./rootCA.crt`);
-  }
-
-  certs.forEach(cert => {
-    context.context.addCACert(cert.trim());
-  });
-
-  return context;
-};
-*/
+		/*
+		const tls = require("tls");
+		
+		const origCreateSecureContext = tls.createSecureContext;
+		
+		tls.createSecureContext = options => {
+		  const context = origCreateSecureContext(options);
+		
+		  const pem = fs
+			.readFileSync("./rootCA.crt", { encoding: "ascii" })
+			.replace(/\r\n/g, "\n");
+		
+		  const certs = pem.match(/-----BEGIN CERTIFICATE-----\n[\s\S]+?\n-----END CERTIFICATE-----/g);
+		
+		  if (!certs) {
+			throw new Error(`Could not parse certificate ./rootCA.crt`);
+		  }
+		
+		  certs.forEach(cert => {
+			context.context.addCACert(cert.trim());
+		  });
+		
+		  return context;
+		};
+		*/
 
 
 
 		// load custom trusted CAs defined in user preferences
 		const trustedCAList = preferences.TrustedCertificateAuthorities;
-		const secureContext = tls.createSecureContext();
-		if (trustedCAList.length > 0) {
-			for (const ca of trustedCAList) {
-				secureContext.context.addCACert(fs.readFileSync(ca))
+
+		// patch CreateSecureContext to add in custom CAs
+		// based on the Monkey Patch discussed in https://medium.com/trabe/monkey-patching-tls-in-node-js-to-support-self-signed-certificates-with-custom-root-cas-25c7396dfd2a
+		const origCreateSecureContext = tls.createSecureContext;
+		tls.createSecureContext = options => {
+			const context = origCreateSecureContext(options);
+			var pem;
+			for (i=0; i < trustedCAList.length; i++) {
+			pem += fs
+				.readFileSync(trustedCAList[i], { encoding: "ascii" })
+				.replace(/\r\n/g, "\n");
 			}
-		}
+
+			const certs = pem.match(/-----BEGIN CERTIFICATE-----\n[\s\S]+?\n-----END CERTIFICATE-----/g);
+
+			if (!certs) {
+				throw new Error('Could not parse certificate ./rootCA.crt');
+			}
+
+			certs.forEach(cert => {
+				context.context.addCACert(cert.trim());
+			});
+			return context;
+		};
 
 		var client = tls.connect(Port, tlsOptions, function () {
 			// check for certificate validation errors
