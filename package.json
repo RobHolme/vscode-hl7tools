@@ -290,7 +290,11 @@
 				},
 				"hl7tools.TrustedCertificateAuthorities": {
 					"type":"array",
-					"description": "An array of paths to trusted Certificate Authorities (CA). Supports connections to endpoints using internal Enterprise CAs."
+					"description": "List of paths to trusted Certificate Authorities (CA) public keys (Base64 CER files). Supports TLS connections to endpoints using internal Enterprise CAs.",
+					"items": {
+						"type": "string",
+						"description": "Path to CA file (base64 CER)"
+					}
 				}
 			}
 		}
