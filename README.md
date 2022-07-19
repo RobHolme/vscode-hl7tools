@@ -72,8 +72,14 @@ This command sends the current message to a remote host (via TCP using MLLP fram
 
 * The status will be displayed in the results text box. If an ACK message is returned it is also displayed. If no ACK is returned, the connection will time out and close (default timeout is 5 seconds). Status information will be cleared each time a message is sent.
 
+> Note: TLS connections will fail if the remote certificate name does not match the hostname provided, or the issuer of the certificate is not trusted. The trusted CA list is hardcoded by node.js, it is not based on workstation trusted CAs. If connecting to an endpoint using an certificate issued from an internal (enterprise) CA, then the user preferences will need to specify the root CA public key so that the remote certificate is trusted. This is set via the following preference containing an array of paths to all custom trusted root CAs (base64 encoded CER files):"
 
- User preferences applicable to this function include:  
+`"hl7tools.TrustedCertificateAuthorities":[`
+`  "c:\\trustedCA\\enterprise-root-ca.cer",`
+`  "c:\\trustedCA\\another-root-ca.cer"`
+` ]`
+
+Other user preferences applicable to this function include:  
 `// The TCP connection timeout (in seconds) when sending a HL7 message.`  
 `"hl7tools.ConnectionTimeout": 10`  
   
@@ -92,9 +98,9 @@ The 'favourite' endpoints are defined in settings.json - similar to the example 
 `{`  
 `   "Description": "Dev Server",`  
 `	"Hostname": "127.0.0.1",`  
-`	"Port": 5000,`
-`	"UseTLS: true"`
-`},`  
+`	"Port": 5000, `  
+`	"UseTLS: true"`  
+`}, `  
 `{`  
 `	"Description": "Test Server",`  
 `	"Hostname": "127.0.0.1",`  
