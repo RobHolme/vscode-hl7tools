@@ -41,34 +41,7 @@ function SendMessage(Host, Port, HL7Message, Timeout, UseTls, encoding, ignoreCe
 			rejectUnauthorized: true
 		}
 
-		/*
-		const tls = require("tls");
-		
-		const origCreateSecureContext = tls.createSecureContext;
-		
-		tls.createSecureContext = options => {
-		  const context = origCreateSecureContext(options);
-		
-		  const pem = fs
-			.readFileSync("./rootCA.crt", { encoding: "ascii" })
-			.replace(/\r\n/g, "\n");
-		
-		  const certs = pem.match(/-----BEGIN CERTIFICATE-----\n[\s\S]+?\n-----END CERTIFICATE-----/g);
-		
-		  if (!certs) {
-			throw new Error(`Could not parse certificate ./rootCA.crt`);
-		  }
-		
-		  certs.forEach(cert => {
-			context.context.addCACert(cert.trim());
-		  });
-		
-		  return context;
-		};
-		*/
-
-
-
+	
 		// load custom trusted CAs defined in user preferences
 		const trustedCAList = preferences.TrustedCertificateAuthorities;
 
