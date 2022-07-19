@@ -203,9 +203,8 @@ class SendHl7MessagePanel {
   				<button id="btnSend">Send Message</button>&nbsp;&nbsp;&nbsp;
 				<button id="btnExit">Exit</button>
 				<br><br>
-				<label class=field for="hl7Message">Message: </label><textarea name="hl7Message" id="hl7Message" wrap='off' rows="15">
-${this.#hl7Message} 
-				</textarea><br><br>
+				<label class=field for="hl7Message">Message: </label>
+				<textarea name="hl7Message" id="hl7Message" wrap='off' rows="15">${this.#hl7Message}</textarea><br><br>
 				<label for="result">Result: </label>
 				<textarea name="result" id="result" wrap='off' rows="6"></textarea><br><br>
 		</body>
