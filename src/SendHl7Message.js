@@ -45,7 +45,7 @@ function SendMessage(Host, Port, HL7Message, Timeout, UseTls, encoding, ignoreCe
 			rejectUnauthorized: true
 		}
 
-	
+
 		// load custom trusted CAs defined in user preferences
 		const trustedCAList = preferences.TrustedCertificateAuthorities;
 
@@ -55,21 +55,28 @@ function SendMessage(Host, Port, HL7Message, Timeout, UseTls, encoding, ignoreCe
 		tls.createSecureContext = options => {
 			const context = origCreateSecureContext(options);
 			var pem;
-			for (i=0; i < trustedCAList.length; i++) {
-			pem += fs
-				.readFileSync(trustedCAList[i], { encoding: "ascii" })
-				.replace(/\r\n/g, "\n");
+			for (i = 0; i < trustedCAList.length; i++) {
+				if (fs.existsSync(trustedCAList[i])) {
+					pem += fs
+						.readFileSync(trustedCAList[i], { encoding: "ascii" })
+						.replace(/\r\n/g, "\n");
+				}
+				else {
+					console.log('User provided trusted CA not found: ' + trustedCAList[i]);
+				}
+			}
+			if (pem) {
+				const certs = pem.match(/-----BEGIN CERTIFICATE-----\n[\s\S]+?\n-----END CERTIFICATE-----/g);
+				if (!certs) {
+					console.log('Could not parse user defined root CA certificate(s)');
+				}
+				else {
+					certs.forEach(cert => {
+						context.context.addCACert(cert.trim());
+					});
+				}
 			}
 
-			const certs = pem.match(/-----BEGIN CERTIFICATE-----\n[\s\S]+?\n-----END CERTIFICATE-----/g);
-
-			if (!certs) {
-				throw new Error('Could not parse certificate ./rootCA.crt');
-			}
-
-			certs.forEach(cert => {
-				context.context.addCACert(cert.trim());
-			});
 			return context;
 		};
 
