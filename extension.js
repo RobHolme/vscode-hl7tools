@@ -321,13 +321,6 @@ function activate(context) {
 			return;
 		}
 
-
-//		// parse the user settings for list of favourite remote hosts
-//		var favouriteList = [];
-//		for (i = 0; i < preferences.FavouriteRemoteHosts.length; i++) {
-//			favouriteList.push({ "description": preferences.FavouriteRemoteHosts[i].Description, "label": preferences.FavouriteRemoteHosts[i].Hostname + ":" + preferences.FavouriteRemoteHosts[i].Port + ":TLS=" + preferences.FavouriteRemoteHosts[i].UseTLS });
-//		}
-
 		// get the HL7 message from the active document. Convert EOL to <CR> only.
 		var currentDoc = activeEditor.document;
 		var hl7Message = currentDoc.getText();
