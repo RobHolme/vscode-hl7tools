@@ -30,6 +30,10 @@ function SendMessage(Host, Port, HL7Message, Timeout, UseTls, encoding, ignoreCe
 	var net = require('net');
 	var tls = require('tls');
 	preferences = new extensionPreferencesClass.ExtensionPreferences();
+
+	// replace any newlines added by the text area with CRs.
+	HL7Message = HL7Message.replace(new RegExp('\n', 'g'), String.fromCharCode(0x0d));
+
 	// connect with TLS
 	if (UseTls) {
 		//		const tlsOptions = {
