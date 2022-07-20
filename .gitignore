@@ -1,3 +1,4 @@
 # ignore user preferences file generated when testing
 .vscode/settings.json
 node_modules/
+Thumbs.db
