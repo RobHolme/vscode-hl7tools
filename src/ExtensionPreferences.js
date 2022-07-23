@@ -30,14 +30,20 @@ class ExtensionPreferences {
 		return this._config['DefaultRemoteHost'];
 	}
 
+	// return empty list if no preferences set, otherwise return the array of favourite host objects 
 	get FavouriteRemoteHosts() {
-		// return null if no preferences set 
-		if (this._config['FavouriteRemoteHosts'].length > 0) {
-			return this._config['FavouriteRemoteHosts'];
+		var returnList = [];
+		const numFavourites = this._config['FavouriteRemoteHosts'].length;
+		if (numFavourites > 0) {
+			for (let i = 0; i < numFavourites; i++) {
+				// remove any favourites that do no pass validation 
+				const currentFavourite = this._config['FavouriteRemoteHosts'][i];
+				if (this._validateFavouriteObject(currentFavourite)) {
+					returnList.push(currentFavourite);
+				}
+			}
 		}
-		else {
-			return null;
-		}
+		return returnList;
 	}
 
 	get HighlightBackgroundColour() {
@@ -76,6 +82,16 @@ class ExtensionPreferences {
 		return this._config['TrustedCertificateAuthorities'];
 	}
 
+	// Confirm the object has the required properties. Does not validate property values are valid.
+	_validateFavouriteObject(favourite) {
+		if ((favourite.hasOwnProperty('Description')) & (favourite.hasOwnProperty('Hostname')) & (favourite.hasOwnProperty('Port'))) {
+			return true;
+		}
+		else {
+			console.log ("Favourite object does not contain the require properties");
+			return false;
+		}
+	}
 }
 
 exports.ExtensionPreferences = ExtensionPreferences;

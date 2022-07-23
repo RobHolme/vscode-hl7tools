@@ -53,7 +53,7 @@ class SendHl7MessagePanel {
 
 	// send a message to populate the favourites drop list if any are set
 	updateFavourites(favourites) {
-		if (favourites) {
+		if (favourites.length > 0) {
 			this.#panel.webview.postMessage({
 				command: 'setFavourites',
 				favouriteList: favourites
