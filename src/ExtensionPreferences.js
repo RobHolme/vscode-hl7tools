@@ -1,7 +1,7 @@
 /*
-    Rob Holme
+	Rob Holme
 
-    Class used to retrieve extension preferences
+	Class used to retrieve extension preferences
     
 */
 const vscode = require('vscode');
@@ -15,7 +15,7 @@ class ExtensionPreferences {
 	}
 
 	get AddLineBreakOnActivation() {
-		return this._config['AddLinebreakOnActivation'] ;
+		return this._config['AddLinebreakOnActivation'];
 	}
 
 	get ConnectionTimeOut() {
@@ -31,8 +31,8 @@ class ExtensionPreferences {
 	}
 
 	get FavouriteRemoteHosts() {
-		// return null if no preferences set (based on the first item not containing a description) 
-		if (this._config['FavouriteRemoteHosts'][0].Description) {
+		// return null if no preferences set 
+		if (this._config['FavouriteRemoteHosts'].length > 0) {
 			return this._config['FavouriteRemoteHosts'];
 		}
 		else {
