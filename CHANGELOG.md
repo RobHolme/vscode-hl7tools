@@ -167,3 +167,6 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 ## 1.14.0 (19/07/2022)
 * Send messages now uses a webview panel to enter connection details
 * TLS connections supported when sending messages to remote hosts that implement TLS
+
+## 1.14.1 (23/07/2022)
+* Fixed issue when favouriteRemoteHosts list was empty
