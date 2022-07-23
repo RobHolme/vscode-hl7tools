@@ -2,7 +2,7 @@
 	"name": "hl7tools",
 	"displayName": "HL7Tools",
 	"description": "HL7 tools for Visual Studio Code",
-	"version": "1.14.1",
+	"version": "1.14.2",
 	"icon": "images/hl7tools-icon.png",
 	"publisher": "RobHolme",
 	"license": "MIT",
