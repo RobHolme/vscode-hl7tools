@@ -130,6 +130,7 @@ function activate(context) {
 
 	// the active document has changed. 
 	vscode.window.onDidChangeActiveTextEditor(function (editor) {
+		console.log("onDidChangeActiveTextEditor event");
 		if (editor) {
 			// update the HL7 delimiter characters from the current file
 			delimiters = common.ParseDelimiters();
@@ -141,7 +142,6 @@ function activate(context) {
 
 				// if the AddLinebreakOnActivation user preference is set, call the 'Add LineBreaks to Segment' command
 				// load user preferences for the extension (SocketEncoding)
-//				preferences = new extensionPreferencesClass.ExtensionPreferences();
 				if (preferences.AddLinebreakOnActivation == true) {
 					AddLinebreaksToSegments();
 				}
@@ -161,10 +161,15 @@ function activate(context) {
 
 	// document text has changed
 	workspace.onDidChangeTextDocument(function (event) {
+		console.log("Document text change detected");
 		if (activeEditor && (event.document === activeEditor.document)) {
 			// only activate the field descriptions if it is identified as a HL7 file  
-			if (common.IsHL7File(editor.document)) {
+			if (common.IsHL7File(event.document)) {
 				UpdateFieldDescriptions();
+				// re apply field highlighting if set
+				if (currentItemLocation) {
+					HighlightFields.ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour);
+				}
 			}
 			else {
 				statusbarHL7Version.hide();
@@ -263,6 +268,7 @@ function activate(context) {
 	//-------------------------------------------------------------------------------------------
 	// this function splits HL7 batch files into a separate file per message
 	var splitBatchFileCommand = vscode.commands.registerCommand('hl7tools.SplitBatchFile', function () {
+		console.log("Splitting HL7 Batch file");
 		var activeEditor = vscode.window.activeTextEditor;
 		if (!activeEditor) {
 			return;
@@ -359,7 +365,7 @@ function activate(context) {
 	//-------------------------------------------------------------------------------------------
 	// This function receives messages from a remote host via TCP. Messages displayed in the editor as new documents.
 	var StartListenerCommand = vscode.commands.registerCommand('hl7tools.StartListener', function () {
-
+		console.log("Starting Listener");
 		var activeEditor = vscode.window.activeTextEditor;
 		if (!activeEditor) {
 			return;
@@ -376,7 +382,7 @@ function activate(context) {
 	//-------------------------------------------------------------------------------------------
 	// This functions stop listening for messages
 	var StopListenerCommand = vscode.commands.registerCommand('hl7tools.StopListener', function () {
-
+		console.log("Stopping Listsener");
 		TcpMllpListener.StopListener();
 	});
 
@@ -386,7 +392,7 @@ function activate(context) {
 	//-------------------------------------------------------------------------------------------
 	// Extract matching segments from the message into a new document
 	var ExtractSegments = vscode.commands.registerCommand('hl7tools.ExtractSegments', function () {
-
+		console.log("Extracting Segments");
 		// exit if the editor is not active
 		var editor = vscode.window.activeTextEditor;
 		if (!editor) {
@@ -602,7 +608,7 @@ function activate(context) {
 		// Search each line in the message to locate a matching segment.
 		// For large documents end after a defined maximum number of lines (set via user preference) 
 		var positionOffset = 0;
-		for (lineIndex = 0; lineIndex < maxLines; lineIndex++) {
+		for (let lineIndex = 0; lineIndex < maxLines; lineIndex++) {
 			var startPos = null;
 			var endPos = null;
 			var currentLine = currentDoc.lineAt(lineIndex).text;
