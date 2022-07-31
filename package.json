@@ -2,7 +2,7 @@
 	"name": "hl7tools",
 	"displayName": "HL7Tools",
 	"description": "HL7 tools for Visual Studio Code",
-	"version": "1.14.2",
+	"version": "2.0.0",
 	"icon": "images/hl7tools-icon.png",
 	"publisher": "RobHolme",
 	"license": "MIT",
@@ -15,7 +15,7 @@
 		"url": "https://github.com/RobHolme/vscode-hl7tools.git"
 	},
 	"engines": {
-		"vscode": "^1.9.0"
+		"vscode": "^1.69.0"
 	},
 	"categories": [
 		"Other"
@@ -37,7 +37,7 @@
 		"onCommand:hl7tools.CheckRequiredFields",
 		"onCommand:hl7tools.FindField"
 	],
-	"main": "./extension",
+	"main": "./out/extension.js",
 	"contributes": {
 		"keybindings": [
 			{
@@ -221,7 +221,7 @@
 							"Port",
 							"Description"
 						],
-						"optional":[
+						"optional": [
 							"UseTLS"
 						],
 						"properties": {
@@ -243,8 +243,7 @@
 							}
 						}
 					},
-					"default": [
-					],
+					"default": [],
 					"description": "Enter favourite endpoints for Send Message command. Provide an array of objects, refer to Send Message section of https://github.com/RobHolme/vscode-hl7tools/blob/master/README.md for a sample config."
 				},
 				"hl7tools.ConnectionTimeout": {
@@ -289,7 +288,7 @@
 					"description": "Full path and filename of custom Schema.js file (Z segment definitions). Applied in addition to standard schema."
 				},
 				"hl7tools.TrustedCertificateAuthorities": {
-					"type":"array",
+					"type": "array",
 					"description": "List of paths to trusted Certificate Authorities (CA) public keys (Base64 CER files). Supports TLS connections to endpoints using internal Enterprise CAs.",
 					"items": {
 						"type": "string",
@@ -299,12 +298,26 @@
 			}
 		}
 	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile && npm run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js"
+	},
 	"devDependencies": {
-		"typescript": "^2.6.1",
-		"vscode": "^1.1.21",
-		"eslint": "^4.11.0",
-		"@types/node": "^8.10.25",
-		"@types/mocha": "^2.2.42"
+		"@types/vscode": "^1.69.0",
+		"@types/glob": "^7.2.0",
+		"@types/mocha": "^9.1.1",
+		"@types/node": "16.x",
+		"@typescript-eslint/eslint-plugin": "^5.31.0",
+		"@typescript-eslint/parser": "^5.31.0",
+		"eslint": "^8.20.0",
+		"glob": "^8.0.3",
+		"mocha": "^10.0.0",
+		"typescript": "^4.7.4",
+		"@vscode/test-electron": "^2.1.5"
 	},
 	"__metadata": {
 		"id": "b919e7cc-6fa1-454b-ab7f-216ed8d48f19",
