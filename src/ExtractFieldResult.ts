@@ -7,7 +7,7 @@
 
 //----------------------------------------------------
 // class defining a single field value and the filename it was found in
-class result {
+export class Result {
 	private _filename: string;
 	private _value: string;
 
@@ -29,8 +29,8 @@ class result {
 
 //----------------------------------------------------
 // a class containing a collection of results.
-class resultCollection {
-	private _resultItems: result[];
+export class ResultCollection {
+	private _resultItems: Result[];
 	private _maxLength: number;
 
 	constructor() {
@@ -40,7 +40,7 @@ class resultCollection {
 
 	// add a new result object to this collection.
 	// @param {object} resultItem - the result object to add to the result collection
-	public AddResult(resultItem: result) {
+	public AddResult(resultItem: Result) {
 		this._resultItems.push(resultItem);
 		if (resultItem.Value.length > this._maxLength) {
 			this._maxLength = resultItem.Value.length;
