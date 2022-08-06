@@ -24,13 +24,16 @@ export abstract class Util {
 	//									If not supplied, the function will default to using the active document in the editor.
 	//
 	// @returns {object} - returns a object containing the HL7 delimiters used in the message
-	public static ParseDelimiters(currentMessage: string) {
-
+	public static ParseDelimiters(currentMessage: string | void) {
+		let _currentMessage : string;
 		// if the message content is not passed in as a string, get the text from the current document open in the editor
 		if (!currentMessage) {
 			const vscode = require('vscode');
 			var window = vscode.window;
-			var currentMessage : string = window.activeTextEditor.document.getText();
+			_currentMessage = window.activeTextEditor.document.getText();
+		}
+		else {
+			_currentMessage = currentMessage
 		}
 
 		// default delimiter values, return these if not detected in the message header
@@ -41,7 +44,7 @@ export abstract class Util {
 		var repeat = "~";
 
 		var hl7HeaderRegex = /^MSH(.){5}/im;
-		var result = hl7HeaderRegex.exec(currentMessage);
+		var result = hl7HeaderRegex.exec(_currentMessage);
 		// if the result is null, then the default delimiter characters would apply
 		if (result != null) {
 			field = result[0][3];
