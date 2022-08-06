@@ -4,11 +4,12 @@
 	Class used to retrieve extension preferences
     
 */
-const vscode = require('vscode');
+import * as vscode from 'vscode';
 
 //----------------------------------------------------
 // class defining a single field value and the filename it was found in
-class ExtensionPreferences {
+export class ExtensionPreferences {
+	private _config : vscode.WorkspaceConfiguration;
 
 	constructor() {
 		this._config = vscode.workspace.getConfiguration('hl7tools');
@@ -38,7 +39,7 @@ class ExtensionPreferences {
 			for (let i = 0; i < numFavourites; i++) {
 				// remove any favourites that do no pass validation 
 				const currentFavourite = this._config['FavouriteRemoteHosts'][i];
-				if (this._validateFavouriteObject(currentFavourite)) {
+				if (this.validateFavouriteObject(currentFavourite)) {
 					returnList.push(currentFavourite);
 				}
 			}
@@ -83,8 +84,8 @@ class ExtensionPreferences {
 	}
 
 	// Confirm the object has the required properties. Does not validate property values are valid.
-	_validateFavouriteObject(favourite) {
-		if ((favourite.hasOwnProperty('Description')) & (favourite.hasOwnProperty('Hostname')) & (favourite.hasOwnProperty('Port'))) {
+	private validateFavouriteObject(favourite: object) {
+		if ((favourite.hasOwnProperty('Description')) && (favourite.hasOwnProperty('Hostname')) && (favourite.hasOwnProperty('Port'))) {
 			return true;
 		}
 		else {
@@ -94,4 +95,3 @@ class ExtensionPreferences {
 	}
 }
 
-exports.ExtensionPreferences = ExtensionPreferences;
