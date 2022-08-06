@@ -24,7 +24,7 @@ export abstract class Util {
 	//									If not supplied, the function will default to using the active document in the editor.
 	//
 	// @returns {object} - returns a object containing the HL7 delimiters used in the message
-	public static ParseDelimiters(currentMessage: string | void) {
+	public static ParseDelimiters(currentMessage: string | void) : object {
 		let _currentMessage : string;
 		// if the message content is not passed in as a string, get the text from the current document open in the editor
 		if (!currentMessage) {
