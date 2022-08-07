@@ -201,7 +201,7 @@ export abstract class Util {
 
 	//----------------------------------------------------
 	//  Finds active documents by cycling them.
-	//  From https://github.com/atishay/vscode-allautocomplete
+	//  Copied from https://github.com/atishay/vscode-allautocomplete
 	//
 	public static findActiveDocsHack() {
 		// Based on https://github.com/eamodio/vscode-restore-editors/blob/master/src/documentManager.ts#L57
@@ -215,7 +215,6 @@ export abstract class Util {
 					if (active === undefined) {
 						active = editor;
 					}
-
 					openEditors.push(editor);
 				}
 				// window.onDidChangeActiveTextEditor should work here but I don't know why it doesn't
@@ -252,15 +251,14 @@ export abstract class Util {
 			var currentDoc = allTextDocuments[i];
 			if (Util.IsHL7File(currentDoc)) {
 				// load the message delimiters from the current file
-				var allText = currentDoc.getText();
-				var delimiters = Util.ParseDelimiters(allText);
-				var segmentRegex = new RegExp("^" + segmentName + "\\" + delimiters.FIELD)
+				var delimiters = new Delimiter(currentDoc.getText());
+				var segmentRegex = new RegExp("^" + segmentName + "\\" + delimiters.Field)
 				for (let lineIndex = 0; lineIndex < currentDoc.lineCount; lineIndex++) {
 					var currentLine = currentDoc.lineAt(lineIndex).text;
 					if (segmentRegex.test(currentLine)) {
-						var fields = currentLine.split(delimiters.FIELD);
+						var fields = currentLine.split(delimiters.Field);
 						if (fieldIndex < fields.length) {
-							var repeats = fields[fieldIndex].split(delimiters.REPEAT);
+							var repeats = fields[fieldIndex].split(delimiters.Repeat);
 							for (let repeatIndex = 0; repeatIndex < repeats.length; repeatIndex++) {
 								var resultItem = new Result(currentDoc.fileName, repeats[repeatIndex]);
 								results.AddResult(resultItem);
@@ -393,23 +391,24 @@ export abstract class Util {
 
 	//----------------------------------------------------
 	// return the unique names of all segments in the message. Return as a associative array indexed by segment name. key values are not consequential.
-	// @param {object} document - a vscode document object containing a HL7 message
+	// @param {vscode.TextDocument} document - a vscode document object containing a HL7 message
 	//
-	// @returns {object} - returns a hashtable containing all unique segment names (as keys).
-	public static GetAllSegmentNames(document: vscode.TextDocument | undefined) {
+	// @returns {HashTable<number>} - returns a hash table containing all unique segment names (as keys).
+	public static GetAllSegmentNames(document: vscode.TextDocument | undefined): HashTable<number> {
+		var segmentHashtable: HashTable<number> = {};
+		// if no document, return empty hash table
 		if (document === undefined) {
-			return {};
+			return segmentHashtable;
 		}
 		// load the message delimiters from the current file
-		var allText = document.getText();
-		var delimiters = Util.ParseDelimiters(allText);
-
-		var segmentHashtable: HashTable<number> = {};
-		var segmentRegex = new RegExp("^[A-Z]{2}([A-Z]|[0-9])\\" + delimiters.FIELD, "i")
+		var delimiters = new Delimiter(document.getText());
+		
+		// search for segment patterns
+		var segmentRegex = new RegExp("^[A-Z]{2}([A-Z]|[0-9])\\" + delimiters.Field, "i")
 		for (let i = 0; i < document.lineCount; i++) {
 			var currentSegment = document.lineAt(i).text;
 			if (segmentRegex.test(currentSegment)) {
-				var segmentName = currentSegment.split(delimiters.FIELD)[0];
+				var segmentName = currentSegment.split(delimiters.Field)[0];
 				if (segmentHashtable[segmentName.toUpperCase()] === undefined) {
 					segmentHashtable[segmentName.toUpperCase()] = 1;
 				}
@@ -423,7 +422,7 @@ export abstract class Util {
 	// @param {object} document - a vscode document object containing a HL7 message
 	//
 	// @returns {string} - returns the end of line characters for the document
-	public static GetEOLCharacter(document: vscode.TextDocument) {
+	public static GetEOLCharacter(document: vscode.TextDocument): string {
 		if (document.eol == vscode.EndOfLine.CRLF) {
 			return "\r\n";
 		}
