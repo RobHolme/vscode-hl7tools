@@ -6,11 +6,14 @@
 */
 
 //----------------------------------------------------
-// class defining a single field value and the filename it was found in
-class missingRequiredFieldResult {
-	// @param {string} LineNumber - the name of the file that the value was found in
-	// @param {string} FieldLocation - a field value 
-	constructor(LineNumber, FieldLocation) {
+// class defining the line number and reference to a HL7 field location
+export class MissingRequiredFieldResult {
+	private _lineNumber: number;
+	private _fieldLocation: string;
+
+	// @param {number} LineNumber - the name of the file that the value was found in
+	// @param {string} FieldLocation - a string referencing field location 
+	constructor(LineNumber: number, FieldLocation: string) {
 		this._lineNumber = LineNumber;
 		this._fieldLocation = FieldLocation;
 	}
@@ -24,4 +27,3 @@ class missingRequiredFieldResult {
 	}
 }
 
-exports.missingRequiredFieldResult = missingRequiredFieldResult;
