@@ -6,7 +6,7 @@ import * as fs from 'fs';
 const workspace = vscode.workspace;
 
 // load local modules
-import { Util } from './Util'; 
+import { Delimiter, Util } from './Util'; 
 import { ExtensionPreferences } from './ExtensionPreferences';
 
 // TODO update these to refer to .ts module
@@ -23,7 +23,7 @@ import { Console } from 'console';
 
 
 // the HL7 delimiters used by the message
-var delimiters : object;
+//var delimiters : object;
 // Store the HL7 schema and associated field descriptions
 var hl7Schema;
 var hl7Fields;
@@ -32,11 +32,11 @@ var currentItemLocation;
 // the status bar item to display current HL7 schema this is loaded
 var statusbarHL7Version = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
 // the list of fields with hover decorations (displaying the field description);
-var hoverDecorationList = [];
+var hoverDecorationList: vscode.DecorationOptions[] = [];
 // stores the current highlighted field so that it can be cleared when selecting a new field.
 //var currentDecoration;
 // stores the current hover decorations
-var currentHoverDecoration;
+var currentHoverDecoration: vscode.TextEditorDecorationType;
 //  use this to prevent th active do hack from running more than once per session
 var activeDocHackRun = false;
 // store field locations used by Find and FindNext functions
@@ -53,10 +53,13 @@ const defaultSchemaVersion = "2.7.1";
 function GetHL7Version(hl7Message: string): string | null {
 	var hl7HeaderRegex: RegExp = /^MSH.+$/im;
 	var result: RegExpExecArray | null = hl7HeaderRegex.exec(hl7Message);
-	var supportedSchemas = ["2.1", "2.2", "2.3", "2.3.1", "2.4", "2.5", "2.5.1", "2.6", "2.7", "2.7.1"];
+	var supportedSchemas: string[] = ["2.1", "2.2", "2.3", "2.3.1", "2.4", "2.5", "2.5.1", "2.6", "2.7", "2.7.1"];
+
+	var delimiters: Delimiter = new Delimiter();
+	delimiters.ParseDelimitersFromMessage(hl7Message);
 
 	if (result != null) {
-		let hl7Version: string = result[0].split(delimiters.FIELD)[11];
+		let hl7Version: string = result[0].split(delimiters.Field)[11];
 		if (supportedSchemas.includes(hl7Version)) {
 			SetStatusBarVersion(hl7Version, `HL7 v${hl7Version} (auto detected)`);
 			return hl7Version;
@@ -156,10 +159,6 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log(`The extension "hl7tools" is now active.`);
 
-
-	// update the HL7 delimiter characters from the current file
-	delimiters = Util.ParseDelimiters();
-
 	var activeEditor : vscode.TextEditor | undefined = vscode.window.activeTextEditor
 	// only activate the field descriptions if it is identified as a HL7 file  
 	if (activeEditor !== undefined) {
@@ -185,8 +184,6 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.window.onDidChangeActiveTextEditor(function (editor) {
 		console.log("onDidChangeActiveTextEditor event");
 		if (editor) {
-			// update the HL7 delimiter characters from the current file
-			delimiters = Util.ParseDelimiters();
 
 			// only activate the field descriptions if it is identified as a HL7 file  
 			if (Util.IsHL7File(editor.document)) {
@@ -291,15 +288,18 @@ export function activate(context: vscode.ExtensionContext) {
 		var currentLineNum = selection.start.line;
 		const fileName = path.basename(currentDoc.uri.fsPath);
 		var currentSegment = currentDoc.lineAt(currentLineNum).text;
-		// extract the segment text from the line incase it is prefixed with line numbers etc.
-		delimiters = Util.ParseDelimiters();
-		var segmentRegEx = new RegExp("([a-z]{2}([a-z]|([0-9]))|([z]([a-z]|[0-9]){2}))\\" + delimiters.FIELD + ".+", "i");
+		// parse the HL7 delimeter characters from the current message
+		var delimiters: Delimiter = new Delimiter();
+		delimiters.ParseDelimitersFromMessage(currentDoc.getText());
+		
+		// extract the segment text from the line in case it is prefixed with line numbers etc.
+		var segmentRegEx = new RegExp("([a-z]{2}([a-z]|([0-9]))|([z]([a-z]|[0-9]){2}))\\" + delimiters.Field + ".+", "i");
 		var match = segmentRegEx.exec(currentSegment);
 		if (match != null) {
 			segment = match[0];
 		}
-		if (Util.IsSegmentValid(segment, delimiters.FIELD)) {
-			var segmentArray = segment.split(delimiters.FIELD);
+		if (Util.IsSegmentValid(segment, delimiters.Field)) {
+			var segmentArray = segment.split(delimiters.Field);
 			var segmentName = segmentArray[0];
 			var output = FieldTreeView.DisplaySegmentAsTree(segment, hl7Schema, hl7Fields);
 
@@ -328,15 +328,17 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		var newMessage = "";
-		var batchHeaderRegEx = new RegExp("(^FHS\\" + delimiters.FIELD + ")|(^BHS\\" + delimiters.FIELD + ")|(^BTS\\" + delimiters.FIELD + ")(^FTS\\" + delimiters.FIELD + ")", "i");
-		var mshRegEx = new RegExp("^MSH\\" + delimiters.FIELD, "i");
 		var currentDoc = activeEditor.document;
+		var documentText = currentDoc.getText();
+		var delimiters: Delimiter = new Delimiter();
+		delimiters.ParseDelimitersFromMessage(documentText);
 
-		var allMessages = currentDoc.getText();
+		var newMessage = "";
+//		var batchHeaderRegEx: RegExp = new RegExp("(^FHS\\" + delimiters.Field + ")|(^BHS\\" + delimiters.Field + ")|(^BTS\\" + delimiters.Field + ")(^FTS\\" + delimiters.Field + ")", "i");
+//		var mshRegEx = new RegExp("^MSH\\" + delimiters.Field, "i");
 
-		var re = new RegExp("^MSH\\" + delimiters.FIELD, "gim");
-		var split = allMessages.split(re);
+		var mshRegEx: RegExp = new RegExp("^MSH\\" + delimiters.Field, "gim");
+		var split: string[] = documentText.split(mshRegEx);
 
 		// If the user is splitting the file into more than 100 new files, warn and provide the opportunity to cancel.
 		// Opening a large number of files could be a drain on system resources. 
@@ -348,7 +350,7 @@ export function activate(context: vscode.ExtensionContext) {
 					for (var i = 1; i < split.length; i++) {
 						// TO DO: remove batch footers            
 						// open the message in a new document, user will be prompted to save on exit
-						var newMessage = "MSH" + delimiters.FIELD + split[i];
+						var newMessage = "MSH" + delimiters.Field + split[i];
 						Util.CreateNewDocument(newMessage, "hl7");
 					}
 				}
@@ -360,7 +362,7 @@ export function activate(context: vscode.ExtensionContext) {
 			for (var i = 1; i < split.length; i++) {
 				// TO DO: remove batch footers            
 				// open the message in a new document, user will be prompted to save on exit
-				var newMessage = "MSH" + delimiters.FIELD + split[i];
+				var newMessage = "MSH" + delimiters.Field + split[i];
 				Util.CreateNewDocument(newMessage, "hl7");
 			}
 		}
@@ -448,25 +450,28 @@ export function activate(context: vscode.ExtensionContext) {
 	var ExtractSegments = vscode.commands.registerCommand('hl7tools.ExtractSegments', function () {
 		console.log("Extracting Segments");
 		// exit if the editor is not active
-		var editor = vscode.window.activeTextEditor;
-		if (!editor) {
+		var editor: vscode.TextEditor | undefined = vscode.window.activeTextEditor;
+		if (editor === undefined) {
 			return;
 		}
 
 		// get the EOL character from the current document
-		var currentDoc = editor.document;
-		endOfLineChar = Util.GetEOLCharacter(currentDoc);
+		var currentDoc: vscode.TextDocument = editor.document;
+		var endOfLineChar: string = Util.GetEOLCharacter(currentDoc);
+		// get HL7 delimiters from current document text 
+		var delimiters: Delimiter = new Delimiter();
+		delimiters.ParseDelimitersFromMessage(currentDoc.getText());
 
-		var extractedSegments = "";
-		var selection = editor.selection;
-		var currentLineNum = selection.start.line;
-		const fileName = path.basename(currentDoc.uri.fsPath);
-		var currentSegment = currentDoc.lineAt(currentLineNum).text
-		var segmentArray = currentSegment.split(delimiters.FIELD);
-		var segmentName = segmentArray[0].substring(0, 3);
-		var segmentRegEx = new RegExp("^" + segmentName + "\\" + delimiters.FIELD, "i");
-		for (var i = 0; i < currentDoc.lineCount; i++) {
-			var currentLine = currentDoc.lineAt(i).text;
+		var extractedSegments: string = "";
+		var selection: vscode.Selection = editor.selection;
+		var currentLineNum: number = selection.start.line;
+//		const fileName = path.basename(currentDoc.uri.fsPath);
+		var currentSegment: string = currentDoc.lineAt(currentLineNum).text
+		var segmentArray: string[] = currentSegment.split(delimiters.Field);
+		var segmentName: string = segmentArray[0].substring(0, 3);
+		var segmentRegEx: RegExp = new RegExp("^" + segmentName + "\\" + delimiters.Field, "i");
+		for (let i: number = 0; i < currentDoc.lineCount; i++) {
+			let currentLine: string = currentDoc.lineAt(i).text;
 			if (segmentRegEx.test(currentLine) == true) {
 				extractedSegments += currentLine + endOfLineChar;
 			}
@@ -592,37 +597,40 @@ export function activate(context: vscode.ExtensionContext) {
 	//-------------------------------------------------------------------------------------------
 	// add line breaks between segments (if they are not present)
 	function AddLinebreaksToSegments() {
-		var activeEditor = vscode.window.activeTextEditor;
-		if (!activeEditor) {
+		var activeEditor: vscode.TextEditor | undefined = vscode.window.activeTextEditor;
+		if (activeEditor === undefined) {
 			return;
 		}
 
+		var currentDoc: vscode.TextDocument = activeEditor.document;
+		var hl7Message: string = currentDoc.getText();
 		// get the EOL character from the current document
-		var currentDoc = activeEditor.document;
-		var hl7Message = currentDoc.getText();
-		endOfLineChar = Util.GetEOLCharacter(currentDoc);
+		var endOfLineChar: string = Util.GetEOLCharacter(currentDoc);
+		// get delimiter characters from current document text
+		var delimiters: Delimiter = new Delimiter();
+		delimiters.ParseDelimitersFromMessage(currentDoc.getText());
 
 		// build the regex from the list of segment names in the schema
-		var regexString = "(?=";
+		var regexString: string = "(?=";
 		Object.entries(hl7Schema).forEach(([key]) => {
-			regexString += key + "\\" + delimiters.FIELD + "|";
+			regexString += key + "\\" + delimiters.Field + "|";
 		});
 		// include support for custom 'Z' segments (not in the schema).
 		// these are prone to false positives - e.g. a field with the name ZOE would still match the definition of a Z segment. 
 		// assuming there will always be a space in front to reduce false positives
 		regexString += "\sZ[A-Z]\\w\\|)";
-		var segmentRegEx = new RegExp(regexString, 'g');
+		var segmentRegEx: RegExp = new RegExp(regexString, 'g');
 
 		// split the message into segments using the regex, then join elements back together with the EOL character separating segments.
-		var segments = hl7Message.split(segmentRegEx);
-		var newMessage = segments.join(endOfLineChar);
+		var segments: string[] = hl7Message.split(segmentRegEx);
+		var newMessage: string = segments.join(endOfLineChar);
 
 		// remove any extra line breaks (if the file contains some segments delimited correctly)
 		newMessage = newMessage.replace(/(\r\n|\n|\r){2}/gm, endOfLineChar);
 
 		// replace current document text with reformatted text
-		var start = new vscode.Position(0, 0);
-		var end = currentDoc.positionAt(hl7Message.length);
+		var start: vscode.Position = new vscode.Position(0, 0);
+		var end: vscode.Position = currentDoc.positionAt(hl7Message.length);
 		activeEditor.edit(editHelper => {
 			editHelper.replace(new vscode.Range(start, end), newMessage);
 		});
@@ -634,24 +642,28 @@ export function activate(context: vscode.ExtensionContext) {
 	function UpdateFieldDescriptions() {
 
 		// exit if the editor is not active
-		var activeEditor = vscode.window.activeTextEditor;
-		if (!activeEditor) {
+		var activeEditor: vscode.TextEditor | undefined = vscode.window.activeTextEditor;
+		if (activeEditor === undefined) {
 			return;
 		}
 
+		var currentDoc:vscode.TextDocument = activeEditor.document;
+		// get delimiters from current document text
+		var delimiters: Delimiter = new Delimiter();
+		delimiters.ParseDelimitersFromMessage(currentDoc.getText());
+		// get the EOL character from the current document
+		var endOfLineChar: string = Util.GetEOLCharacter(currentDoc);
+
 		// don't apply descriptions if file is too large (i.e. large hl7 batch files). 
 		// Performance can be impacted on systems with low resources
-		var currentDoc = activeEditor.document;
-		var maxLines = Math.min(currentDoc.lineCount, preferences.MaxLinesForFieldDescriptions);
-		var regEx = new RegExp("\\" + delimiters.FIELD, "g");
-		var validSegmentRegEx = new RegExp("^[a-z][a-z]([a-z]|[0-9])\\" + delimiters.FIELD, "i");
-		// get the EOL character from the current document
-		endOfLineChar = Util.GetEOLCharacter(currentDoc);
+		var maxLines: number = Math.min(currentDoc.lineCount, preferences.MaxLinesForFieldDescriptions);
+		var regEx: RegExp = new RegExp("\\" + delimiters.Field, "g");
+		var validSegmentRegEx: RegExp = new RegExp("^[a-z][a-z]([a-z]|[0-9])\\" + delimiters.Field, "i");
 
 		// calculate the number of characters at the end of line (<CR>, or <CR><LF>)
-		var endOfLineLength = endOfLineChar.length;
+		var endOfLineLength: number = endOfLineChar.length;
 
-		var hoverDecorationType = vscode.window.createTextEditorDecorationType({
+		var hoverDecorationType: vscode.TextEditorDecorationType = vscode.window.createTextEditorDecorationType({
 		});
 
 		// dispose of any prior decorations
@@ -661,17 +673,17 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 		// Search each line in the message to locate a matching segment.
 		// For large documents end after a defined maximum number of lines (set via user preference) 
-		var positionOffset = 0;
-		for (let lineIndex = 0; lineIndex < maxLines; lineIndex++) {
-			var startPos = null;
-			var endPos = null;
-			var currentLine = currentDoc.lineAt(lineIndex).text;
-			var fields = currentLine.split(delimiters.FIELD);
-			var segmentName = fields[0];
+		var positionOffset: number = 0;
+		for (let lineIndex: number = 0; lineIndex < maxLines; lineIndex++) {
+			var startPos: vscode.Position | null = null;
+			var endPos: vscode.Position | null = null;
+			var currentLine: string = currentDoc.lineAt(lineIndex).text;
+			var fields: string[] = currentLine.split(delimiters.Field);
+			var segmentName: string = fields[0];
 			var segmentDef = hl7Schema[segmentName];
-			var fieldCount = -1;
-			var previousEndPos = null;
-			var fieldDescription = "";
+			var fieldCount: number = -1;
+			var previousEndPos: vscode.Position | null = null;
+			var fieldDescription: string = "";
 			// ignore all lines that do not at least contain a segment name and field delimiter. This should be the absolute minimum for a segment
 			if (!validSegmentRegEx.test(currentLine)) {
 				positionOffset += currentLine.length + endOfLineLength;
@@ -682,12 +694,14 @@ export function activate(context: vscode.ExtensionContext) {
 				fieldCount++;
 			}
 			// get the location of field delimiter characters
-			while (match = regEx.exec(currentLine)) {
+	
+			var match: RegExpExecArray | null = regEx.exec(currentLine);
+			while (match != null) {
 				endPos = activeEditor.document.positionAt(positionOffset + match.index);
 				startPos = previousEndPos;
 				previousEndPos = activeEditor.document.positionAt(positionOffset + match.index + 1);
 				// when the next field is located, apply a hover tag decoration to the previous field
-				if (startPos) {
+				if (startPos != null) {
 					// try/catch needed for custom 'Z' segments not listed in the HL7 data dictionary.
 					try {
 						fieldDescription = segmentDef.fields[fieldCount].desc;
@@ -699,6 +713,7 @@ export function activate(context: vscode.ExtensionContext) {
 					hoverDecorationList.push(decoration);
 				}
 				fieldCount++;
+				match = regEx.exec(currentLine);
 			}
 			// add a decoration for the last field in the segment (not bounded by a field delimiter) 
 			startPos = previousEndPos;
