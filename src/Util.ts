@@ -1,19 +1,71 @@
 /*
 	Rob Holme
 
-	Common functions used across the extension commands 
+	Common functions/objects used across the extension commands 
 */
 
 import * as vscode from 'vscode';
-import {Result} from './ExtractFieldResult'
-import {ResultCollection} from './ExtractFieldResult';
+import { Result } from './ExtractFieldResult'
+import { ResultCollection } from './ExtractFieldResult';
 
 // Hash table. String keys, numeric values
 interface HashTable<T> {
 	[key: string]: T;
 }
+
+export class Delimiter {
+	private _field: string = "|";
+	private _component: string = "^";
+	private _subcomponent: string = "&";
+	private _escape: string = "\\";
+	private _repeat: string = "~";
+
+	constructor(hl7MessageText: string | null) {
+		// parse the delimiters from the message. If message not provided (or does not contain a MSH segment) the default delimiters will be returned 
+		if (hl7MessageText != null) {
+			var hl7HeaderRegex: RegExp = /^MSH(.){5}/im;
+			var result: RegExpExecArray | null = hl7HeaderRegex.exec(hl7MessageText);
+			// if the result is null, then the default delimiter characters would apply
+			if (result != null) {
+				this._field = result[0][3];
+				this._component = result[0][4];
+				this._repeat = result[0][5];
+				this._escape = result[0][6];
+				this._subcomponent = result[0][7];
+			}
+		}
+	}
+
+	// return field delimiter
+	get Field() {
+		return this._field;
+	}
+
+	// return component delimiter
+	get Component() {
+		return this._component;
+	}
+
+	// return sub component delimiter
+	get SubComponent() {
+		return this._subcomponent;
+	}
+
+	// return escape delimiter
+	get Escape() {
+		return this._escape;
+	}
+
+	// return repeat delimiter
+	get Repeat() {
+		return this._repeat;
+	}
+}
+
+
 export abstract class Util {
 
+	/* Deprecated - using the Delimiter class instead
 	//----------------------------------------------------
 	// Parse the delimiters for the currently opened HL7 message. If more than one message per file 
 	// this will assume the delimiters are the same for all messages (only the first MSH segment 
@@ -56,27 +108,27 @@ export abstract class Util {
 		var delimiters = { FIELD: field, COMPONENT: component, REPEAT: repeat, ESCAPE: escape, SUBCOMPONENT: subcomponent };
 		return delimiters;
 	}
+*/
 
 	//----------------------------------------------------
 	// Identify if the vscode document contains a valid HL7 v2.x message
-	// @param {object} vsCodeDocument - the vscode document object to check.
+	// @param {vscode.TextDocument} vsCodeDocument - the vscode document object to check.
 	//
 	// @returns {boolean} - Return true if a HL7 v2.x file is detected, otherwise returns false
-	public static IsHL7File(vsCodeDocument : vscode.TextDocument) {
-		if (vsCodeDocument) {
-			if (vsCodeDocument.languageId == "hl7") {
+	public static IsHL7File(Hl7Document: vscode.TextDocument): boolean {
+		if (Hl7Document) {
+			// assumes document is valid if user has set HL7 file extension, or manually set the document ID. 
+			if (Hl7Document.languageId == "hl7") {
 				return true;
 			}
-			var allText = vsCodeDocument.getText();
-			var delimiters = Util.ParseDelimiters(allText);
-			var hl7HeaderRegex = new RegExp("(^MSH\\" + delimiters.FIELD + ")|(^FHS\\" + delimiters.FIELD + ")|(^BHS\\" + delimiters.FIELD + ")", "i");
-			if (hl7HeaderRegex.test(allText)) {
-				return true;
-			}
-			else {
-				return false;
-			}
+			// otherwise check for the presence of a header (or batch header) at the start of the message
+			var allText: string = Hl7Document.getText();
+			var delimiters: Delimiter = new Delimiter(documentText);
+			var hl7HeaderRegex: RegExp = new RegExp("(^MSH\\" + delimiters.Field + ")|(^FHS\\" + delimiters.Field + ")|(^BHS\\" + delimiters.Field + ")", "i");
+			// return true or false based on RegEx search result
+			return hl7HeaderRegex.test(documentText);
 		}
+		// no vscode.TextDocument provided, return false
 		else {
 			return false;
 		}
@@ -91,7 +143,7 @@ export abstract class Util {
 	// @returns {string} - Returns the string padded to the specified length. If the original string is longer than the requested
 	//						pad length, the original string is returned in full without truncation.
 	// TO DO: add optional true/false parameter to truncate the string if longer than pad length (default to false)
-	public static padRight(stringToPad : string, padLength : number, padChar : string) : string {
+	public static padRight(stringToPad: string, padLength: number, padChar: string): string {
 		// default to space if the padding char not supplied
 		if (padChar === undefined) {
 			padChar = ' ';
@@ -127,7 +179,7 @@ export abstract class Util {
 	// @returns {string} - Returns the string padded to the specified length. If the original string is longer than the requested
 	//						pad length, the original string is returned in full without truncation.
 	// TO DO: add optional true/false parameter to truncate the string if longer than pad length (default to false)
-	public static padLeft(stringToPad: string, padLength: number, padChar: string) : string {
+	public static padLeft(stringToPad: string, padLength: number, padChar: string): string {
 		// default to space if the padding char not supplied
 		if (padChar === undefined) {
 			padChar = ' ';
@@ -152,31 +204,31 @@ export abstract class Util {
 	//  From https://github.com/atishay/vscode-allautocomplete
 	//
 	public static findActiveDocsHack() {
-    // Based on https://github.com/eamodio/vscode-restore-editors/blob/master/src/documentManager.ts#L57
-    return new Promise<void>((resolve, reject) => {
-        let active = vscode.window.activeTextEditor as any;
-        let editor = active;
-        const openEditors: any[] = [];
-        function handleNextEditor() {
-            if (editor !== undefined) {
-                // If we didn't start with a valid editor, set one once we find it
-                if (active === undefined) {
-                    active = editor;
-                }
+		// Based on https://github.com/eamodio/vscode-restore-editors/blob/master/src/documentManager.ts#L57
+		return new Promise<void>((resolve, reject) => {
+			let active = vscode.window.activeTextEditor as any;
+			let editor = active;
+			const openEditors: any[] = [];
+			function handleNextEditor() {
+				if (editor !== undefined) {
+					// If we didn't start with a valid editor, set one once we find it
+					if (active === undefined) {
+						active = editor;
+					}
 
-                openEditors.push(editor);
-            }
-            // window.onDidChangeActiveTextEditor should work here but I don't know why it doesn't
-            setTimeout(() => {
-                editor = vscode.window.activeTextEditor;
-                if (editor !== undefined && openEditors.some(_ => _._id === editor._id)) return resolve();
-                if ((active === undefined && editor === undefined) || editor._id !== active._id) return handleNextEditor();
-                resolve();
-            }, 500);
-            vscode.commands.executeCommand('workbench.action.nextEditor')
-        }
-        handleNextEditor();
-    });
+					openEditors.push(editor);
+				}
+				// window.onDidChangeActiveTextEditor should work here but I don't know why it doesn't
+				setTimeout(() => {
+					editor = vscode.window.activeTextEditor;
+					if (editor !== undefined && openEditors.some(_ => _._id === editor._id)) return resolve();
+					if ((active === undefined && editor === undefined) || editor._id !== active._id) return handleNextEditor();
+					resolve();
+				}, 500);
+				vscode.commands.executeCommand('workbench.action.nextEditor')
+			}
+			handleNextEditor();
+		});
 
 	}
 
@@ -186,7 +238,7 @@ export abstract class Util {
 	// @param {number} fieldIndex - The index identifying the field in the segment (1 based index).
 	//
 	// @returns {ResultCollection} - returns an object containing the field value and the name of the file the value was found in.
-	public static GetFields(segmentName: string, fieldIndex: number) : ResultCollection {
+	public static GetFields(segmentName: string, fieldIndex: number): ResultCollection {
 		var results = new ResultCollection();
 
 		// exit if the editor is not active
@@ -227,7 +279,7 @@ export abstract class Util {
 	// @param {string} itemLocation - A string identifying the location of the field. e.g. PID-3
 	//
 	// @returns {boolean} - returns true if the location string's syntax is valid. It does not confiem if the item is present in the message or not.
-	public static IsItemLocationValid(itemLocation: string) :boolean {
+	public static IsItemLocationValid(itemLocation: string): boolean {
 		var itemLocationRegex = new RegExp("^[A-Z]{2}([A-Z]|[0-9])[-]([1-9][0-9]{0,2})$", 'i');
 		// test to see if the user has provided a valid location string
 		if (!itemLocationRegex.test(itemLocation)) {
@@ -243,7 +295,7 @@ export abstract class Util {
 	// @param {string} FieldDelimeter - field delimiter character
 	//
 	// @returns {bool} - returns true if the start of the line contains a segment name and field delimiter
-	public static IsSegmentValid(Segment: string, FieldDelimeter: string) : boolean {
+	public static IsSegmentValid(Segment: string, FieldDelimeter: string): boolean {
 		// default to "|" field delimiter if it is not supplied 
 		if (FieldDelimeter === undefined) {
 			FieldDelimeter = "|";
@@ -260,7 +312,7 @@ export abstract class Util {
 	// @param {string} hl7ItemlocationString - A string identifying the location of the field. e.g. PID-3
 	//
 	// @returns {int} - returns the field index contained in the HL7 location string parameter.
-	public static GetFieldIndex(hl7ItemlocationString: string) : number | null {
+	public static GetFieldIndex(hl7ItemlocationString: string): number | null {
 		var split1 = hl7ItemlocationString.split("-");
 		if (split1.length > 1) {
 			return parseInt(split1[1].split(".")[0]);
@@ -275,7 +327,7 @@ export abstract class Util {
 	// @param {string} hl7ItemlocationString - A string identifying the location of the field. e.g. PID-3
 	//
 	// @returns {string} - returns the segment name contained in the HL7 location string parameter.
-	public static GetSegmentNameFromLocationString(hl7ItemlocationString: string) : string {
+	public static GetSegmentNameFromLocationString(hl7ItemlocationString: string): string {
 		return hl7ItemlocationString.substring(0, 3);
 	}
 
@@ -287,9 +339,9 @@ export abstract class Util {
 	// @param {object} hl7Schema - An object containing the HL7 schema corresponding to the version of the HL7 message
 	//
 	// @return {object} - a hashtable containing HL7 location strings for every field matching the description supplied by the fieldDescription parameter. Includes partial matches.
-	public static FindLocationFromDescription(fieldDescription: string, hl7Schema: object) : object {
+	public static FindLocationFromDescription(fieldDescription: string, hl7Schema: object): object {
 
-		var locationHashtable:  HashTable<number[]> = {};
+		var locationHashtable: HashTable<number[]> = {};
 
 		var itemLocationRegex = new RegExp("^[A-Z]{2}([A-Z]|[0-9])[-]([0-9]{1,3})$", 'i');
 
@@ -300,7 +352,7 @@ export abstract class Util {
 		if (itemLocationRegex.test(fieldDescription)) {
 			// identify the segment name and field index from the location string
 			var segmentName: string = Util.GetSegmentNameFromLocationString(fieldDescription).toUpperCase();
-			var fieldIndex : number | null = Util.GetFieldIndex(fieldDescription);
+			var fieldIndex: number | null = Util.GetFieldIndex(fieldDescription);
 			if (fieldIndex != null) {
 				// the first field of MSH, FHS, BHS segments is the field delimiter, adjust index accordingly for MSH fields
 				if (segmentName == 'MSH' || segmentName == 'FHS' || segmentName == 'BHS') {
@@ -312,13 +364,13 @@ export abstract class Util {
 		// else assume the user has provided a field description to search for instead of a location.
 		else {
 			// find matching field names for any segment present in the message
-			var currentDoc = vscode.window.activeTextEditor?.document; 
+			var currentDoc = vscode.window.activeTextEditor?.document;
 			var segmentHash = Util.GetAllSegmentNames(currentDoc);
 			for (var key in segmentHash) {
 				var segmentDef = hl7Schema[key];
 				// ignore segments not present in the hl7 scheme (i.e. custom Z segments)
 				if (!(segmentDef === undefined)) {
-					var fieldIndexArray : number[] = [];
+					var fieldIndexArray: number[] = [];
 					for (var i = 0; i < segmentDef.fields.length; i++) {
 						if (nameRegEx.test(segmentDef.fields[i].desc)) {
 							// the first field of MSH, FHS, and BHS segments is the field delimiter, adjust index accordingly for these fields
@@ -352,7 +404,7 @@ export abstract class Util {
 		var allText = document.getText();
 		var delimiters = Util.ParseDelimiters(allText);
 
-		var segmentHashtable : HashTable<number> = {};
+		var segmentHashtable: HashTable<number> = {};
 		var segmentRegex = new RegExp("^[A-Z]{2}([A-Z]|[0-9])\\" + delimiters.FIELD, "i")
 		for (let i = 0; i < document.lineCount; i++) {
 			var currentSegment = document.lineAt(i).text;
