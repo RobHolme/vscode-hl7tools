@@ -16,11 +16,9 @@ import * as  MaskIdentifiers from './src/MaskIdentifiers.ts';
 import * as  FieldTreeView from './src/FieldTreeView.ts';
 import * as  TcpMllpClient from './src/SendHl7Message.ts';
 import * as  TcpMllpListener from './src/TCPListener.ts';
-import * as  ExtractFields from './src/ExtractFields.ts';
 import * as  CheckRequiredFields from './src/CheckRequiredFields.ts';
 import * as  FindFieldClass from './src/FindField.ts';
 import * as  SendHl7MessagePanelClass from './src/webviewpanels/SendHl7MessagePanel.ts';
-import { Console } from 'console';
 
 
 // the HL7 delimiters used by the message
