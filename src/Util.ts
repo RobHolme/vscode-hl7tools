@@ -122,7 +122,7 @@ export abstract class Util {
 				return true;
 			}
 			// otherwise check for the presence of a header (or batch header) at the start of the message
-			var allText: string = Hl7Document.getText();
+			var documentText: string = Hl7Document.getText();
 			var delimiters: Delimiter = new Delimiter(documentText);
 			var hl7HeaderRegex: RegExp = new RegExp("(^MSH\\" + delimiters.Field + ")|(^FHS\\" + delimiters.Field + ")|(^BHS\\" + delimiters.Field + ")", "i");
 			// return true or false based on RegEx search result
