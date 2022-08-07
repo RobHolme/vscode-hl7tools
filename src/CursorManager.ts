@@ -12,7 +12,7 @@ export abstract class CursorManager {
 	
 	//----------------------------------------------------
 	// Get the cursor position from the active text editor
-	// @retuens {vscode.Position} cursor position
+	// @returns {vscode.Position} cursor position
 	public static GetCursorPosition() : vscode.Position | undefined {
 		const editor: vscode.TextEditor | undefined = vscode.window.activeTextEditor;
 		if (editor != undefined) {
