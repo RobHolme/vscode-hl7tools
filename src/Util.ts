@@ -16,14 +16,24 @@ interface HashTable<T> {
 //----------------------------------------------------
 // Class defining delimter strings used by a HL7 message
 export class Delimiter {
-	private _field: string = "|";
-	private _component: string = "^";
-	private _subcomponent: string = "&";
-	private _escape: string = "\\";
-	private _repeat: string = "~";
+	private _field: string;
+	private _component: string;
+	private _subcomponent: string;
+	private _escape: string;
+	private _repeat: string;
 
-	// Parse the delimiters from the message. If message not provided (or does not contain a MSH segment) the default delimiters will be returned 
-	constructor(hl7MessageText: string | null) {
+	// set default values for delimiters
+	constructor() {
+		this._field = "|";
+		this._component = "^";
+		this._subcomponent = "&";
+		this._escape = "\\";
+		this._repeat = "~";
+
+	}
+
+	// Parse the delimiters from the message. If message does not contain a MSH segment the default delimiters will be returned. 
+	public ParseDelimitersFromMessage(hl7MessageText: string) {
 		if (hl7MessageText != null) {
 			var hl7HeaderRegex: RegExp = /^MSH(.){5}/im;
 			var result: RegExpExecArray | null = hl7HeaderRegex.exec(hl7MessageText);
@@ -78,7 +88,8 @@ export abstract class Util {
 			}
 			// otherwise check for the presence of a header (or batch header) at the start of the message
 			var documentText: string = Hl7Document.getText();
-			var delimiters: Delimiter = new Delimiter(documentText);
+			var delimiters: Delimiter = new Delimiter();
+			delimiters.ParseDelimitersFromMessage(documentText);
 			var hl7HeaderRegex: RegExp = new RegExp("(^MSH\\" + delimiters.Field + ")|(^FHS\\" + delimiters.Field + ")|(^BHS\\" + delimiters.Field + ")", "i");
 			// return true or false based on RegEx search result
 			return hl7HeaderRegex.test(documentText);
@@ -208,16 +219,17 @@ export abstract class Util {
 			var currentDoc = allTextDocuments[i];
 			if (Util.IsHL7File(currentDoc)) {
 				// load the message delimiters from the current file
-				var delimiters = new Delimiter(currentDoc.getText());
-				var segmentRegex = new RegExp("^" + segmentName + "\\" + delimiters.Field)
-				for (let lineIndex = 0; lineIndex < currentDoc.lineCount; lineIndex++) {
-					var currentLine = currentDoc.lineAt(lineIndex).text;
+				var delimiters: Delimiter = new Delimiter();
+				delimiters.ParseDelimitersFromMessage(currentDoc.getText());
+				var segmentRegex: RegExp = new RegExp("^" + segmentName + "\\" + delimiters.Field)
+				for (let lineIndex: number = 0; lineIndex < currentDoc.lineCount; lineIndex++) {
+					var currentLine: string = currentDoc.lineAt(lineIndex).text;
 					if (segmentRegex.test(currentLine)) {
-						var fields = currentLine.split(delimiters.Field);
+						var fields: string[] = currentLine.split(delimiters.Field);
 						if (fieldIndex < fields.length) {
-							var repeats = fields[fieldIndex].split(delimiters.Repeat);
-							for (let repeatIndex = 0; repeatIndex < repeats.length; repeatIndex++) {
-								var resultItem = new Result(currentDoc.fileName, repeats[repeatIndex]);
+							var repeats: string[] = fields[fieldIndex].split(delimiters.Repeat);
+							for (let repeatIndex: number = 0; repeatIndex < repeats.length; repeatIndex++) {
+								var resultItem: Result = new Result(currentDoc.fileName, repeats[repeatIndex]);
 								results.AddResult(resultItem);
 							}
 						}
@@ -361,8 +373,9 @@ export abstract class Util {
 			return segmentHashtable;
 		}
 		// load the message delimiters from the current file
-		var delimiters = new Delimiter(document.getText());
-
+		var delimiters = new Delimiter();
+		delimiters.ParseDelimitersFromMessage(document.getText());
+		
 		// search for segment patterns
 		var segmentRegex = new RegExp("^[A-Z]{2}([A-Z]|[0-9])\\" + delimiters.Field, "i")
 		for (let i = 0; i < document.lineCount; i++) {
