@@ -5,7 +5,7 @@
 	validate if the field data confirms to the correct data type. 
 */
 import { TextDocument } from 'vscode';
-import { Util } from './Util'; 
+import { Delimiter } from './Util'; 
 import { MissingRequiredFieldResult } from './CheckRequiredFieldsResult';
 
 
@@ -16,15 +16,16 @@ import { MissingRequiredFieldResult } from './CheckRequiredFieldsResult';
 export function CheckAllFields(HL7Message: TextDocument, Hl7Schema: object) : MissingRequiredFieldResult[] {
 
 	var resultsToReturn: MissingRequiredFieldResult[] = [];
-	// load the message delimiters from the current file
-	var delimiters = Util.ParseDelimiters();
+	// parse the HL7 delimiter characters from the current message
+	var delimiters: Delimiter = new Delimiter();
+	delimiters.ParseDelimitersFromMessage(HL7Message.getText());
 
-	var segmentRegex: RegExp = new RegExp("^[A-Z]{2}([A-Z]|[0-9])\\" + delimiters.FIELD, "i")
+	var segmentRegex: RegExp = new RegExp("^[A-Z]{2}([A-Z]|[0-9])\\" + delimiters.Field, "i")
 	for (let i: number = 0; i < HL7Message.lineCount; i++) {
 		var indexOffset: number = 0;
 		var currentLineNumber: number = i + 1;
 		var currentSegment: string = HL7Message.lineAt(i).text;
-		var segmentFieldList: string[] = currentSegment.split(delimiters.FIELD)
+		var segmentFieldList: string[] = currentSegment.split(delimiters.Field)
 		if (segmentRegex.test(currentSegment)) {
 			var segmentName: string = segmentFieldList[0]; // the first item in the list will be the segment name
 			// special case for MSH, FHS, BHS segment, where 1st field is the field delimiter character. All fields are offset by 1 when splitting a MSH segment by the field delimiter.
@@ -32,7 +33,7 @@ export function CheckAllFields(HL7Message: TextDocument, Hl7Schema: object) : Mi
 				indexOffset = 1
 			}
 
-			var requiredFieldIndexes = GetRequiredFields(segmentName, Hl7Schema);
+			var requiredFieldIndexes: number[] = GetRequiredFields(segmentName, Hl7Schema);
 			for (let j: number = 0; j < requiredFieldIndexes.length; j++) {
 				// the field is not present in the message
 				if (segmentFieldList.length <= requiredFieldIndexes[j - indexOffset]) {
