@@ -8,6 +8,7 @@ const workspace = vscode.workspace;
 // load local modules
 import { Delimiter, Util } from './Util'; 
 import { ExtensionPreferences } from './ExtensionPreferences';
+import { ExtractAllFields, ExtractReturnCode } from './ExtractFields';
 
 // TODO update these to refer to .ts module
 import * as  HighlightFields from './src/HighlightField.ts';
@@ -38,7 +39,7 @@ var hoverDecorationList: vscode.DecorationOptions[] = [];
 // stores the current hover decorations
 var currentHoverDecoration: vscode.TextEditorDecorationType;
 //  use this to prevent th active do hack from running more than once per session
-var activeDocHackRun = false;
+var activeDocHackRun: boolean = false;
 // store field locations used by Find and FindNext functions
 var findFieldLocation;
 // retrieves user preferences for the extension
@@ -499,19 +500,19 @@ export function activate(context: vscode.ExtensionContext) {
 
 		// cycle through all documents, otherwise they won't be included.
 		// ONLY NEED TO DO THIS ONCE PER SESSION, OPENING NEW DOCUMENTS IS FINE.
-		if (this.activeDocHackRun) {
+		if (activeDocHackRun) {
 			var fieldPromise = vscode.window.showInputBox({ prompt: "Enter the field to extract (e.g. PID-3)" });
 			fieldPromise.then(function (fieldToExtract) {
-				ExtractFields.ExtractAllFields(fieldToExtract);
+				ExtractAllFields(fieldToExtract);
 			});
 		}
 		else {
-			this.activeDocHackRun = true;
-			activeDocHackPromise = Util.findActiveDocsHack();
+			activeDocHackRun = true;
+			var activeDocHackPromise: Promise<void> = Util.findActiveDocsHack();
 			activeDocHackPromise.then(function () {
 				var fieldPromise = vscode.window.showInputBox({ prompt: "Enter the field to extract (e.g. PID-3)" });
 				fieldPromise.then(function (fieldToExtract) {
-					ExtractFields.ExtractAllFields(fieldToExtract);
+					ExtractAllFields(fieldToExtract);
 				});
 			});
 		}
