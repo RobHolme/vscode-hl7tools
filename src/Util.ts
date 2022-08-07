@@ -13,6 +13,8 @@ interface HashTable<T> {
 	[key: string]: T;
 }
 
+//----------------------------------------------------
+// Class defining delimter strings used by a HL7 message
 export class Delimiter {
 	private _field: string = "|";
 	private _component: string = "^";
@@ -20,8 +22,8 @@ export class Delimiter {
 	private _escape: string = "\\";
 	private _repeat: string = "~";
 
+	// Parse the delimiters from the message. If message not provided (or does not contain a MSH segment) the default delimiters will be returned 
 	constructor(hl7MessageText: string | null) {
-		// parse the delimiters from the message. If message not provided (or does not contain a MSH segment) the default delimiters will be returned 
 		if (hl7MessageText != null) {
 			var hl7HeaderRegex: RegExp = /^MSH(.){5}/im;
 			var result: RegExpExecArray | null = hl7HeaderRegex.exec(hl7MessageText);
@@ -40,22 +42,18 @@ export class Delimiter {
 	get Field() {
 		return this._field;
 	}
-
 	// return component delimiter
 	get Component() {
 		return this._component;
 	}
-
 	// return sub component delimiter
 	get SubComponent() {
 		return this._subcomponent;
 	}
-
 	// return escape delimiter
 	get Escape() {
 		return this._escape;
 	}
-
 	// return repeat delimiter
 	get Repeat() {
 		return this._repeat;
@@ -63,52 +61,9 @@ export class Delimiter {
 }
 
 
+//----------------------------------------------------
+// Util static class containing common functions used across commands
 export abstract class Util {
-
-	/* Deprecated - using the Delimiter class instead
-	//----------------------------------------------------
-	// Parse the delimiters for the currently opened HL7 message. If more than one message per file 
-	// this will assume the delimiters are the same for all messages (only the first MSH segment 
-	// is examined). The currentMessage parameter supplies the message text to parse, if not supplied
-	// as a parameter the active document in the editor will be used instead.
-	//
-	// @param {string} currentMessage - A string containing the message text of a HL7 message to parse the delimiters in. 
-	//									If not supplied, the function will default to using the active document in the editor.
-	//
-	// @returns {object} - returns a object containing the HL7 delimiters used in the message
-	public static ParseDelimiters(currentMessage: string | void) : object {
-		let _currentMessage : string;
-		// if the message content is not passed in as a string, get the text from the current document open in the editor
-		if (!currentMessage) {
-			const vscode = require('vscode');
-			var window = vscode.window;
-			_currentMessage = window.activeTextEditor.document.getText();
-		}
-		else {
-			_currentMessage = currentMessage
-		}
-
-		// default delimiter values, return these if not detected in the message header
-		var field = "|";
-		var component = "^";
-		var subcomponent = "&";
-		var escape = "\\";
-		var repeat = "~";
-
-		var hl7HeaderRegex = /^MSH(.){5}/im;
-		var result = hl7HeaderRegex.exec(_currentMessage);
-		// if the result is null, then the default delimiter characters would apply
-		if (result != null) {
-			field = result[0][3];
-			component = result[0][4];
-			repeat = result[0][5];
-			escape = result[0][6];
-			subcomponent = result[0][7];
-		}
-		var delimiters = { FIELD: field, COMPONENT: component, REPEAT: repeat, ESCAPE: escape, SUBCOMPONENT: subcomponent };
-		return delimiters;
-	}
-*/
 
 	//----------------------------------------------------
 	// Identify if the vscode document contains a valid HL7 v2.x message
@@ -133,6 +88,7 @@ export abstract class Util {
 			return false;
 		}
 	}
+
 
 	//----------------------------------------------------
 	// Add trailing characters to right pad a string
@@ -169,6 +125,7 @@ export abstract class Util {
 		}
 		return stringToPad;
 	}
+
 
 	//----------------------------------------------------
 	// Add leading characters to left pad a string
@@ -228,8 +185,8 @@ export abstract class Util {
 			}
 			handleNextEditor();
 		});
-
 	}
+
 
 	//----------------------------------------------------
 	// return a resultCollection object containing all of the field value(s) identified by the segmentName and fieldIndex parameters.
@@ -270,6 +227,7 @@ export abstract class Util {
 		}
 		return results;
 	}
+
 
 	//----------------------------------------------------
 	// Confirm if the location string provided is valid.
@@ -319,6 +277,7 @@ export abstract class Util {
 			return null;
 		}
 	}
+
 
 	//----------------------------------------------------
 	// extract the segment name from the hl7 item location string
@@ -389,6 +348,7 @@ export abstract class Util {
 		return locationHashtable;
 	}
 
+
 	//----------------------------------------------------
 	// return the unique names of all segments in the message. Return as a associative array indexed by segment name. key values are not consequential.
 	// @param {vscode.TextDocument} document - a vscode document object containing a HL7 message
@@ -402,7 +362,7 @@ export abstract class Util {
 		}
 		// load the message delimiters from the current file
 		var delimiters = new Delimiter(document.getText());
-		
+
 		// search for segment patterns
 		var segmentRegex = new RegExp("^[A-Z]{2}([A-Z]|[0-9])\\" + delimiters.Field, "i")
 		for (let i = 0; i < document.lineCount; i++) {
@@ -416,6 +376,7 @@ export abstract class Util {
 		}
 		return segmentHashtable;
 	}
+
 
 	//----------------------------------------------------
 	// return the End Of Line (EOL) character used by the active file in the text editor
@@ -444,6 +405,7 @@ export abstract class Util {
 			console.error(error);
 		});
 	}
+
 }
 
 
