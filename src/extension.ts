@@ -115,7 +115,6 @@ function LoadHL7Schema() {
 
 
 	// load custom segment schemas
-	//		preferences = new extensionPreferencesClass.ExtensionPreferences();
 	if (preferences.CustomSegmentSchema != '') {
 		if (fs.existsSync(preferences.CustomSegmentSchema)) {
 			customSchema = require(preferences.CustomSegmentSchema);
@@ -193,7 +192,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 				// if the AddLinebreakOnActivation user preference is set, call the 'Add LineBreaks to Segment' command
 				// load user preferences for the extension (SocketEncoding)
-				if (preferences.AddLinebreakOnActivation == true) {
+				if (preferences.AddLineBreakOnActivation == true) {
 					AddLinebreaksToSegments();
 				}
 
