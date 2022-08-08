@@ -7,8 +7,11 @@
 
 //----------------------------------------------------
 // defines a class representing a component item
-class Component {
-	constructor(Name) {
+export class Component {
+	private _name: string;
+	private _value: string;
+
+	constructor(Name: string) {
         this._name = Name;
         this._value = "";
     }
@@ -28,14 +31,16 @@ class Component {
 // defines a class representing a Field. This is a collection of FieldItems. 
 // A repeating Field contains many FieldItems, a non-repeating Field contains 
 // one FieldItem.  
-class Field {
+export class Field {
+	private _fieldItems: FieldItem[];
+	private _maxLength: number;
     constructor() {
         this._fieldItems = [];
         this._maxLength = 0;
     }
     // add a new FieldItem object to this collection. Calculate the maximum
     // length of all FieldItems to allow output to be formatted in columns
-    AddFieldItem(FieldItem) {
+    AddFieldItem(FieldItem: FieldItem) {
         this._fieldItems.push(FieldItem);
         if (FieldItem.MaxLength > this._maxLength) {
             this._maxLength = FieldItem.MaxLength;
@@ -56,15 +61,20 @@ class Field {
 // If the field does not contain components, the value attribute is set to the 
 // value of the HL7 field. If the field contains components, the value will be empty
 // and the components will contain values instead.
-class FieldItem {
-    constructor(Name) {
+export class FieldItem {
+	private _name: string;
+	private _components: Component[];
+	private _value: string;
+	private _maxLength: number;
+
+    constructor(Name: string) {
         this._name = Name;
         this._components = [];
         this._value = "";
         this._maxLength = Name.length + 12 || 0;
     }
     // add a new component to the array.
-    AddComponent(Component) {
+    AddComponent(Component: Component) {
         this._components.push(Component)
         // record the length of the longest component description to calculate length to pad all strings.
         // allow minimum of 17 characters for indenting, component index etc.
@@ -75,7 +85,7 @@ class FieldItem {
     get Name() {
         return this._name;
     }
-    set Name(Name) {
+    set Name(Name: string) {
         this._name = Name;
         // update the maxLength attribute if needed (allowing 12 characters for field name, field index, repeat index etc.)
         if ((Name.length + 12) > this._maxLength) {
@@ -98,15 +108,20 @@ class FieldItem {
 
 //----------------------------------------------------
 // This class represents a HL7 segment. It contains a list of Field objects.
-class Segment {
-    constructor(Name) {
+export class Segment {
+	private _name: string;
+	private _fields: Field[];
+	private _maxLength: number;
+	private _description:string;
+	 
+    constructor(Name: string) {
         this._name = Name;
         this._fields = [];
         this._maxLength = 0;
         this._description = "";
     }
     // add a new Field object to the collection of fields.
-    AddField(Field) {
+    AddField(Field: Field) {
         this._fields.push(Field);
         if (Field.MaxLength > this._maxLength) {
             this._maxLength = Field.MaxLength;
@@ -135,8 +150,3 @@ class Segment {
         return this._fields;
     }
 }
-
-exports.Component = Component;
-exports.Field = Field;
-exports.FieldItem = FieldItem;
-exports.Segment = Segment;
