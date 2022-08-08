@@ -3,15 +3,18 @@
 // Implements functions to send a HL7 v2.x message via TCP using MLLP framing.
 
 
+
+// required modules
+import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as net from 'net';
+import * as tls from 'tls';
+import { ExtensionPreferences } from './ExtensionPreferences';
+
 // MLLP framing codes
 const VT = String.fromCharCode(0x0b);
 const FS = String.fromCharCode(0x1c);
 const CR = String.fromCharCode(0x0d);
-
-// required modules
-const vscode = require('vscode');
-const fs = require('fs');
-const extensionPreferencesClass = require('./ExtensionPreferences.js');
 
 //----------------------------------------------------
 // Send a HL7 v2.x message to a remote host using MLLP framing.
@@ -20,19 +23,21 @@ const extensionPreferencesClass = require('./ExtensionPreferences.js');
 // @param {string} HL7Message - a string representing a HL7 v2.x message
 // @param {int} Timeout - the timeout value for the TCP socket in milliseconds. Defaults to 5000 if not supplied. 
 // @param {bool} UseTLS - if true connect using TLS
+// @param {} encoding
 // @param {object} webViewPanel - reference to webview panel object so that status update messages can be returned
-function SendMessage(Host, Port, HL7Message, Timeout, UseTls, encoding, ignoreCertError, webViewPanel) {
+export function SendMessage(Host: string, Port: number, HL7Message: string, Timeout: number, UseTls: boolean, encoding: BufferEncoding, webViewPanel: vscode.webViewPanel) {
 
 	// default to 5 second timeout for TCP socket if not supplied as a parameter
 	Timeout = Timeout || 5000;
 
 	// Establish a TCP socket connection to the remote host, write the HL7 message to the socket. 
-	var net = require('net');
-	var tls = require('tls');
-	preferences = new extensionPreferencesClass.ExtensionPreferences();
+
+	var preferences: ExtensionPreferences = new ExtensionPreferences();
 
 	// replace any newlines added by the text area with CRs.
 	HL7Message = HL7Message.replace(new RegExp('\n', 'g'), String.fromCharCode(0x0d));
+
+	var client: net.Socket | tls.TLSSocket;
 
 	// connect with TLS
 	if (UseTls) {
@@ -47,19 +52,17 @@ function SendMessage(Host, Port, HL7Message, Timeout, UseTls, encoding, ignoreCe
 
 
 		// load custom trusted CAs defined in user preferences
-		const trustedCAList = preferences.TrustedCertificateAuthorities;
+		const trustedCAList: string[] = preferences.TrustedCertificateAuthorities;
 
 		// patch CreateSecureContext to add in custom CAs
 		// based on the Monkey Patch discussed in https://medium.com/trabe/monkey-patching-tls-in-node-js-to-support-self-signed-certificates-with-custom-root-cas-25c7396dfd2a
 		const origCreateSecureContext = tls.createSecureContext;
 		tls.createSecureContext = options => {
 			const context = origCreateSecureContext(options);
-			var pem;
-			for (i = 0; i < trustedCAList.length; i++) {
+			var pem: string = "";
+			for (let i:number = 0; i < trustedCAList.length; i++) {
 				if (fs.existsSync(trustedCAList[i])) {
-					pem += fs
-						.readFileSync(trustedCAList[i], { encoding: "ascii" })
-						.replace(/\r\n/g, "\n");
+					pem += fs.readFileSync(trustedCAList[i], { encoding: "ascii" }).replace(/\r\n/g, "\n");
 				}
 				else {
 					console.log('User provided trusted CA not found: ' + trustedCAList[i]);
@@ -80,7 +83,7 @@ function SendMessage(Host, Port, HL7Message, Timeout, UseTls, encoding, ignoreCe
 			return context;
 		};
 
-		var client = tls.connect(Port, tlsOptions, function () {
+		client = tls.connect(Port, tlsOptions, function () {
 			// check for certificate validation errors
 			if (client.authorized) {
 				webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Connected to ' + Host + ':' + Port + ' using TLS \r\n');
@@ -95,7 +98,7 @@ function SendMessage(Host, Port, HL7Message, Timeout, UseTls, encoding, ignoreCe
 	}
 	// connect without TLS
 	else {
-		var client = new net.Socket();
+		client = new net.Socket();
 		client.setTimeout(Timeout);
 		client.setEncoding(encoding);
 		client.connect(Port, Host, function () {
@@ -129,7 +132,7 @@ function SendMessage(Host, Port, HL7Message, Timeout, UseTls, encoding, ignoreCe
 	// receive ACK, log to console 
 	client.on('data', function (data) {
 		// convert the ACK response to string, remove the MLLP header and footer characters. 
-		Ack = data.toString(encoding);
+		var Ack: string = data.toString(encoding);
 		webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] ACK Received: \r\n');
 		Ack = Ack.replace(VT, "");
 		Ack = Ack.replace(FS + CR, "");
@@ -148,4 +151,3 @@ function SendMessage(Host, Port, HL7Message, Timeout, UseTls, encoding, ignoreCe
 	});
 }
 
-exports.SendMessage = SendMessage;

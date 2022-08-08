@@ -6,7 +6,7 @@
 */
 
 
-const vscode = require('vscode');
+import * as vscode from 'vscode';
 
 class SendHl7MessagePanel {
 	// private fields
