@@ -6,8 +6,8 @@
 */
 
 // load modules
-const common = require('./common.js');
-const hl7Message = require('./HL7Message.js');
+import { Delimiter, Util } from "./Util";
+import {Field, Component, FieldItem, Segment} from "./HL7Message"
 
 
 //----------------------------------------------------
@@ -17,27 +17,27 @@ const hl7Message = require('./HL7Message.js');
 // @param {array} hl7Fields - An array containing the field descriptions
 //
 // @returns {string} - returns a string containing the segment fields formatted on a tree view
-function DisplaySegmentAsTree(segment, hl7Schema, hl7Fields) {
+export function DisplaySegmentAsTree(segment: Segment, hl7Schema: Object, hl7Fields, delimiters: Delimiter): string {
 	// build the segment object to display	
-	var segmentToDisplay = BuildSegmentObject(segment, hl7Schema, hl7Fields)
+	var segmentToDisplay: Segment = BuildSegmentObject(segment, hl7Schema, hl7Fields, delimiters);
 
 	// display the items to the output window. Enumerate through all Fields in the Segment object,
 	// then all FieldItems in the Field collection. If the FieldItem objects contain Components, list
 	// all components values and names. If there are no components, then list the FieldItem value and name.  
-	var output = segmentToDisplay.Name + " - " + segmentToDisplay.Description + "\n\n";
-	segmentToDisplay.Fields.forEach(function (fieldElement, fieldIndex) {
-		fieldElement.FieldItems.forEach(function (fieldItemElement, fieldItemIndex) {
+	var output: string = segmentToDisplay.Name + " - " + segmentToDisplay.Description + "\n\n";
+	segmentToDisplay.Fields.forEach(function (fieldElement: Field, fieldIndex: number) {
+		fieldElement.FieldItems.forEach(function (fieldItemElement: FieldItem, fieldItemIndex: number) {
 			// if a field is repeating (i.e. a Field object contains more than 1 FieldItem objects) include the repeat index in the field location 
-			var repeat = "";
+			var repeat: string = "";
 			if (fieldElement.FieldItems.length > 1) {
 				repeat = "[" + (fieldItemIndex + 1) + "]"
 			}
-			var fieldValue = fieldItemElement.Value;
+			var fieldValue: string = fieldItemElement.Value;
 			output += common.padRight(segmentToDisplay.Name + "-" + (fieldIndex + 1) + repeat + " " + fieldItemElement.Name + ":", segmentToDisplay.MaxLength) + fieldValue + "\n";
 			fieldItemElement.Components.forEach(function (componentElement, componentIndex) {
-				var border = " ├ ";
+				var border: string = " ├ ";
 				if (componentIndex + 1 == fieldItemElement.Components.length) {
-					border = " └ "
+					border = " └ ";
 				}
 				output += common.padRight(border + segmentToDisplay.Name + "-" + (fieldIndex + 1) + repeat + "." + (componentIndex + 1) + " (" + componentElement.Name + ") ", segmentToDisplay.MaxLength) + componentElement.Value + "\n";
 			});
@@ -53,12 +53,10 @@ function DisplaySegmentAsTree(segment, hl7Schema, hl7Fields) {
 // @param {array} hl7Fields - An array containing the field descriptions
 //
 // @returns {Segment} - returns a string containing the segment fields formatted on a tree view
-function BuildSegmentObject(segment, hl7Schema, hl7Fields) {
-	// load the message delimiters from the current file
-	var delimiters = common.ParseDelimiters();
-	var repeatNum = 0;
-	// get the list of fields as an array. After saving the segment name, remove it from the array so it contains fields only (i.e. remove the item at index 0)
-	var segmentFieldArray = segment.split(delimiters.FIELD);
+function BuildSegmentObject(segment: Segment, hl7Schema, hl7Fields, delimiters: Delimiter) :Segment {
+
+ 	// get the list of fields as an array. After saving the segment name, remove it from the array so it contains fields only (i.e. remove the item at index 0)
+	var segmentFieldArray = segment.split(delimiters.Field);
 	var segmentName = segmentFieldArray[0];
 	segmentFieldArray.splice(0, 1);
 	var segmentDefinition = hl7Schema[segmentName];
@@ -66,7 +64,7 @@ function BuildSegmentObject(segment, hl7Schema, hl7Fields) {
 
 	// special case for MSH, FHS, and BHS segment, since the field delimiter is MSH-1
 	if (segmentName == 'MSH' || segmentName == 'FHS' || segmentName == 'BHS') {
-		segmentFieldArray.splice(0, 0, delimiters.FIELD);
+		segmentFieldArray.splice(0, 0, delimiters.Field);
 	}
 
 	// if a custom segment ('Z' segment) is selected, the segment name will not exist in hl7Schema. 
@@ -103,7 +101,7 @@ function BuildSegmentObject(segment, hl7Schema, hl7Fields) {
 			}
 		}
 		// for each repeating field item create a FieldItem object and add it to Field object
-		var fieldRepeats = segmentFieldArray[i].split(delimiters.REPEAT);
+		var fieldRepeats = segmentFieldArray[i].split(delimiters.Repeat);
 		// don't split MSH-2, BHS-2, or FHS-2  since it contains the repeat delimiter by definition
 		if ((segmentName == 'MSH' || segmentName == 'FHS' || segmentName == 'BHS') && (i == 1)) {
 			fieldRepeats = segmentFieldArray[1].split();
@@ -117,7 +115,7 @@ function BuildSegmentObject(segment, hl7Schema, hl7Fields) {
 				components = fieldRepeats[j].split();
 			}
 			else {
-				components = fieldRepeats[j].split(delimiters.COMPONENT);
+				components = fieldRepeats[j].split(delimiters.Component);
 			}
 			if (components.length > 1) {
 				for (k = 0; k < components.length; k++) {
@@ -142,5 +140,3 @@ function BuildSegmentObject(segment, hl7Schema, hl7Fields) {
 	}
 	return segmentToReturn;
 }
-
-exports.DisplaySegmentAsTree = DisplaySegmentAsTree;

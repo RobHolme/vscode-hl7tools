@@ -299,7 +299,7 @@ export function activate(context: vscode.ExtensionContext) {
 		if (Util.IsSegmentValid(segment, delimiters.Field)) {
 			var segmentArray = segment.split(delimiters.Field);
 			var segmentName = segmentArray[0];
-			var output = FieldTreeView.DisplaySegmentAsTree(segment, hl7Schema, hl7Fields);
+			var output = FieldTreeView.DisplaySegmentAsTree(segment, hl7Schema, hl7Fields, delimiters);
 
 			// write the results to visual studio code's output window
 			var channel = vscode.window.createOutputChannel('HL7 Fields - ' + segmentName + ' (' + fileName + ')');
