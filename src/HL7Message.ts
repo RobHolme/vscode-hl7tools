@@ -40,7 +40,7 @@ export class Field {
     }
     // add a new FieldItem object to this collection. Calculate the maximum
     // length of all FieldItems to allow output to be formatted in columns
-    AddFieldItem(FieldItem: FieldItem) {
+    public AddFieldItem(FieldItem: FieldItem) {
         this._fieldItems.push(FieldItem);
         if (FieldItem.MaxLength > this._maxLength) {
             this._maxLength = FieldItem.MaxLength;
@@ -74,7 +74,7 @@ export class FieldItem {
         this._maxLength = Name.length + 12 || 0;
     }
     // add a new component to the array.
-    AddComponent(Component: Component) {
+    public AddComponent(Component: Component) {
         this._components.push(Component)
         // record the length of the longest component description to calculate length to pad all strings.
         // allow minimum of 17 characters for indenting, component index etc.
@@ -121,7 +121,7 @@ export class Segment {
         this._description = "";
     }
     // add a new Field object to the collection of fields.
-    AddField(Field: Field) {
+    public AddField(Field: Field) {
         this._fields.push(Field);
         if (Field.MaxLength > this._maxLength) {
             this._maxLength = Field.MaxLength;
@@ -149,4 +149,23 @@ export class Segment {
     get Fields() {
         return this._fields;
     }
+}
+
+
+//----------------------------------------------------
+// This class represents a HL7 message. Segments aren't ordered (other than order that they are added).
+export class HL7Message {
+	private _segments: Segment[];
+	constructor () {
+		this._segments = [];
+	}
+
+	// add a segment to the message
+	public AddSegment(segment: Segment) {
+		this._segments.push(segment);
+	}
+
+	get Segments() {
+		return this._segments;
+	}
 }
