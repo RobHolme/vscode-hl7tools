@@ -6,107 +6,122 @@
 */
 
 // load modules
-const common = require('./common.js');
-const findFieldResultClass = require('./FindFieldResult.js');
-const cursorManagerClass = require('./CursorManager.js');
+import * as vscode from 'vscode';
+import { Delimiter, Util } from './Util'; 
+import { FindFieldResult } from './FindFieldResult';
+import { CursorManager } from './CursorManager';
+
+
+// return codes
+export enum findNextReturnCode {
+	ERROR_NO_SEARCH_DEFINED = 0,
+	ERROR_NO_FIELDS_FOUND = 1,
+	SUCCESS_FIELD_FOUND = 2,
+	SUCCESS_LAST_FIELD_FOUND = 3,
+	ERROR_UNKNOWN = 4
+}; 
+
 
 //----------------------------------------------------
 // class defining methods to search for the location of HL7 fields within a vscode document
 // @param {object} CurrentDocument - an object referring to vscode.window.activeTextEditor.document
 // @param {object} HL7Schema - an object referring to the version of the HL7 schema used by the message
-class FindField {
-	constructor(CurrentDocument, HL7Schema) {
-		this.hl7Schema = HL7Schema;
-		this.document = CurrentDocument;
-		this.locationArray = [];
-		this.results = {};
-		this.findResultsIndex = 0;
-		this.totalFieldsFound = 0;
-		this.searchString = "";
-		this.cursor = new cursorManagerClass.CursorManager();
-		// enum containing the return codes for the FindNext() function
-		this.findNextReturnCode = {
-			ERROR_NO_SEARCH_DEFINED: 0,
-			ERROR_NO_FIELDS_FOUND: 1,
-			SUCCESS_FIELD_FOUND: 2,
-			SUCCESS_LAST_FIELD_FOUND: 3,
-		};
+export class FindField {
+	private _hl7Schema: object;
+	private _document: vscode.TextDocument;
+	private _locationArray: FindFieldResult[];
+	private _findResultsIndex: number;
+	private _totalFieldsFound: number;
+	private _searchString: string;
+
+
+	constructor(CurrentDocument: vscode.TextDocument, HL7Schema: object) {
+		this._hl7Schema = HL7Schema;
+		this._document = CurrentDocument;
+		this._locationArray = [];
+		this._findResultsIndex = 0;
+		this._totalFieldsFound = 0;
+		this._searchString = "";
 	}
 
-	Find(FieldLocation) {
-		this.searchString = FieldLocation;
-		this.locationArray = this.FindAll(FieldLocation);
-		this.totalFieldsFound = this.locationArray.length;
-		if (this.totalFieldsFound > 0) { 
-			this.findResultsIndex = 1;
-			this.cursor.CursorPosition = this.locationArray[0];
-			return this.findNextReturnCode.SUCCESS_FIELD_FOUND;
+	public Find(FieldLocation: string): findNextReturnCode {
+		this._searchString = FieldLocation;
+		this._locationArray = this.FindAll(FieldLocation);
+		this._totalFieldsFound = this._locationArray.length;
+		if (this._totalFieldsFound > 0) { 
+			this._findResultsIndex = 1;
+			CursorManager.SetCursorPosition(this._locationArray[0]);
+			return findNextReturnCode.SUCCESS_FIELD_FOUND;
 		}
 		else {
-			return this.findNextReturnCode.ERROR_NO_FIELDS_FOUND;
+			return findNextReturnCode.ERROR_NO_FIELDS_FOUND;
 		}
 	}
 
 	//----------------------------------------------------
 	// Find the next instance of the current item in the. The return value indicates the result of the FindNext function.
-	FindNext() {
+	public FindNext(): findNextReturnCode {
 		// The find function hasn't been called yet.
-		if (this.searchString == "") {
-			return this.findNextReturnCode.ERROR_NO_SEARCH_DEFINED;
+		if (this._searchString == "") {
+			return findNextReturnCode.ERROR_NO_SEARCH_DEFINED;
 		}
 		// no results found
-		if (this.totalFieldsFound == 0) {
-			return this.findNextReturnCode.ERROR_NO_FIELDS_FOUND;
+		if (this._totalFieldsFound == 0) {
+			return findNextReturnCode.ERROR_NO_FIELDS_FOUND;
 		}
 		// the next field was found, with more fields remaining
-		if (this.locationArray.length > this.findResultsIndex) {
-			this.findResultsIndex++;
-			this.cursor.CursorPosition = this.locationArray[this.findResultsIndex - 1];
-			return this.findNextReturnCode.SUCCESS_FIELD_FOUND;
+		if (this._locationArray.length > this._findResultsIndex) {
+			this._findResultsIndex++;
+			CursorManager.SetCursorPosition(this._locationArray[this._findResultsIndex - 1]);
+			return findNextReturnCode.SUCCESS_FIELD_FOUND;
 		}
 		// the last field was located, so start from the beginning again 
-		if (this.locationArray.length == this.findResultsIndex) {
-			this.findResultsIndex = 1;
-			this.cursor.CursorPosition = this.locationArray[this.findResultsIndex - 1];
-			return this.findNextReturnCode.SUCCESS_LAST_FIELD_FOUND;
+		if (this._locationArray.length == this._findResultsIndex) {
+			this._findResultsIndex = 1;
+			CursorManager.SetCursorPosition(this._locationArray[this._findResultsIndex - 1]);
+			return findNextReturnCode.SUCCESS_LAST_FIELD_FOUND;
 		}
+		return findNextReturnCode.ERROR_UNKNOWN;
 	}
 
 	//----------------------------------------------------
 	// @param {string} FieldLocation - a string identifying the location of the field in the HL7 message.
 	// @return {FindFieldResult} - return the row and  
 	//
-	FindAll(FieldLocation) {
-		var results = [];
-		var allText = this.document.getText();
-		var delimiters = common.ParseDelimiters(allText);
-		var locationArray = common.FindLocationFromDescription(FieldLocation, this.hl7Schema);
-		var fieldRegEx = new RegExp("\\" + delimiters.FIELD, "g");
+	public FindAll(FieldLocation: string): FindFieldResult[] {
+		var results: FindFieldResult[] = [];
+		var allText = this._document.getText();
+		var delimiters = new Delimiter;
+		delimiters.ParseDelimitersFromMessage(allText);
+		var locationArray = Util.FindLocationFromDescription(FieldLocation, this._hl7Schema);
+		var fieldRegEx: RegExp = new RegExp("\\" + delimiters.Field, "g");
 		for (var key in locationArray) {
-			for (var i = 0; i < locationArray[key].length; i++) {
+			for (let i: number = 0; i < this._locationArray[key].length; i++) {
 				var segmentName = key;
 				var fieldIndex = locationArray[key][i];
-				var segmentRegex = new RegExp("^" + segmentName + "\\" + delimiters.FIELD);
+				var segmentRegex = new RegExp("^" + segmentName + "\\" + delimiters.Field);
 
 				// search each line in the file for the field
-				for (var lineIndex = 0; lineIndex < this.document.lineCount; lineIndex++) {
-					var currentLine = this.document.lineAt(lineIndex).text;
+				for (var lineIndex = 0; lineIndex < this._document.lineCount; lineIndex++) {
+					var currentLine = this._document.lineAt(lineIndex).text;
 					if (segmentRegex.test(currentLine)) {
-						var fieldCount = 1;
-						while (match = fieldRegEx.exec(currentLine)) {
+						var fieldCount: number = 1;
+						var match: RegExpExecArray | null = fieldRegEx.exec(currentLine)
+						while (match) {
 							if (fieldCount == fieldIndex) {
 								// find the location of the start of the next field, to set the end of the selection (endPos) 
-								var startPos = match.index+1
-								var endPos = currentLine.indexOf(delimiters.FIELD,startPos)
+								var startPos: number = match.index+1
+								var endPos: number = currentLine.indexOf(delimiters.Field,startPos)
 								// no more fields found, set the end position to the last character in the line.
 								if (endPos < startPos) {
 									endPos = currentLine.length;
 								}
 								// return the result. Select from end to start, so the cursor is at the start of the field.
-								var result = new findFieldResultClass.FindFieldResult(lineIndex, endPos, startPos);
+								var result: FindFieldResult = new FindFieldResult(lineIndex, endPos, startPos);
 								results.push(result);
 							}
 							fieldCount++;
+							match = fieldRegEx.exec(currentLine);
 						}
 					}
 				}
@@ -114,6 +129,6 @@ class FindField {
 		}
 		return results;
 	}
+
 }
 
-module.exports = FindField;
