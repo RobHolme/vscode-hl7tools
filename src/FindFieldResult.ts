@@ -6,28 +6,31 @@
 
 //----------------------------------------------------
 // class defining the line number and column number of the start of a field
-class FindFieldResult {
+export class FindFieldResult {
+	private _line: number;
+	private _startCharacter: string;
+	private _endCharacter: string;
 	// @param {int} Line - the line number of the field (0 based)
 	// @param {int} StartCharacter - the number characters to the start of the field (0 based)
 	// @param {int} EndCharacter - the number characters to the end of the field (0 based)
 	
-	constructor(Line, StartCharacter, EndCharacter) {
-		this.line = Line;
-		this.startCharacter = StartCharacter;
-		this.endCharacter = EndCharacter;
+	constructor(Line: number, StartCharacter: string, EndCharacter: string) {
+		this._line = Line;
+		this._startCharacter = StartCharacter;
+		this._endCharacter = EndCharacter;
 	}
 
 	get Line() {
-		return this.line;
+		return this._line;
 	}
 
 	get StartCharacter() {
-		return this.startCharacter;
+		return this._startCharacter;
 	}
 
 	get EndCharacter() {
-		return this.endCharacter;
+		return this._endCharacter;
 	}
+	
 }
 
-exports.FindFieldResult = FindFieldResult;
