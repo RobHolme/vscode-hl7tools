@@ -9,7 +9,7 @@ import { Result } from './ExtractFieldResult'
 import { ResultCollection } from './ExtractFieldResult';
 
 // Hash table. String keys, numeric values
-interface HashTable<T> {
+export interface HashTable<T> {
 	[key: string]: T;
 }
 
@@ -46,6 +46,16 @@ export class Delimiter {
 				this._subcomponent = result[0][7];
 			}
 		}
+	}
+
+	// parse the delimiters from the active editor window
+	public ParseDelimitersFromActiveEditor(){
+		var editor = vscode.window.activeTextEditor;
+		if (!editor) {
+			return;
+		}
+		var currentDoc = editor.document;
+		this.ParseDelimitersFromMessage(currentDoc.getText());
 	}
 
 	// return field delimiter
@@ -308,7 +318,7 @@ export abstract class Util {
 	// @param {object} hl7Schema - An object containing the HL7 schema corresponding to the version of the HL7 message
 	//
 	// @return {object} - a hashtable containing HL7 location strings for every field matching the description supplied by the fieldDescription parameter. Includes partial matches.
-	public static FindLocationFromDescription(fieldDescription: string, hl7Schema: object): object {
+	public static FindLocationFromDescription(fieldDescription: string, hl7Schema: object): HashTable<number[]> {
 
 		var locationHashtable: HashTable<number[]> = {};
 
