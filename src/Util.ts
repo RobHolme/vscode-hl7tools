@@ -90,7 +90,7 @@ export abstract class Util {
 	// @param {vscode.TextDocument} vsCodeDocument - the vscode document object to check.
 	//
 	// @returns {boolean} - Return true if a HL7 v2.x file is detected, otherwise returns false
-	public static IsHL7File(Hl7Document: vscode.TextDocument): boolean {
+	public static IsHL7File(Hl7Document: vscode.TextDocument | undefined): boolean {
 		if (Hl7Document) {
 			// assumes document is valid if user has set HL7 file extension, or manually set the document ID. 
 			if (Hl7Document.languageId == "hl7") {
