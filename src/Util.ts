@@ -120,7 +120,13 @@ export abstract class Util {
 	// @returns {string} - Returns the string padded to the specified length. If the original string is longer than the requested
 	//						pad length, the original string is returned in full without truncation.
 	// TO DO: add optional true/false parameter to truncate the string if longer than pad length (default to false)
-	public static padRight(stringToPad: string, padLength: number, padChar: string): string {
+
+	// overload functions
+	public static padRight(stringToPad: string, padLength: number): string;
+	public static padRight(stringToPad: string, padLength: number, padChar: string): string;
+
+	public static padRight(stringToPad: string, padLength: number, padChar?: string): string {
+	
 		// default to space if the padding char not supplied
 		if (padChar === undefined) {
 			padChar = ' ';
@@ -148,6 +154,7 @@ export abstract class Util {
 	}
 
 
+
 	//----------------------------------------------------
 	// Add leading characters to left pad a string
 	// @param {string} stringToPad - the original string to apply the padding to.
@@ -157,7 +164,12 @@ export abstract class Util {
 	// @returns {string} - Returns the string padded to the specified length. If the original string is longer than the requested
 	//						pad length, the original string is returned in full without truncation.
 	// TO DO: add optional true/false parameter to truncate the string if longer than pad length (default to false)
-	public static padLeft(stringToPad: string, padLength: number, padChar: string): string {
+
+	// overload functions
+	public static padLeft(stringToPad: string, padLength: number): string;
+	public static padLeft(stringToPad: string, padLength: number, padChar: string): string;
+	
+	public static padLeft(stringToPad: string, padLength: number, padChar?: string): string {
 		// default to space if the padding char not supplied
 		if (padChar === undefined) {
 			padChar = ' ';
