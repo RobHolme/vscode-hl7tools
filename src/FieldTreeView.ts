@@ -7,7 +7,7 @@
 
 // load modules
 import { Delimiter, Util } from "./Util";
-import {Field, Component, FieldItem, Segment} from "./HL7Message"
+import {Field, FieldItem, Component, Segment} from "./HL7Message"
 
 
 //----------------------------------------------------
@@ -17,7 +17,7 @@ import {Field, Component, FieldItem, Segment} from "./HL7Message"
 // @param {array} hl7Fields - An array containing the field descriptions
 //
 // @returns {string} - returns a string containing the segment fields formatted on a tree view
-export function DisplaySegmentAsTree(segment: Segment, hl7Schema: Object, hl7Fields, delimiters: Delimiter): string {
+export function DisplaySegmentAsTree(segment: Segment, hl7Schema: Object, hl7Fields: Object, delimiters: Delimiter): string {
 	// build the segment object to display	
 	var segmentToDisplay: Segment = BuildSegmentObject(segment, hl7Schema, hl7Fields, delimiters);
 
@@ -53,14 +53,14 @@ export function DisplaySegmentAsTree(segment: Segment, hl7Schema: Object, hl7Fie
 // @param {array} hl7Fields - An array containing the field descriptions
 //
 // @returns {Segment} - returns a string containing the segment fields formatted on a tree view
-function BuildSegmentObject(segment: Segment, hl7Schema, hl7Fields, delimiters: Delimiter) :Segment {
+function BuildSegmentObject(segment: string, hl7Schema: Object, hl7Fields: Object, delimiters: Delimiter): Segment {
 
  	// get the list of fields as an array. After saving the segment name, remove it from the array so it contains fields only (i.e. remove the item at index 0)
-	var segmentFieldArray = segment.split(delimiters.Field);
+	var segmentFieldArray: string[] = segment.split(delimiters.Field);
 	var segmentName = segmentFieldArray[0];
 	segmentFieldArray.splice(0, 1);
 	var segmentDefinition = hl7Schema[segmentName];
-	var segmentToReturn = new hl7Message.Segment(segmentName)
+	var segmentToReturn = new Segment(segmentName)
 
 	// special case for MSH, FHS, and BHS segment, since the field delimiter is MSH-1
 	if (segmentName == 'MSH' || segmentName == 'FHS' || segmentName == 'BHS') {
@@ -77,10 +77,9 @@ function BuildSegmentObject(segment: Segment, hl7Schema, hl7Fields, delimiters: 
 		segmentToReturn.Description = segmentDefinition.desc;
 	}
 
-	for (var i = 0; i < segmentFieldArray.length; i++) {
-		var fieldName;
-		// determine the field name, default to 'Unknown' if not found in schema
-		fieldName = "undefined";
+	for (let i: number = 0; i < segmentFieldArray.length; i++) {
+		var fieldName: string = "undefined";
+		// determine the field name, default to 'undefined' if not found in schema
 		if (segmentDefinition) {
 			if (i < segmentDefinition.fields.length) {
 				fieldName = segmentDefinition.fields[i].desc;
@@ -88,37 +87,41 @@ function BuildSegmentObject(segment: Segment, hl7Schema, hl7Fields, delimiters: 
 		}
 		// empty field - just add the description and continue to next field
 		if (segmentFieldArray[i] == "") {
-			var field = new hl7Message.Field();
-			var fieldItem = new hl7Message.FieldItem(fieldName);
+			var field: Field = new Field();
+			var fieldItem: FieldItem = new FieldItem(fieldName);
 			field.AddFieldItem(fieldItem);
 			segmentToReturn.AddField(field);
 			continue;
 		}
-		var fieldDataType;
+		var fieldDataType: string;
 		if (segmentDefinition) {
 			if (i < segmentDefinition.fields.length) {
 				fieldDataType = segmentDefinition.fields[i].datatype;
 			}
 		}
 		// for each repeating field item create a FieldItem object and add it to Field object
-		var fieldRepeats = segmentFieldArray[i].split(delimiters.Repeat);
+		var fieldRepeats: string[] = [];
 		// don't split MSH-2, BHS-2, or FHS-2  since it contains the repeat delimiter by definition
 		if ((segmentName == 'MSH' || segmentName == 'FHS' || segmentName == 'BHS') && (i == 1)) {
-			fieldRepeats = segmentFieldArray[1].split();
+			fieldRepeats[0] = segmentFieldArray[i]; 
 		}
-		var field = new hl7Message.Field();
-		for (var j = 0; j < fieldRepeats.length; j++) {
-			var fieldItem = new hl7Message.FieldItem(fieldName);
+		else {
+			fieldRepeats = segmentFieldArray[i].split(delimiters.Repeat);
+		}
+		var field: Field = new Field();
+		for (let j: number = 0; j < fieldRepeats.length; j++) {
+			var fieldItem: FieldItem = new FieldItem(fieldName);
+			var components: string[] = [];
 			// for each component, add it to the FieldItem's list fo Components. If no component delimiters found, assign the field value to FieldItem's Value property 
 			// don't split the field into components if it is MSH-2, BHS-2, or FHS-2 as by definition it contains the component delimiter but is a single field.
 			if ((segmentName == 'MSH' || segmentName == 'FHS' || segmentName == 'BHS') && (i == 1)) {
-				components = fieldRepeats[j].split();
+				components[0] = fieldRepeats[j];
 			}
 			else {
 				components = fieldRepeats[j].split(delimiters.Component);
 			}
 			if (components.length > 1) {
-				for (k = 0; k < components.length; k++) {
+				for (let k: number = 0; k < components.length; k++) {
 					// confirm the field data type is listed in the schema, if not the component description will be 'undefined'
 					var componentName = "undefined";
 					if (fieldDataType) {
@@ -126,7 +129,7 @@ function BuildSegmentObject(segment: Segment, hl7Schema, hl7Fields, delimiters: 
 							componentName = hl7Fields[fieldDataType].subfields[k].desc;
 						}
 					}
-					var component = new hl7Message.Component(componentName);
+					var component = new Component(componentName);
 					component.Value = components[k];
 					fieldItem.AddComponent(component);
 				}
