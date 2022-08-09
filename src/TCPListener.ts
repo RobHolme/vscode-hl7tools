@@ -4,19 +4,19 @@
 // Message received are displayed as new documents in the active editor.
 
 // required modules
-const vscode = require('vscode');
-var net = require("net");
-const common = require('./common.js');
-const extensionPreferencesClass = require('./ExtensionPreferences.js');
+import * as vscode from 'vscode';
+import * as net from 'net';
+import { Delimiter, Util } from './Util';
+import { ExtensionPreferences } from './ExtensionPreferences';
 
 // MLLP framing codes
-const VT = String.fromCharCode(0x0b);
-const FS = String.fromCharCode(0x1c);
-const CR = String.fromCharCode(0x0d);
+const VT: string = String.fromCharCode(0x0b);
+const FS: string = String.fromCharCode(0x1c);
+const CR: string = String.fromCharCode(0x0d);
 
-var listenerStarted = false;
-var server;
-var hl7Message = "";
+var listenerStarted: boolean = false;
+var server: net.Server;
+var hl7Message: string = "";
 
 
 //----------------------------------------------------
@@ -25,23 +25,25 @@ var hl7Message = "";
 // @param {string} Message - the HL7 message triggering the ACK.
 //
 // @return {string} - A string containing the ACK message generated for the HL7 message
-function GenerateAckFromMessage(HL7Message) {
-	var delimiters = common.ParseDelimiters(HL7Message);
-	var ackMessage = "";
+function GenerateAckFromMessage(HL7Message: string): string {
+	// parse delimiters from current message
+	var delimiters: Delimiter = new Delimiter();
+	delimiters.ParseDelimitersFromMessage(HL7Message);
+	var ackMessage: string = "";
 
 	// confirm the message received starts with a MSH segment.
 	// TO DO: add support for batch mode messages that start with FHS, BHS, BTS, or FTS segments. Also query field & component separator instead of assuming '|' & '^'. 
-	var hl7HeaderRegex = new RegExp("^MSH\\" + delimiters.FIELD, "i");
+	var hl7HeaderRegex: RegExp = new RegExp("^MSH\\" + delimiters.Field, "i");
 	if (hl7HeaderRegex.test(HL7Message)) {
-		var mshFields = HL7Message.split(delimiters.FIELD);
+		var mshFields: string[] = HL7Message.split(delimiters.Field);
 		// check length of MSH segment
-		var currentDateTime = new Date();
-		var messageTimestamp = + currentDateTime.getFullYear().toString() + common.padLeft((currentDateTime.getMonth() + 1).toString(), 2, '0') + common.padLeft(currentDateTime.getDate().toString(), 2, '0') + common.padLeft(currentDateTime.getHours().toString(), 2, '0') + common.padLeft(currentDateTime.getMinutes().toString(), 2, '0') + common.padLeft(currentDateTime.getSeconds().toString(), 2, '0');
+		var currentDateTime: Date = new Date();
+		var messageTimestamp: string = + currentDateTime.getFullYear().toString() + Util.padLeft((currentDateTime.getMonth() + 1).toString(), 2, '0') + Util.padLeft(currentDateTime.getDate().toString(), 2, '0') + Util.padLeft(currentDateTime.getHours().toString(), 2, '0') + Util.padLeft(currentDateTime.getMinutes().toString(), 2, '0') + Util.padLeft(currentDateTime.getSeconds().toString(), 2, '0');
 		// the following fields in the array are required fields, or occur before required fields, so they should be present in the array if the message conforms to the HL7 spec. Check the array length to be sure.
 		if (mshFields.length < 12) {
 		}
 		else {
-			ackMessage = VT + "MSH" + delimiters.FIELD + delimiters.COMPONENT + delimiters.REPEAT + delimiters.ESCAPE + delimiters.SUBCOMPONENT + delimiters.FIELD + "vscode-hl7tools" + delimiters.FIELD + mshFields[5] + delimiters.FIELD + mshFields[2] + delimiters.FIELD + mshFields[3] + delimiters.FIELD + messageTimestamp + delimiters.FIELD + delimiters.FIELD + "ACK" + delimiters.COMPONENT + mshFields[8].split(delimiters.COMPONENT)[1] + delimiters.FIELD + mshFields[9] + delimiters.FIELD + mshFields[10] + delimiters.FIELD + mshFields[11] + CR + "MSA" + delimiters.FIELD + "CA" + delimiters.FIELD + mshFields[9] + FS + CR;
+			ackMessage = VT + "MSH" + delimiters.Field + delimiters.Component + delimiters.Repeat + delimiters.Escape + delimiters.SubComponent + delimiters.Field + "vscode-hl7tools" + delimiters.Field + mshFields[5] + delimiters.Field + mshFields[2] + delimiters.Field + mshFields[3] + delimiters.Field + messageTimestamp + delimiters.Field + delimiters.Field + "ACK" + delimiters.Component + mshFields[8].split(delimiters.Component)[1] + delimiters.Field + mshFields[9] + delimiters.Field + mshFields[10] + delimiters.Field + mshFields[11] + CR + "MSA" + delimiters.Field + "CA" + delimiters.Field + mshFields[9] + FS + CR;
 		}
 	}
 	return ackMessage;
@@ -50,7 +52,7 @@ function GenerateAckFromMessage(HL7Message) {
 //----------------------------------------------------
 // Receive a HL7 v2.x message from a remote host using MLLP framing.
 // @param {int} Port - the port number to listen for messages on
-function StartListener(Port) {
+export function StartListener(Port: number): void {
 	// return if the listener is already running
 	if (listenerStarted === true) {
 		console.log("The listener is already running");
@@ -59,7 +61,7 @@ function StartListener(Port) {
 	}
 
 	// load user preferences for the extension (SocketEncoding)
-	preferences = new extensionPreferencesClass.ExtensionPreferences();
+	var preferences: ExtensionPreferences = new ExtensionPreferences();
 
 	// send a ACK message in reply (unless user preference to send ACK is set to false)
 	listenerStarted = true;
@@ -72,26 +74,26 @@ function StartListener(Port) {
 		socket.addListener("data", function (data) {
 			hl7Message += data;
 			// search for the start of the MLLP frame (VT character)
-			var start = hl7Message.indexOf(VT);
+			var start: number = hl7Message.indexOf(VT);
 			if (start >= 0) {
 				// search for the end of the MLLP frame (FS char followed by a CR char). This identifies the end of the message in the stream.
-				var end = hl7Message.indexOf(FS + CR);
+				var end: number = hl7Message.indexOf(FS + CR);
 				if (end > start) {
 					// remove the MLLP frame characters from the message
 					hl7Message = hl7Message.replace(VT, "");
 					hl7Message = hl7Message.replace(FS + CR, "");
 
 					// send a ACK message in reply (unless user preference to send ACK is set to false)
-					if (preferences.SendACK === true) {
+					if (preferences.SendACK == true) {
 						GenerateAckFromMessage(hl7Message);
-						var ackReply = GenerateAckFromMessage(hl7Message);
+						var ackReply: string = GenerateAckFromMessage(hl7Message);
 						if (ackReply.length > 0) {
 							socket.write(ackReply, preferences.SocketEncodingPreference);
 						}
 					}
 
 					// open the message in a new document window.
-					common.CreateNewDocument(hl7Message, "hl7");
+					Util.CreateNewDocument(hl7Message, "hl7");
 					hl7Message = "";
 					start = 0;
 					end = 0;
@@ -112,7 +114,7 @@ function StartListener(Port) {
 
 	// handle error if port is already in use. 
 	// TO DO: this isn't always triggered if the port is already in use, why???? 
-	server.on('error', function (err) {
+	server.on('error', function (err: NodeJS.ErrnoException) {
 		if (err.code == 'EADDRINUSE') {
 			vscode.window.showWarningMessage("The port " + Port + " is already in use. Choose another port.");
 			listenerStarted = false;
@@ -122,7 +124,7 @@ function StartListener(Port) {
 
 //----------------------------------------------------
 // Stops all listeners
-function StopListener() {
+export function StopListener() {
 	if (listenerStarted === true) {
 		server.close(function () {
 			listenerStarted = false;
@@ -134,6 +136,4 @@ function StopListener() {
 	}
 }
 
-exports.StartListener = StartListener;
-exports.StopListener = StopListener;
 
