@@ -285,7 +285,12 @@ export abstract class Util {
 	// @param {string} FieldDelimeter - field delimiter character
 	//
 	// @returns {bool} - returns true if the start of the line contains a segment name and field delimiter
-	public static IsSegmentValid(Segment: string, FieldDelimeter: string): boolean {
+
+	// overloaded methods
+	public static IsSegmentValid(Segment: string): boolean;
+	public static IsSegmentValid(Segment: string, FieldDelimeter: string): boolean; 
+
+	public static IsSegmentValid(Segment: string, FieldDelimeter?: string): boolean {
 		// default to "|" field delimiter if it is not supplied 
 		if (FieldDelimeter === undefined) {
 			FieldDelimeter = "|";
