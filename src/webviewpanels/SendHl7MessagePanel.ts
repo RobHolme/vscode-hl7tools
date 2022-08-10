@@ -8,69 +8,69 @@
 
 import * as vscode from 'vscode';
 
-class SendHl7MessagePanel {
+export class SendHl7MessagePanel {
 	// private fields
-	#panel;
-	#extensionUri;
-	#hl7Message;
-	#encodingPreference;
+	private _panel: vscode.WebviewPanel;
+	private _extensionUri: vscode.Uri;
+	private _hl7Message: string = "";
+	private _encodingPreference: string = "utf8";
 
 	// constructor
-	constructor(extensionUri) {
-		this.#extensionUri = extensionUri;
-		this.#panel = vscode.window.createWebviewPanel("SendHL7Message", "Send HL7 Message", vscode.ViewColumn.Two, {
+	constructor(extensionUri: vscode.Uri) {
+		this._extensionUri = extensionUri;
+		this._panel = vscode.window.createWebviewPanel("SendHL7Message", "Send HL7 Message", vscode.ViewColumn.Two, {
 			enableScripts: true
 		});
 	}
 
 	// render the panel with a supplied HL7 Message
-	render(hl7Message) {
-		this.#hl7Message = hl7Message;
-		if (this.#panel) {
-			this.#panel.reveal(vscode.ViewColumn.Two);
+	public render(hl7Message: string): void {
+		this._hl7Message = hl7Message;
+		if (this._panel) {
+			this._panel.reveal(vscode.ViewColumn.Two);
 		}
-		this.#panel.webview.html = this.#getHtmlForWebview(this.#panel.webview, this.#extensionUri);
+		this._panel.webview.html = this.getHtmlForWebview(this._panel.webview, this._extensionUri);
 	}
 
 	// set the preferred encoding methods for strings
 	// if set this will be used to set the default value for the encoding drop down list.
-	set encodingPreference(encoding) {
-		this.#encodingPreference = encoding;
+	set encodingPreference(encoding: string) {
+		this._encodingPreference = encoding;
 	}
 
 	// getter method to return the panel supporting the webview
 	get panel() {
-		return this.#panel;
+		return this._panel;
 	}
 
 	// post a status message update to the webview panel
-	updateStatus(statusMessage) {
-		this.#panel.webview.postMessage({
+	public updateStatus(statusMessage: string) {
+		this._panel.webview.postMessage({
 			command: 'status',
 			statusMessage: statusMessage
 		});
 	}
 
 	// send a message to populate the favourites drop list if any are set
-	updateFavourites(favourites) {
+	public updateFavourites(favourites) {
 		if (favourites.length > 0) {
-			this.#panel.webview.postMessage({
+			this._panel.webview.postMessage({
 				command: 'setFavourites',
 				favouriteList: favourites
 			});
 		}
 	}
 
-	dispose() {
-		this.#panel.dispose();
+	public dispose() {
+		this._panel.dispose();
 	}
 
 	// private method to render the HTML for the web view
-	#getHtmlForWebview(webview, extensionUri) {
-		const nonce = this.#getNonce();
+	 private getHtmlForWebview(webview: vscode.Webview, extensionUri: vscode.Uri) {
+		const nonce = this.getNonce();
 		const stylesPathMainPath = vscode.Uri.joinPath(extensionUri, 'media', 'stylesheet.css');
 		const stylesMainUri = webview.asWebviewUri(stylesPathMainPath);
-		const encodingPreference = this.#encodingPreference;
+		const encodingPreference = this._encodingPreference;
 
 
 		return `<!DOCTYPE html>
@@ -204,7 +204,7 @@ class SendHl7MessagePanel {
 				<button id="btnExit">Exit</button>
 				<br><br>
 				<label class=field for="hl7Message">Message: </label>
-				<textarea name="hl7Message" id="hl7Message" wrap='off' rows="15">${this.#hl7Message}</textarea><br><br>
+				<textarea name="hl7Message" id="hl7Message" wrap='off' rows="15">${this._hl7Message}</textarea><br><br>
 				<label for="result">Result: </label>
 				<textarea name="result" id="result" wrap='off' rows="6"></textarea><br><br>
 		</body>
@@ -212,7 +212,7 @@ class SendHl7MessagePanel {
 	}
 
 	// private method to return a generated nonce value for the CSP header (and in line scripts)
-	#getNonce() {
+	private getNonce() {
 		let text = '';
 		const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 		for (let i = 0; i < 32; i++) {
