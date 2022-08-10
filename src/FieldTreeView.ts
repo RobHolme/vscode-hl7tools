@@ -7,7 +7,7 @@
 
 // load modules
 import { Delimiter, Util } from "./Util";
-import {Field, FieldItem, Component, Segment} from "./HL7Message"
+import { Field, FieldItem, Component, Segment } from "./HL7Message"
 
 
 //----------------------------------------------------
@@ -17,7 +17,7 @@ import {Field, FieldItem, Component, Segment} from "./HL7Message"
 // @param {array} hl7Fields - An array containing the field descriptions
 //
 // @returns {string} - returns a string containing the segment fields formatted on a tree view
-export function DisplaySegmentAsTree(segment: Segment, hl7Schema: Object, hl7Fields: Object, delimiters: Delimiter): string {
+export function DisplaySegmentAsTree(segment: string, hl7Schema: Object, hl7Fields: Object, delimiters: Delimiter): string {
 	// build the segment object to display	
 	var segmentToDisplay: Segment = BuildSegmentObject(segment, hl7Schema, hl7Fields, delimiters);
 
@@ -33,13 +33,13 @@ export function DisplaySegmentAsTree(segment: Segment, hl7Schema: Object, hl7Fie
 				repeat = "[" + (fieldItemIndex + 1) + "]"
 			}
 			var fieldValue: string = fieldItemElement.Value;
-			output += common.padRight(segmentToDisplay.Name + "-" + (fieldIndex + 1) + repeat + " " + fieldItemElement.Name + ":", segmentToDisplay.MaxLength) + fieldValue + "\n";
+			output += Util.padRight(segmentToDisplay.Name + "-" + (fieldIndex + 1) + repeat + " " + fieldItemElement.Name + ":", segmentToDisplay.MaxLength) + fieldValue + "\n";
 			fieldItemElement.Components.forEach(function (componentElement, componentIndex) {
 				var border: string = " ├ ";
 				if (componentIndex + 1 == fieldItemElement.Components.length) {
 					border = " └ ";
 				}
-				output += common.padRight(border + segmentToDisplay.Name + "-" + (fieldIndex + 1) + repeat + "." + (componentIndex + 1) + " (" + componentElement.Name + ") ", segmentToDisplay.MaxLength) + componentElement.Value + "\n";
+				output += Util.padRight(border + segmentToDisplay.Name + "-" + (fieldIndex + 1) + repeat + "." + (componentIndex + 1) + " (" + componentElement.Name + ") ", segmentToDisplay.MaxLength) + componentElement.Value + "\n";
 			});
 		});
 	});
