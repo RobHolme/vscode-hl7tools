@@ -28,7 +28,7 @@ export enum findNextReturnCode {
 // @param {object} HL7Schema - an object referring to the version of the HL7 schema used by the message
 export class FindField {
 	private _hl7Schema: object;
-	private _document: vscode.TextDocument;
+	private _document: vscode.TextDocument | null;
 	private _locationArray: FindFieldResult[];
 	private _findResultsIndex: number;
 	private _totalFieldsFound: number;
@@ -90,7 +90,11 @@ export class FindField {
 	//
 	public FindAll(FieldLocation: string): FindFieldResult[] {
 		var results: FindFieldResult[] = [];
-		var allText = this._document.getText();
+		var allText: string;
+		if (this._document === null) {
+			return results;
+		} 
+		allText = this._document.getText();
 		var delimiters = new Delimiter;
 		delimiters.ParseDelimitersFromMessage(allText);
 		var locationArray = Util.FindLocationFromDescription(FieldLocation, this._hl7Schema);
