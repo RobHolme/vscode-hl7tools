@@ -8,6 +8,7 @@
 
 
 // load modules
+import * as vscode from 'vscode'
 import { Delimiter, Util } from "./Util";
 
 
