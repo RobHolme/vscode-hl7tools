@@ -9,25 +9,24 @@ const workspace = vscode.workspace;
 import { Delimiter, Util } from './Util'; 
 import { ExtensionPreferences } from './ExtensionPreferences';
 import { ExtractAllFields, ExtractReturnCode } from './ExtractFields';
-
-// TODO update these to refer to .ts module
-import * as  HighlightFields from './src/HighlightField.ts';
-import * as  MaskIdentifiers from './src/MaskIdentifiers.ts';
-import * as  FieldTreeView from './src/FieldTreeView.ts';
-import * as  TcpMllpClient from './src/SendHl7Message.ts';
-import * as  TcpMllpListener from './src/TCPListener.ts';
-import * as  CheckRequiredFields from './src/CheckRequiredFields.ts';
-import * as  FindFieldClass from './src/FindField.ts';
-import * as  SendHl7MessagePanelClass from './src/webviewpanels/SendHl7MessagePanel.ts';
-
+import { ShowHighlights, HighlightFieldReturnCode} from './HighlightField';
+import { DisplaySegmentAsTree } from './FieldTreeView';
+import { MaskAllIdentifiers } from './MaskIdentifiers';
+import { SendMessage } from './SendHl7Message'
+import { StartListener, StopListener } from './TCPListener';
+import { CheckAllFields } from './CheckRequiredFields';
+import { MissingRequiredFieldResult } from './CheckRequiredFieldsResult';
+import { FindField, findNextReturnCode } from './FindField';
+import { SendHl7MessagePanel } from './webviewpanels/SendHl7MessagePanel';
+import { stringify } from 'querystring';
 
 // the HL7 delimiters used by the message
 //var delimiters : object;
 // Store the HL7 schema and associated field descriptions
-var hl7Schema;
-var hl7Fields;
+var hl7Schema: Object;
+var hl7Fields: Object;
 // this stores the location or name of the field to highlight. The highlight is re-applied as the active document changes.
-var currentItemLocation;
+var currentItemLocation: string;
 // the status bar item to display current HL7 schema this is loaded
 var statusbarHL7Version = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
 // the list of fields with hover decorations (displaying the field description);
@@ -39,7 +38,7 @@ var currentHoverDecoration: vscode.TextEditorDecorationType;
 //  use this to prevent th active do hack from running more than once per session
 var activeDocHackRun: boolean = false;
 // store field locations used by Find and FindNext functions
-var findFieldLocation;
+var findFieldLocation : FindField;
 // retrieves user preferences for the extension
 var preferences : ExtensionPreferences = new ExtensionPreferences();
 // default schema to use if not detected
@@ -115,7 +114,7 @@ function LoadHL7Schema() {
 	// load custom segment schemas
 	if (preferences.CustomSegmentSchema != '') {
 		if (fs.existsSync(preferences.CustomSegmentSchema)) {
-			customSchema = require(preferences.CustomSegmentSchema);
+			var customSchema = require(preferences.CustomSegmentSchema);
 			hl7Schema = { ...hl7Schema, ...customSchema } // append the custom segments
 		}
 		else {
@@ -164,25 +163,20 @@ export function activate(context: vscode.ExtensionContext) {
 			statusbarHL7Version.hide();
 			return;
 		}
-	}
-	// exit if the editor is not active
-	if (!activeEditor) {
-		return;
-	}
-	else {
-		// load the HL7 schema based on the version reported by the MSH segment
-		LoadHL7Schema();
-		// apply the hover descriptions for each field
-		UpdateFieldDescriptions();
-		// create a new FindField object when the active editor changes
-		findFieldLocation = new FindFieldClass(vscode.window.activeTextEditor.document, hl7Schema);
+		else {
+			// load the HL7 schema based on the version reported by the MSH segment
+			LoadHL7Schema();
+			// apply the hover descriptions for each field
+			UpdateFieldDescriptions();
+			// create a new FindField object when the active editor changes
+			findFieldLocation = new FindField(activeEditor.document, hl7Schema);
+		}
 	}
 
 	// the active document has changed. 
 	vscode.window.onDidChangeActiveTextEditor(function (editor) {
 		console.log("onDidChangeActiveTextEditor event");
 		if (editor) {
-
 			// only activate the field descriptions if it is identified as a HL7 file  
 			if (Util.IsHL7File(editor.document)) {
 				// the new document may be a different version of HL7, so load the appropriate version of schema
@@ -196,10 +190,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 				UpdateFieldDescriptions();
 
-				var result = HighlightFields.ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour);
+				ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour);
 
 				// create a new FindField object when the active editor changes
-				findFieldLocation = new FindFieldClass(vscode.window.activeTextEditor.document, hl7Schema);
+				findFieldLocation = new FindField(editor.document, hl7Schema);
 			}
 			else {
 				statusbarHL7Version.hide();
@@ -216,7 +210,7 @@ export function activate(context: vscode.ExtensionContext) {
 				UpdateFieldDescriptions();
 				// re apply field highlighting if set
 				if (currentItemLocation) {
-					HighlightFields.ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour);
+					ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour);
 				}
 			}
 			else {
@@ -232,10 +226,15 @@ export function activate(context: vscode.ExtensionContext) {
 		// prompt the user for the location of the HL7 field (e.g. PID-3). Validate the location via regex.
 		var itemLocationPromise = vscode.window.showInputBox({ prompt: "Enter HL7 item location (e.g. 'PID-3'), or the partial field name (e.g. 'name')" });
 		itemLocationPromise.then(function (itemLocation) {
-			currentItemLocation = itemLocation;
-			var result = HighlightFields.ShowHighlights(itemLocation, hl7Schema, preferences.HighlightBackgroundColour);
-			if (result == HighlightFields.HighlightFieldReturnCode.ERROR_NO_FIELDS_FOUND) {
-				vscode.window.showWarningMessage("A field matching " + itemLocation + " could not be located in the message");
+			if (itemLocation) {
+				currentItemLocation = itemLocation;
+				var result: HighlightFieldReturnCode = ShowHighlights(itemLocation, hl7Schema, preferences.HighlightBackgroundColour);
+				if (result == HighlightFieldReturnCode.SUCCESS_NO_FIELD_FOUND) {
+					vscode.window.showWarningMessage("A field matching " + itemLocation + " could not be located in the message");
+				}
+			}
+			else {
+				vscode.window.showWarningMessage("Item location not provided.");
 			}
 		});
 
@@ -248,7 +247,7 @@ export function activate(context: vscode.ExtensionContext) {
 	var ClearHighlightedFieldsCommand = vscode.commands.registerCommand('hl7tools.ClearHighlightedFields', function () {
 		console.log('In function ClearHighlightedFields');
 		currentItemLocation = null;
-		HighlightFields.ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour);
+		ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour);
 	});
 	context.subscriptions.push(ClearHighlightedFieldsCommand);
 
@@ -256,7 +255,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// This function masks out patient & next of kin identifiers
 	var maskIdentifiersCommand = vscode.commands.registerCommand('hl7tools.MaskIdentifiers', function () {
 		console.log('In function MaskIdentifiers');
-		MaskIdentifiers.MaskAll();
+		MaskAllIdentifiers();
 	});
 	context.subscriptions.push(maskIdentifiersCommand);
 
@@ -286,7 +285,7 @@ export function activate(context: vscode.ExtensionContext) {
 		var currentLineNum = selection.start.line;
 		const fileName = path.basename(currentDoc.uri.fsPath);
 		var currentSegment = currentDoc.lineAt(currentLineNum).text;
-		// parse the HL7 delimeter characters from the current message
+		// parse the HL7 delimiter characters from the current message
 		var delimiters: Delimiter = new Delimiter();
 		delimiters.ParseDelimitersFromMessage(currentDoc.getText());
 		
@@ -299,7 +298,7 @@ export function activate(context: vscode.ExtensionContext) {
 		if (Util.IsSegmentValid(segment, delimiters.Field)) {
 			var segmentArray = segment.split(delimiters.Field);
 			var segmentName = segmentArray[0];
-			var output = FieldTreeView.DisplaySegmentAsTree(segment, hl7Schema, hl7Fields, delimiters);
+			var output: string = DisplaySegmentAsTree(segment, hl7Schema, hl7Fields, delimiters);
 
 			// write the results to visual studio code's output window
 			var channel = vscode.window.createOutputChannel('HL7 Fields - ' + segmentName + ' (' + fileName + ')');
@@ -385,11 +384,11 @@ export function activate(context: vscode.ExtensionContext) {
 		var currentDoc = activeEditor.document;
 		var hl7Message = currentDoc.getText();
 		// get the EOL character from the current document
-		endOfLineChar = Util.GetEOLCharacter(currentDoc);
+		var endOfLineChar: string = Util.GetEOLCharacter(currentDoc);
 		hl7Message = hl7Message.replace(new RegExp(endOfLineChar, 'g'), String.fromCharCode(0x0d));
 
 		// display the webview panel
-		SendHl7MessageWebView = new SendHl7MessagePanelClass(vscode.extensions.getExtension('RobHolme.hl7tools').extensionUri);
+		var SendHl7MessageWebView: SendHl7MessagePanel = new SendHl7MessagePanel(vscode.extensions.getExtension('RobHolme.hl7tools').extensionUri);
 		if (preferences.SocketEncodingPreference) {
 			SendHl7MessageWebView.encodingPreference = preferences.SocketEncodingPreference;
 		}
@@ -402,7 +401,7 @@ export function activate(context: vscode.ExtensionContext) {
 			message => {
 				switch (message.command) {
 					case 'sendMessage':
-						TcpMllpClient.SendMessage(message.host, message.port, message.hl7, tcpConnectionTimeout, message.tls, message.encoding, message.ignoreCertError, SendHl7MessageWebView);
+						SendMessage(message.host, message.port, message.hl7, tcpConnectionTimeout, message.tls, message.encoding, message.ignoreCertError, SendHl7MessageWebView);
 						return;
 					case 'exit':
 						SendHl7MessageWebView.panel.dispose();
@@ -425,9 +424,11 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		var listenerPromise = vscode.window.showInputBox({ prompt: "Enter the TCP port to listen on for messages", value: preferences.DefaultListenerPort });
-		listenerPromise.then(function (listenerPort) {
-			TcpMllpListener.StartListener(listenerPort);
+		var listenerPromise: = vscode.window.showInputBox({ prompt: "Enter the TCP port to listen on for messages", value: preferences.DefaultListenerPort });
+		listenerPromise.then(function (listenerPort: number) {
+			if (listenerPort) {
+				StartListener(listenerPort);
+			}
 		});
 	});
 
@@ -436,8 +437,8 @@ export function activate(context: vscode.ExtensionContext) {
 	//-------------------------------------------------------------------------------------------
 	// This functions stop listening for messages
 	var StopListenerCommand = vscode.commands.registerCommand('hl7tools.StopListener', function () {
-		console.log("Stopping Listsener");
-		TcpMllpListener.StopListener();
+		console.log("Stopping Listener");
+		StopListener();
 	});
 
 	context.subscriptions.push(StopListenerCommand);
@@ -529,7 +530,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 
 		// Check required fields 
-		var missingRequiredFields = CheckRequiredFields.CheckAllFields(hl7Schema);
+		var missingRequiredFields: MissingRequiredFieldResult[] = CheckAllFields(editor.document, hl7Schema);
 		const fileName = path.basename(editor.document.uri.fsPath);
 
 		// Write the results to visual studio code's output window if missing required field values are identified
@@ -541,7 +542,7 @@ export function activate(context: vscode.ExtensionContext) {
 				var hl7Location = missingRequiredFields[i].FieldLocation;
 				var segmentName = hl7Location.split('-')[0];
 				var fieldIndex = hl7Location.split('-')[1] - 1;
-				var output = Util.padRight(missingRequiredFields[i].LineNumber, 7) + Util.padRight(hl7Location, 8) + hl7Schema[segmentName].fields[fieldIndex].desc;
+				var output = Util.padRight((missingRequiredFields[i].LineNumber).toString(), 7) + Util.padRight(hl7Location, 8) + hl7Schema[segmentName].fields[fieldIndex].desc;
 				channel.appendLine(output);
 			}
 			channel.appendLine("\n\nPlease note that this does not consider conditional fields, and does not attempt to validate the data type of required fields");
@@ -563,9 +564,14 @@ export function activate(context: vscode.ExtensionContext) {
 		// prompt the user for the location of the HL7 field (e.g. PID-3). Validate the location via regex.
 		var itemLocationPromise = vscode.window.showInputBox({ prompt: "Enter HL7 item location (e.g. 'PID-3'), or the partial field name (e.g. 'name')" });
 		itemLocationPromise.then(function (itemLocation) {
-			var findResult = findFieldLocation.Find(itemLocation);
-			if (findResult == findFieldLocation.findNextReturnCode.ERROR_NO_FIELDS_FOUND) {
-				vscode.window.showInformationMessage("No matching fields found.");
+			if (itemLocation) {
+				var findResult: findNextReturnCode = findFieldLocation.Find(itemLocation);
+				if (findResult == findNextReturnCode.ERROR_NO_FIELDS_FOUND) {
+					vscode.window.showInformationMessage("No matching fields found.");
+				}
+			}
+			else {
+				vscode.window.showInformationMessage("Item location not provided.");
 			}
 		});
 	});
@@ -577,15 +583,15 @@ export function activate(context: vscode.ExtensionContext) {
 	var FindNextFieldCommand = vscode.commands.registerCommand('hl7tools.FindNextField', function () {
 		console.log('Running command hl7tools.FindNextField');
 
-		var findNextResult = findFieldLocation.FindNext();
+		var findNextResult: findNextReturnCode = findFieldLocation.FindNext();
 		// warn user when last match found, or no matches found, or when the 'Find Fields' function hasn't been called first.
-		if (findNextResult === findFieldLocation.findNextReturnCode.SUCCESS_LAST_FIELD_FOUND) {
+		if (findNextResult === findNextReturnCode.SUCCESS_LAST_FIELD_FOUND) {
 			vscode.window.showInformationMessage("All fields found. Resuming from beginning of message");
 		}
-		else if (findNextResult === findFieldLocation.findNextReturnCode.ERROR_NO_SEARCH_DEFINED) {
+		else if (findNextResult === findNextReturnCode.ERROR_NO_SEARCH_DEFINED) {
 			vscode.window.showInformationMessage("No search defined. Use 'HL7 Tools: Find Field' function first.");
 		}
-		else if (findNextResult === findFieldLocation.findNextReturnCode.ERROR_NO_FIELDS_FOUND) {
+		else if (findNextResult === findNextReturnCode.ERROR_NO_FIELDS_FOUND) {
 			vscode.window.showInformationMessage("No matching fields found.");
 		}
 	});
@@ -722,8 +728,10 @@ export function activate(context: vscode.ExtensionContext) {
 			catch (err) {
 				fieldDescription = "";
 			}
-			var decoration = { range: new vscode.Range(startPos, endPos), hoverMessage: fieldDescription + " (" + segmentName + "-" + (fieldCount + 1) + ")" };
-			hoverDecorationList.push(decoration);
+			if (startPos !== null) {
+				var decoration = { range: new vscode.Range(startPos, endPos), hoverMessage: fieldDescription + " (" + segmentName + "-" + (fieldCount + 1) + ")" };
+				hoverDecorationList.push(decoration);
+			}
 
 			// the field locations are relative to the current line, so calculate the offset of previous lines to identify the location within the file.
 			positionOffset += currentLine.length + endOfLineLength;
