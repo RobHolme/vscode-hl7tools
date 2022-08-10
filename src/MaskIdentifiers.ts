@@ -88,7 +88,7 @@ export function maskField(fieldToMask: string, componentNumber: number | null): 
 
 //----------------------------------------------------
 // Mask all predefined patient and next of kin named identifiers
-export function MaskAll() {
+export function MaskAllIdentifiers() {
     // load the message delimiters from the current file
     var delimiters = new Delimiter;
 	delimiters.ParseDelimitersFromActiveEditor();
