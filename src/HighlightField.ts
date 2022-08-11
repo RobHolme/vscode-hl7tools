@@ -25,7 +25,12 @@ export enum HighlightFieldReturnCode {
 // @param {string} backgroundColor - The RGBA colour value identifying the background colour e.g. "rgba(0,255,0,0.3)". If this is not supplied, a default colour will be used.
 //
 // @returns {int} - returns the number of decorations applied
-export function ShowHighlights(itemLocation: string, hl7Schema: object, backgroundColor: string) {
+export function ShowHighlights(itemLocation: string | null, hl7Schema: object, backgroundColor: string) {
+	// return if no field location string provided
+	if (itemLocation === null) {
+		return HighlightFieldReturnCode.ERROR_NO_LOCATION_PROVIDED;
+	}
+
 	// the default background colour for highlighted items (if not otherwise specified)
 	const defaultBackgroundColour: string = 'rgba(0,255,0,0.3)';
 
@@ -47,7 +52,7 @@ export function ShowHighlights(itemLocation: string, hl7Schema: object, backgrou
 	}
 
 	// return if no location provided by the user, or no active editor
-	if ((!itemLocation) || (!activeEditor)) {
+	if (!activeEditor) {
 		return HighlightFieldReturnCode.ERROR_NO_LOCATION_PROVIDED;
 	}
 

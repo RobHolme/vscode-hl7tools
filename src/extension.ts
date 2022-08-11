@@ -18,7 +18,6 @@ import { CheckAllFields } from './CheckRequiredFields';
 import { MissingRequiredFieldResult } from './CheckRequiredFieldsResult';
 import { FindField, findNextReturnCode } from './FindField';
 import { SendHl7MessagePanel } from './webviewpanels/SendHl7MessagePanel';
-import { stringify } from 'querystring';
 
 // the HL7 delimiters used by the message
 //var delimiters : object;
@@ -26,7 +25,7 @@ import { stringify } from 'querystring';
 var hl7Schema: Object;
 var hl7Fields: Object;
 // this stores the location or name of the field to highlight. The highlight is re-applied as the active document changes.
-var currentItemLocation: string;
+var currentItemLocation: string | null;
 // the status bar item to display current HL7 schema this is loaded
 var statusbarHL7Version = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
 // the list of fields with hover decorations (displaying the field description);
@@ -90,8 +89,6 @@ function SetStatusBarVersion(hl7Version: string, hl7SchemaTooltip: string) {
 function LoadHL7Schema() {
 	// exit if the editor is not active
 	var activeEditor = vscode.window.activeTextEditor;
-	var hl7SchemaTooltip = "";
-
 
 	// return if no active editor
 	if (!activeEditor) {
@@ -108,8 +105,6 @@ function LoadHL7Schema() {
 
 	// load the schema based on the HL7 version detected
 	var hl7Schema = require('./schema/' + hl7Version + '/segments.js');
-	//hl7Fields = require('./schema/' + hl7Version + '/fields.js');
-
 
 	// load custom segment schemas
 	if (preferences.CustomSegmentSchema != '') {
@@ -388,7 +383,12 @@ export function activate(context: vscode.ExtensionContext) {
 		hl7Message = hl7Message.replace(new RegExp(endOfLineChar, 'g'), String.fromCharCode(0x0d));
 
 		// display the webview panel
-		var SendHl7MessageWebView: SendHl7MessagePanel = new SendHl7MessagePanel(vscode.extensions.getExtension('RobHolme.hl7tools').extensionUri);
+		var thisExtension: vscode.Extension<any> | undefined = vscode.extensions.getExtension('RobHolme.hl7tools');
+		if (thisExtension === undefined) {
+			console.log("The extension 'RobHolme.hl7tools' could no be referenced.")
+			return;
+		}
+		var SendHl7MessageWebView: SendHl7MessagePanel = new SendHl7MessagePanel(thisExtension.extensionUri);
 		if (preferences.SocketEncodingPreference) {
 			SendHl7MessageWebView.encodingPreference = preferences.SocketEncodingPreference;
 		}
@@ -401,7 +401,7 @@ export function activate(context: vscode.ExtensionContext) {
 			message => {
 				switch (message.command) {
 					case 'sendMessage':
-						SendMessage(message.host, message.port, message.hl7, tcpConnectionTimeout, message.tls, message.encoding, message.ignoreCertError, SendHl7MessageWebView);
+						SendMessage(message.host, message.port, message.hl7, tcpConnectionTimeout, message.tls, message.encoding, SendHl7MessageWebView);
 						return;
 					case 'exit':
 						SendHl7MessageWebView.panel.dispose();
@@ -424,10 +424,10 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		var listenerPromise: = vscode.window.showInputBox({ prompt: "Enter the TCP port to listen on for messages", value: preferences.DefaultListenerPort });
-		listenerPromise.then(function (listenerPort: number) {
+		var listenerPromise = vscode.window.showInputBox({ prompt: "Enter the TCP port to listen on for messages", value: preferences.DefaultListenerPort });
+		listenerPromise.then(function (listenerPort) {
 			if (listenerPort) {
-				StartListener(listenerPort);
+				StartListener(parseInt(listenerPort, 10));
 			}
 		});
 	});
@@ -539,14 +539,15 @@ export function activate(context: vscode.ExtensionContext) {
 			channel.clear();
 			channel.appendLine("The following required fields are missing, or contained no value:\n\nLine   Field   Description\n----   -----   -----------");
 			for (var i = 0; i < missingRequiredFields.length; i++) {
-				var hl7Location = missingRequiredFields[i].FieldLocation;
-				var segmentName = hl7Location.split('-')[0];
-				var fieldIndex = hl7Location.split('-')[1] - 1;
+				var hl7Location: string = missingRequiredFields[i].FieldLocation;
+				var segmentName: string = hl7Location.split('-')[0];
+				var fieldIndex: number = parseInt(hl7Location.split('-')[1],10) -1;
 				var output = Util.padRight((missingRequiredFields[i].LineNumber).toString(), 7) + Util.padRight(hl7Location, 8) + hl7Schema[segmentName].fields[fieldIndex].desc;
 				channel.appendLine(output);
 			}
 			channel.appendLine("\n\nPlease note that this does not consider conditional fields, and does not attempt to validate the data type of required fields");
-			channel.show(vscode.ViewColumn.Two);
+			channel.show();
+			//channel.show(vscode.ViewColumn.Two);
 		}
 
 		// display prompt indicating all required fields have values 
