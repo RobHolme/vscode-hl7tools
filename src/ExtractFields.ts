@@ -36,7 +36,7 @@ export function ExtractAllFields(itemLocation: string | undefined) :ExtractRetur
 	}
 
 	// test to see if the user has provided a valid location string
-	if (!common.IsItemLocationValid(itemLocation)) 
+	if (!Util.IsItemLocationValid(itemLocation)) 
 	{
 		vscode.window.showInformationMessage(itemLocation + " is not a recognised HL7 field location");
 		return ExtractReturnCode.ERROR_LOCATION_NOT_VALID;
@@ -61,10 +61,10 @@ export function ExtractAllFields(itemLocation: string | undefined) :ExtractRetur
 	if (allResults.length > 0) {
 		var channel: vscode.OutputChannel = vscode.window.createOutputChannel('HL7 Fields from all messages');
 		channel.clear();
-		channel.appendLine(common.padRight("Value", results.MaxLength, ' ') + "  Filename");
-		channel.appendLine(common.padRight("-----", results.MaxLength, ' ') + "  --------");
+		channel.appendLine(Util.padRight("Value", results.MaxLength, ' ') + "  Filename");
+		channel.appendLine(Util.padRight("-----", results.MaxLength, ' ') + "  --------");
 		for (let i: number = 0; i < allResults.length; i++) {
-			channel.appendLine(common.padRight(allResults[i].Value, results.MaxLength, ' ') + "  " + allResults[i].Filename)
+			channel.appendLine(Util.padRight(allResults[i].Value, results.MaxLength, ' ') + "  " + allResults[i].Filename)
 		}
 		channel.show();
 	}
