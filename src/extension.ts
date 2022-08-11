@@ -9,7 +9,7 @@ const workspace = vscode.workspace;
 import { Delimiter, Util } from './Util'; 
 import { ExtensionPreferences } from './ExtensionPreferences';
 import { ExtractAllFields, ExtractReturnCode } from './ExtractFields';
-import { ShowHighlights, HighlightFieldReturnCode} from './HighlightField';
+import { HighlightFields, HighlightFieldReturnCode} from './HighlightField';
 import { DisplaySegmentAsTree } from './FieldTreeView';
 import { MaskAllIdentifiers } from './MaskIdentifiers';
 import { SendMessage } from './SendHl7Message'
@@ -31,7 +31,7 @@ var statusbarHL7Version = vscode.window.createStatusBarItem(vscode.StatusBarAlig
 // the list of fields with hover decorations (displaying the field description);
 var hoverDecorationList: vscode.DecorationOptions[] = [];
 // stores the current highlighted field so that it can be cleared when selecting a new field.
-//var currentDecoration;
+var FieldHighlights: HighlightFields = new HighlightFields();
 // stores the current hover decorations
 var currentHoverDecoration: vscode.TextEditorDecorationType;
 //  use this to prevent th active do hack from running more than once per session
@@ -185,7 +185,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 				UpdateFieldDescriptions();
 
-				ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour);
+				FieldHighlights.ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour);
 
 				// create a new FindField object when the active editor changes
 				findFieldLocation = new FindField(editor.document, hl7Schema);
@@ -205,7 +205,7 @@ export function activate(context: vscode.ExtensionContext) {
 				UpdateFieldDescriptions();
 				// re apply field highlighting if set
 				if (currentItemLocation) {
-					ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour);
+					FieldHighlights.ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour);
 				}
 			}
 			else {
@@ -223,7 +223,7 @@ export function activate(context: vscode.ExtensionContext) {
 		itemLocationPromise.then(function (itemLocation) {
 			if (itemLocation) {
 				currentItemLocation = itemLocation;
-				var result: HighlightFieldReturnCode = ShowHighlights(itemLocation, hl7Schema, preferences.HighlightBackgroundColour);
+				var result: HighlightFieldReturnCode = FieldHighlights.ShowHighlights(itemLocation, hl7Schema, preferences.HighlightBackgroundColour);
 				if (result == HighlightFieldReturnCode.SUCCESS_NO_FIELD_FOUND) {
 					vscode.window.showWarningMessage("A field matching " + itemLocation + " could not be located in the message");
 				}
@@ -242,7 +242,7 @@ export function activate(context: vscode.ExtensionContext) {
 	var ClearHighlightedFieldsCommand = vscode.commands.registerCommand('hl7tools.ClearHighlightedFields', function () {
 		console.log('In function ClearHighlightedFields');
 		currentItemLocation = null;
-		ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour);
+		FieldHighlights.ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour);
 	});
 	context.subscriptions.push(ClearHighlightedFieldsCommand);
 
