@@ -7,7 +7,7 @@
 
 // load modules
 import * as vscode from 'vscode';
-import { Delimiter, Util } from './Util'; 
+import { Delimiter, HashTable, Util } from './Util'; 
 import { FindFieldResult } from './FindFieldResult';
 import { CursorManager } from './CursorManager';
 
@@ -88,7 +88,7 @@ export class FindField {
 	// @param {string} FieldLocation - a string identifying the location of the field in the HL7 message.
 	// @return {FindFieldResult} - return the row and  
 	//
-	public FindAll(FieldLocation: string): FindFieldResult[] {
+	private FindAll(FieldLocation: string): FindFieldResult[] {
 		var results: FindFieldResult[] = [];
 		var allText: string;
 		if (this._document === null) {
@@ -97,10 +97,10 @@ export class FindField {
 		allText = this._document.getText();
 		var delimiters = new Delimiter;
 		delimiters.ParseDelimitersFromMessage(allText);
-		var locationArray = Util.FindLocationFromDescription(FieldLocation, this._hl7Schema);
+		var locationArray: HashTable<number[]> = Util.FindLocationFromDescription(FieldLocation, this._hl7Schema);
 		var fieldRegEx: RegExp = new RegExp("\\" + delimiters.Field, "g");
 		for (var key in locationArray) {
-			for (let i: number = 0; i < this._locationArray[key].length; i++) {
+			for (let i: number = 0; i < locationArray[key].length; i++) {
 				var segmentName = key;
 				var fieldIndex = locationArray[key][i];
 				var segmentRegex = new RegExp("^" + segmentName + "\\" + delimiters.Field);
