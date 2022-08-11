@@ -5,11 +5,12 @@
 
 
 // required modules
-import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as net from 'net';
 import * as tls from 'tls';
+import { SendHl7MessagePanel } from './webviewpanels/SendHl7MessagePanel';
 import { ExtensionPreferences } from './ExtensionPreferences';
+import { NetworkInterfaceBase } from 'os';
 
 // MLLP framing codes
 const VT = String.fromCharCode(0x0b);
@@ -25,7 +26,7 @@ const CR = String.fromCharCode(0x0d);
 // @param {bool} UseTLS - if true connect using TLS
 // @param {} encoding
 // @param {object} webViewPanel - reference to webview panel object so that status update messages can be returned
-export function SendMessage(Host: string, Port: number, HL7Message: string, Timeout: number, UseTls: boolean, encoding: BufferEncoding, webViewPanel: vscode.webViewPanel) {
+export function SendMessage(Host: string, Port: number, HL7Message: string, Timeout: number, UseTls: boolean, encoding: BufferEncoding, webViewPanel: SendHl7MessagePanel) {
 
 	// default to 5 second timeout for TCP socket if not supplied as a parameter
 	Timeout = Timeout || 5000;
@@ -37,7 +38,7 @@ export function SendMessage(Host: string, Port: number, HL7Message: string, Time
 	// replace any newlines added by the text area with CRs.
 	HL7Message = HL7Message.replace(new RegExp('\n', 'g'), String.fromCharCode(0x0d));
 
-	var client: net.Socket | tls.TLSSocket;
+	var client: any;
 
 	// connect with TLS
 	if (UseTls) {
@@ -57,7 +58,7 @@ export function SendMessage(Host: string, Port: number, HL7Message: string, Time
 		// patch CreateSecureContext to add in custom CAs
 		// based on the Monkey Patch discussed in https://medium.com/trabe/monkey-patching-tls-in-node-js-to-support-self-signed-certificates-with-custom-root-cas-25c7396dfd2a
 		const origCreateSecureContext = tls.createSecureContext;
-		tls.createSecureContext = options => {
+		tls.createSecureContext = function(options: tls.SecureContextOptions) {
 			const context = origCreateSecureContext(options);
 			var pem: string = "";
 			for (let i:number = 0; i < trustedCAList.length; i++) {
@@ -115,7 +116,7 @@ export function SendMessage(Host: string, Port: number, HL7Message: string, Time
 	});
 
 	// error handler for refused connections (i.e. remote host unreachable.)
-	client.on('error', function (e) {
+	client.on('error', function (e: any) {
 		if (e.code == 'ECONNREFUSED') {
 			webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Connection refused by ' + Host + ':' + Port + '\r\n');
 		}
@@ -125,12 +126,12 @@ export function SendMessage(Host: string, Port: number, HL7Message: string, Time
 	});
 
 	// error handler for sockets ended by remote endpoint.)
-	client.on('end', function (data) {
+	client.on('end', function (data: any) {
 		webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Socket closed by remote host. \r\n');
 	});
 
 	// receive ACK, log to console 
-	client.on('data', function (data) {
+	client.on('data', function (data: any) {
 		// convert the ACK response to string, remove the MLLP header and footer characters. 
 		var Ack: string = data.toString(encoding);
 		webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] ACK Received: \r\n');
@@ -140,7 +141,7 @@ export function SendMessage(Host: string, Port: number, HL7Message: string, Time
 		client.destroy();
 	});
 
-	client.on('close', function (error) {
+	client.on('close', function (error: any) {
 		if (error) {
 			webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Connection to ' + Host + ':' + Port + ' has been closed due to an error.\r\n');
 		}
