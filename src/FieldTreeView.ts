@@ -93,7 +93,7 @@ function BuildSegmentObject(segment: string, hl7Schema: Object, hl7Fields: Objec
 			segmentToReturn.AddField(field);
 			continue;
 		}
-		var fieldDataType: string;
+		var fieldDataType: string | null = null;
 		if (segmentDefinition) {
 			if (i < segmentDefinition.fields.length) {
 				fieldDataType = segmentDefinition.fields[i].datatype;
