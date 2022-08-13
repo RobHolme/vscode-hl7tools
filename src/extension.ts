@@ -134,7 +134,7 @@ function LoadHL7Fields() {
 	}
 
 	// load the field descriptions based on the HL7 version detected
-	var hl7Fields = require('./schema/' + hl7Version + '/fields.js');
+	var hl7Fields = require('./schema/' + hl7Version + '/fields');
 	return hl7Fields;
 }
 
