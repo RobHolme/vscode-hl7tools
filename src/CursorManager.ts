@@ -6,6 +6,7 @@
 */
 
 import * as vscode from 'vscode';
+import { FindFieldResult } from './FindFieldResult';
 
 
 export abstract class CursorManager {
