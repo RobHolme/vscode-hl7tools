@@ -19,10 +19,6 @@ import { MissingRequiredFieldResult } from './CheckRequiredFieldsResult';
 import { FindField, findNextReturnCode } from './FindField';
 import { SendHl7MessagePanel } from './SendHl7MessageWebPanel';
 
-// the HL7 delimiters used by the message
-//var delimiters : object;
-// Store the HL7 schema and associated field descriptions
-var hl7Schema: HashTable<SegmentSchema>;
 
 // this stores the location or name of the field to highlight. The highlight is re-applied as the active document changes.
 var currentItemLocation: string | null;
@@ -86,13 +82,13 @@ function SetStatusBarVersion(hl7Version: string, hl7SchemaTooltip: string) {
 
 //----------------------------------------------------
 // load the appropriate hl7 schema based on the HL7 version
-function LoadHL7Schema() {
+function LoadHL7Schema(): HashTable<SegmentSchema> | null {
 	// exit if the editor is not active
 	var activeEditor = vscode.window.activeTextEditor;
 
 	// return if no active editor
 	if (!activeEditor) {
-		return;
+		return null;
 	}
 
 	var currentMessage = activeEditor.document.getText();
@@ -104,19 +100,19 @@ function LoadHL7Schema() {
 	}
 
 	// load the schema based on the HL7 version detected
-	var hl7Schema = require('./schema/' + hl7Version + '/segments.js');
+	var schema = require('./schema/' + hl7Version + '/segments');
 
 	// load custom segment schemas
 	if (preferences.CustomSegmentSchema != '') {
 		if (fs.existsSync(preferences.CustomSegmentSchema)) {
 			var customSchema = require(preferences.CustomSegmentSchema);
-			hl7Schema = { ...hl7Schema, ...customSchema } // append the custom segments
+			schema = { ...schema, ...customSchema } // append the custom segments
 		}
 		else {
 			vscode.window.showWarningMessage("Could not load the custom schema file: " + preferences.CustomSegmentSchema);
 		}
 	}
-	return hl7Schema;
+	return schema;
 }
 
 //----------------------------------------------------
@@ -159,12 +155,17 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 		else {
-			// load the HL7 schema based on the version reported by the MSH segment
-			LoadHL7Schema();
 			// apply the hover descriptions for each field
 			UpdateFieldDescriptions();
-			// create a new FindField object when the active editor changes
-			findFieldLocation = new FindField(activeEditor.document, hl7Schema);
+			// load the HL7 schema based on the version reported by the MSH segment
+			var hl7Schema = LoadHL7Schema();
+			if (hl7Schema !== null) {
+				// create a new FindField object when the active editor changes
+				findFieldLocation = new FindField(activeEditor.document, hl7Schema);
+			}
+			else {
+				console.log("Failed to load HL7 schema in Activate");
+			}
 		}
 	}
 
@@ -174,21 +175,21 @@ export function activate(context: vscode.ExtensionContext) {
 		if (editor) {
 			// only activate the field descriptions if it is identified as a HL7 file  
 			if (Util.IsHL7File(editor.document)) {
-				// the new document may be a different version of HL7, so load the appropriate version of schema
-				LoadHL7Schema();
-
 				// if the AddLinebreakOnActivation user preference is set, call the 'Add LineBreaks to Segment' command
-				// load user preferences for the extension (SocketEncoding)
 				if (preferences.AddLineBreakOnActivation == true) {
 					AddLinebreaksToSegments();
 				}
-
 				UpdateFieldDescriptions();
-
-				FieldHighlights.ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour);
-
-				// create a new FindField object when the active editor changes
-				findFieldLocation = new FindField(editor.document, hl7Schema);
+				// the new document may be a different version of HL7, so load the appropriate version of schema
+				var hl7Schema: HashTable<SegmentSchema> | null = LoadHL7Schema();
+				if (hl7Schema != null) {
+					FieldHighlights.ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour);
+					// create a new FindField object when the active editor changes
+					findFieldLocation = new FindField(editor.document, hl7Schema);
+				}
+				else {
+					console.log("Failed to load HL7 schema in onDidChangeActiveTextEditor");
+				}
 			}
 			else {
 				statusbarHL7Version.hide();
@@ -205,7 +206,13 @@ export function activate(context: vscode.ExtensionContext) {
 				UpdateFieldDescriptions();
 				// re apply field highlighting if set
 				if (currentItemLocation) {
-					FieldHighlights.ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour);
+					var hl7Schema: HashTable<SegmentSchema> | null = LoadHL7Schema();
+					if (hl7Schema != null) {
+						FieldHighlights.ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour);
+					}
+					else {
+						console.log("Failed to load HL7 schema in onDidChangeTextDocument");
+					}
 				}
 			}
 			else {
@@ -223,9 +230,15 @@ export function activate(context: vscode.ExtensionContext) {
 		itemLocationPromise.then(function (itemLocation) {
 			if (itemLocation) {
 				currentItemLocation = itemLocation;
-				var result: HighlightFieldReturnCode = FieldHighlights.ShowHighlights(itemLocation, hl7Schema, preferences.HighlightBackgroundColour);
-				if (result == HighlightFieldReturnCode.SUCCESS_NO_FIELD_FOUND) {
-					vscode.window.showWarningMessage("A field matching " + itemLocation + " could not be located in the message");
+				var hl7Schema: HashTable<SegmentSchema> | null = LoadHL7Schema();
+				if (hl7Schema != null) {
+					var result: HighlightFieldReturnCode = FieldHighlights.ShowHighlights(itemLocation, hl7Schema, preferences.HighlightBackgroundColour);
+					if (result == HighlightFieldReturnCode.SUCCESS_NO_FIELD_FOUND) {
+						vscode.window.showWarningMessage("A field matching " + itemLocation + " could not be located in the message");
+					}
+				}
+				else {
+					console.log("Failed to load HL7 schema in hl7tools.HighlightHL7Item");
 				}
 			}
 			else {
@@ -242,7 +255,13 @@ export function activate(context: vscode.ExtensionContext) {
 	var ClearHighlightedFieldsCommand = vscode.commands.registerCommand('hl7tools.ClearHighlightedFields', function () {
 		console.log('In function ClearHighlightedFields');
 		currentItemLocation = null;
-		FieldHighlights.ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour);
+		var hl7Schema: HashTable<SegmentSchema> | null = LoadHL7Schema();
+		if (hl7Schema != null) {
+			FieldHighlights.ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour); 
+		}
+		else {
+			console.log("Failed to load HL7 schema in hl7tools.ClearHighlightedFields");
+		}
 	});
 	context.subscriptions.push(ClearHighlightedFieldsCommand);
 
@@ -294,14 +313,20 @@ export function activate(context: vscode.ExtensionContext) {
 			var segmentArray = segment.split(delimiters.Field);
 			var segmentName = segmentArray[0];
 			var hl7Fields: HashTable<FieldSchema> = LoadHL7Fields();
-			var output: string = DisplaySegmentAsTree(segment, hl7Schema, hl7Fields, delimiters);
+			var hl7Schema: HashTable<SegmentSchema> | null = LoadHL7Schema();
+			if (hl7Schema != null) {
+				var output: string = DisplaySegmentAsTree(segment, hl7Schema, hl7Fields, delimiters);
+				// write the results to visual studio code's output window
+				var channel = vscode.window.createOutputChannel('HL7 Fields - ' + segmentName + ' (' + fileName + ')');
+				channel.clear();
+				channel.appendLine(output);
+				//channel.show(vscode.ViewColumn.Two);
+				channel.show();
+			}
+			else {
+				console.log("Failed to load HL7 schema in hl7tools.DisplaySegmentFields");
+			}
 
-			// write the results to visual studio code's output window
-			var channel = vscode.window.createOutputChannel('HL7 Fields - ' + segmentName + ' (' + fileName + ')');
-			channel.clear();
-			channel.appendLine(output);
-			//channel.show(vscode.ViewColumn.Two);
-			channel.show();
 		}
 		else {
 			vscode.window.showWarningMessage("The current line does not appear to be a valid segment. Check for any characters prefixing the segment name.");
@@ -398,7 +423,7 @@ export function activate(context: vscode.ExtensionContext) {
 		SendHl7MessageWebView.updateFavourites(preferences.FavouriteRemoteHosts);
 
 		// handle messages from the webview
-		SendHl7MessageWebView.panel.webview.onDidReceiveMessage(function(message) {
+		SendHl7MessageWebView.panel.webview.onDidReceiveMessage(function (message) {
 			switch (message.command) {
 				case 'sendMessage':
 					SendMessage(message.host, message.port, message.hl7, tcpConnectionTimeout, message.tls, message.encoding, SendHl7MessageWebView);
@@ -529,30 +554,35 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		// Check required fields 
-		var missingRequiredFields: MissingRequiredFieldResult[] = CheckAllFields(editor.document, hl7Schema);
-		const fileName = path.basename(editor.document.uri.fsPath);
+		var hl7Schema: HashTable<SegmentSchema> | null = LoadHL7Schema();
+		if (hl7Schema != null) {
+			// Check required fields 
+			var missingRequiredFields: MissingRequiredFieldResult[] = CheckAllFields(editor.document, hl7Schema);
+			const fileName = path.basename(editor.document.uri.fsPath);
 
-		// Write the results to visual studio code's output window if missing required field values are identified
-		if (missingRequiredFields.length > 0) {
-			var channel = vscode.window.createOutputChannel('Missing required fields - ' + fileName);
-			channel.clear();
-			channel.appendLine("The following required fields are missing, or contained no value:\n\nLine   Field   Description\n----   -----   -----------");
-			for (var i = 0; i < missingRequiredFields.length; i++) {
-				var hl7Location: string = missingRequiredFields[i].FieldLocation;
-				var segmentName: string = hl7Location.split('-')[0];
-				var fieldIndex: number = parseInt(hl7Location.split('-')[1], 10) - 1;
-				var output = Util.padRight((missingRequiredFields[i].LineNumber).toString(), 7) + Util.padRight(hl7Location, 8) + hl7Schema[segmentName].fields[fieldIndex].desc;
-				channel.appendLine(output);
+			// Write the results to visual studio code's output window if missing required field values are identified
+			if (missingRequiredFields.length > 0) {
+				var channel = vscode.window.createOutputChannel('Missing required fields - ' + fileName);
+				channel.clear();
+				channel.appendLine("The following required fields are missing, or contained no value:\n\nLine   Field   Description\n----   -----   -----------");
+				for (var i = 0; i < missingRequiredFields.length; i++) {
+					var hl7Location: string = missingRequiredFields[i].FieldLocation;
+					var segmentName: string = hl7Location.split('-')[0];
+					var fieldIndex: number = parseInt(hl7Location.split('-')[1], 10) - 1;
+					var output = Util.padRight((missingRequiredFields[i].LineNumber).toString(), 7) + Util.padRight(hl7Location, 8) + hl7Schema[segmentName].fields[fieldIndex].desc;
+					channel.appendLine(output);
+				}
+				channel.appendLine("\n\nPlease note that this does not consider conditional fields, and does not attempt to validate the data type of required fields");
+				channel.show();
+				//channel.show(vscode.ViewColumn.Two);
 			}
-			channel.appendLine("\n\nPlease note that this does not consider conditional fields, and does not attempt to validate the data type of required fields");
-			channel.show();
-			//channel.show(vscode.ViewColumn.Two);
+			// display prompt indicating all required fields have values 
+			else {
+				vscode.window.showInformationMessage("All required fields are present in the message and contain values");
+			}
 		}
-
-		// display prompt indicating all required fields have values 
 		else {
-			vscode.window.showInformationMessage("All required fields are present in the message and contain values");
+			console.log("Failed to load HL7 schema in hl7tools.CheckRequiredFields");
 		}
 	});
 	context.subscriptions.push(CheckRequiredFieldsCommand);
@@ -615,30 +645,36 @@ export function activate(context: vscode.ExtensionContext) {
 		var delimiters: Delimiter = new Delimiter();
 		delimiters.ParseDelimitersFromMessage(currentDoc.getText());
 
-		// build the regex from the list of segment names in the schema
-		var regexString: string = "(?=";
-		Object.entries(hl7Schema).forEach(([key]) => {
-			regexString += key + "\\" + delimiters.Field + "|";
-		});
-		// include support for custom 'Z' segments (not in the schema).
-		// these are prone to false positives - e.g. a field with the name ZOE would still match the definition of a Z segment. 
-		// assuming there will always be a space in front to reduce false positives
-		regexString += "\sZ[A-Z]\\w\\|)";
-		var segmentRegEx: RegExp = new RegExp(regexString, 'g');
+		var hl7Schema: HashTable<SegmentSchema> | null = LoadHL7Schema();
+		if (hl7Schema != null) {
+			// build the regex from the list of segment names in the schema
+			var regexString: string = "(?=";
+			Object.entries(hl7Schema).forEach(([key]) => {
+				regexString += key + "\\" + delimiters.Field + "|";
+			});
+			// include support for custom 'Z' segments (not in the schema).
+			// these are prone to false positives - e.g. a field with the name ZOE would still match the definition of a Z segment. 
+			// assuming there will always be a space in front to reduce false positives
+			regexString += "\sZ[A-Z]\\w\\|)";
+			var segmentRegEx: RegExp = new RegExp(regexString, 'g');
 
-		// split the message into segments using the regex, then join elements back together with the EOL character separating segments.
-		var segments: string[] = hl7Message.split(segmentRegEx);
-		var newMessage: string = segments.join(endOfLineChar);
+			// split the message into segments using the regex, then join elements back together with the EOL character separating segments.
+			var segments: string[] = hl7Message.split(segmentRegEx);
+			var newMessage: string = segments.join(endOfLineChar);
 
-		// remove any extra line breaks (if the file contains some segments delimited correctly)
-		newMessage = newMessage.replace(/(\r\n|\n|\r){2}/gm, endOfLineChar);
+			// remove any extra line breaks (if the file contains some segments delimited correctly)
+			newMessage = newMessage.replace(/(\r\n|\n|\r){2}/gm, endOfLineChar);
 
-		// replace current document text with reformatted text
-		var start: vscode.Position = new vscode.Position(0, 0);
-		var end: vscode.Position = currentDoc.positionAt(hl7Message.length);
-		activeEditor.edit(editHelper => {
-			editHelper.replace(new vscode.Range(start, end), newMessage);
-		});
+			// replace current document text with reformatted text
+			var start: vscode.Position = new vscode.Position(0, 0);
+			var end: vscode.Position = currentDoc.positionAt(hl7Message.length);
+			activeEditor.edit(editHelper => {
+				editHelper.replace(new vscode.Range(start, end), newMessage);
+			});
+		}
+		else {
+			console.log("Failed to load HL7 schema in AddLinebreaksToSegments");
+		}
 	}
 
 
@@ -651,7 +687,11 @@ export function activate(context: vscode.ExtensionContext) {
 		if (activeEditor === undefined) {
 			return;
 		}
-
+		var hl7Schema: HashTable<SegmentSchema> | null = LoadHL7Schema();
+		if (hl7Schema == null) {
+			console.log("Failed to load HL7 schema in UpdateFieldDescriptions");
+			return;
+		}
 		var currentDoc: vscode.TextDocument = activeEditor.document;
 		// get delimiters from current document text
 		var delimiters: Delimiter = new Delimiter();
