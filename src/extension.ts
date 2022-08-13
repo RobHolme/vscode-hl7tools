@@ -6,10 +6,10 @@ import * as fs from 'fs';
 const workspace = vscode.workspace;
 
 // load local modules
-import { Delimiter, Util } from './Util'; 
+import { Delimiter, Util } from './Util';
 import { ExtensionPreferences } from './ExtensionPreferences';
 import { ExtractAllFields, ExtractReturnCode } from './ExtractFields';
-import { HighlightFields, HighlightFieldReturnCode} from './HighlightField';
+import { HighlightFields, HighlightFieldReturnCode } from './HighlightField';
 import { DisplaySegmentAsTree } from './FieldTreeView';
 import { MaskAllIdentifiers } from './MaskIdentifiers';
 import { SendMessage } from './SendHl7Message'
@@ -17,7 +17,7 @@ import { StartListener, StopListener } from './TCPListener';
 import { CheckAllFields } from './CheckRequiredFields';
 import { MissingRequiredFieldResult } from './CheckRequiredFieldsResult';
 import { FindField, findNextReturnCode } from './FindField';
-import { SendHl7MessagePanel } from './webviewpanels/SendHl7MessagePanel';
+import { SendHl7MessagePanel } from './SendHl7MessageWebPanel';
 
 // the HL7 delimiters used by the message
 //var delimiters : object;
@@ -37,9 +37,9 @@ var currentHoverDecoration: vscode.TextEditorDecorationType;
 //  use this to prevent th active do hack from running more than once per session
 var activeDocHackRun: boolean = false;
 // store field locations used by Find and FindNext functions
-var findFieldLocation : FindField;
+var findFieldLocation: FindField;
 // retrieves user preferences for the extension
-var preferences : ExtensionPreferences = new ExtensionPreferences();
+var preferences: ExtensionPreferences = new ExtensionPreferences();
 // default schema to use if not detected
 const defaultSchemaVersion = "2.7.1";
 
@@ -151,7 +151,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log(`The extension "hl7tools" is now active.`);
 
-	var activeEditor : vscode.TextEditor | undefined = vscode.window.activeTextEditor
+	var activeEditor: vscode.TextEditor | undefined = vscode.window.activeTextEditor
 	// only activate the field descriptions if it is identified as a HL7 file  
 	if (activeEditor !== undefined) {
 		if (!Util.IsHL7File(activeEditor.document)) {
@@ -283,7 +283,7 @@ export function activate(context: vscode.ExtensionContext) {
 		// parse the HL7 delimiter characters from the current message
 		var delimiters: Delimiter = new Delimiter();
 		delimiters.ParseDelimitersFromMessage(currentDoc.getText());
-		
+
 		// extract the segment text from the line in case it is prefixed with line numbers etc.
 		var segmentRegEx = new RegExp("([a-z]{2}([a-z]|([0-9]))|([z]([a-z]|[0-9]){2}))\\" + delimiters.Field + ".+", "i");
 		var match = segmentRegEx.exec(currentSegment);
@@ -326,8 +326,8 @@ export function activate(context: vscode.ExtensionContext) {
 		delimiters.ParseDelimitersFromMessage(documentText);
 
 		var newMessage = "";
-//		var batchHeaderRegEx: RegExp = new RegExp("(^FHS\\" + delimiters.Field + ")|(^BHS\\" + delimiters.Field + ")|(^BTS\\" + delimiters.Field + ")(^FTS\\" + delimiters.Field + ")", "i");
-//		var mshRegEx = new RegExp("^MSH\\" + delimiters.Field, "i");
+		//		var batchHeaderRegEx: RegExp = new RegExp("(^FHS\\" + delimiters.Field + ")|(^BHS\\" + delimiters.Field + ")|(^BTS\\" + delimiters.Field + ")(^FTS\\" + delimiters.Field + ")", "i");
+		//		var mshRegEx = new RegExp("^MSH\\" + delimiters.Field, "i");
 
 		var mshRegEx: RegExp = new RegExp("^MSH\\" + delimiters.Field, "gim");
 		var split: string[] = documentText.split(mshRegEx);
@@ -397,17 +397,16 @@ export function activate(context: vscode.ExtensionContext) {
 		SendHl7MessageWebView.updateFavourites(preferences.FavouriteRemoteHosts);
 
 		// handle messages from the webview
-		SendHl7MessageWebView.panel.webview.onDidReceiveMessage(
-			message => {
-				switch (message.command) {
-					case 'sendMessage':
-						SendMessage(message.host, message.port, message.hl7, tcpConnectionTimeout, message.tls, message.encoding, SendHl7MessageWebView);
-						return;
-					case 'exit':
-						SendHl7MessageWebView.panel.dispose();
-						return;
-				}
-			},
+		SendHl7MessageWebView.panel.webview.onDidReceiveMessage(function(message) {
+			switch (message.command) {
+				case 'sendMessage':
+					SendMessage(message.host, message.port, message.hl7, tcpConnectionTimeout, message.tls, message.encoding, SendHl7MessageWebView);
+					return;
+				case 'exit':
+					SendHl7MessageWebView.panel.dispose();
+					return;
+			}
+		},
 			undefined,
 			context.subscriptions
 		);
@@ -464,7 +463,7 @@ export function activate(context: vscode.ExtensionContext) {
 		var extractedSegments: string = "";
 		var selection: vscode.Selection = editor.selection;
 		var currentLineNum: number = selection.start.line;
-//		const fileName = path.basename(currentDoc.uri.fsPath);
+		//		const fileName = path.basename(currentDoc.uri.fsPath);
 		var currentSegment: string = currentDoc.lineAt(currentLineNum).text
 		var segmentArray: string[] = currentSegment.split(delimiters.Field);
 		var segmentName: string = segmentArray[0].substring(0, 3);
@@ -541,7 +540,7 @@ export function activate(context: vscode.ExtensionContext) {
 			for (var i = 0; i < missingRequiredFields.length; i++) {
 				var hl7Location: string = missingRequiredFields[i].FieldLocation;
 				var segmentName: string = hl7Location.split('-')[0];
-				var fieldIndex: number = parseInt(hl7Location.split('-')[1],10) -1;
+				var fieldIndex: number = parseInt(hl7Location.split('-')[1], 10) - 1;
 				var output = Util.padRight((missingRequiredFields[i].LineNumber).toString(), 7) + Util.padRight(hl7Location, 8) + hl7Schema[segmentName].fields[fieldIndex].desc;
 				channel.appendLine(output);
 			}
@@ -652,7 +651,7 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		var currentDoc:vscode.TextDocument = activeEditor.document;
+		var currentDoc: vscode.TextDocument = activeEditor.document;
 		// get delimiters from current document text
 		var delimiters: Delimiter = new Delimiter();
 		delimiters.ParseDelimitersFromMessage(currentDoc.getText());
@@ -699,7 +698,7 @@ export function activate(context: vscode.ExtensionContext) {
 				fieldCount++;
 			}
 			// get the location of field delimiter characters
-	
+
 			var match: RegExpExecArray | null = regEx.exec(currentLine);
 			while (match != null) {
 				endPos = activeEditor.document.positionAt(positionOffset + match.index);
@@ -746,7 +745,7 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() { 
+export function deactivate() {
 	console.log("deactivating HL7Tools extension");
 }
 
