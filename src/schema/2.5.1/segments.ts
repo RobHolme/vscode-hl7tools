@@ -1,4 +1,4 @@
-var segments = {
+var segments_251 = {
     "ABS": {
         "desc": "Abstract",
         "fields": [
@@ -15964,4 +15964,3 @@ var segments = {
     }
 };
 
-module.exports = segments;

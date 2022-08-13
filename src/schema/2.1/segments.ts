@@ -1,4 +1,4 @@
-var segments = {
+var segments_21 = {
     "ACC": {
         "desc": "Accident",
         "fields": [
@@ -3360,4 +3360,4 @@ var segments = {
     }
 };
 
-module.exports = segments;
+

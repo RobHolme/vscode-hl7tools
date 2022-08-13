@@ -1,4 +1,4 @@
-var fields = {
+var fields_271 = {
     "AD": {
         "desc": "Address",
         "subfields": [
@@ -3677,4 +3677,3 @@ var fields = {
     }
 };
 
-module.exports = fields;
