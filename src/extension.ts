@@ -6,7 +6,7 @@ import * as fs from 'fs';
 const workspace = vscode.workspace;
 
 // load local modules
-import { Delimiter, Util } from './Util';
+import { Delimiter, Util, SegmentSchema, FieldSchema, HashTable } from './Util';
 import { ExtensionPreferences } from './ExtensionPreferences';
 import { ExtractAllFields, ExtractReturnCode } from './ExtractFields';
 import { HighlightFields, HighlightFieldReturnCode } from './HighlightField';
@@ -22,8 +22,8 @@ import { SendHl7MessagePanel } from './SendHl7MessageWebPanel';
 // the HL7 delimiters used by the message
 //var delimiters : object;
 // Store the HL7 schema and associated field descriptions
-var hl7Schema: Object;
-var hl7Fields: Object;
+var hl7Schema: HashTable<SegmentSchema>;
+
 // this stores the location or name of the field to highlight. The highlight is re-applied as the active document changes.
 var currentItemLocation: string | null;
 // the status bar item to display current HL7 schema this is loaded
@@ -293,6 +293,7 @@ export function activate(context: vscode.ExtensionContext) {
 		if (Util.IsSegmentValid(segment, delimiters.Field)) {
 			var segmentArray = segment.split(delimiters.Field);
 			var segmentName = segmentArray[0];
+			var hl7Fields: HashTable<FieldSchema> = LoadHL7Fields();
 			var output: string = DisplaySegmentAsTree(segment, hl7Schema, hl7Fields, delimiters);
 
 			// write the results to visual studio code's output window

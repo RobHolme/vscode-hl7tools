@@ -6,7 +6,7 @@
 */
 
 // load modules
-import { Delimiter, Util } from "./Util";
+import { Delimiter, FieldSchema, HashTable, SegmentSchema, Util } from "./Util";
 import { Field, FieldItem, Component, Segment } from "./HL7Message"
 
 
@@ -17,7 +17,7 @@ import { Field, FieldItem, Component, Segment } from "./HL7Message"
 // @param {array} hl7Fields - An array containing the field descriptions
 //
 // @returns {string} - returns a string containing the segment fields formatted on a tree view
-export function DisplaySegmentAsTree(segment: string, hl7Schema: Object, hl7Fields: Object, delimiters: Delimiter): string {
+export function DisplaySegmentAsTree(segment: string, hl7Schema: HashTable<SegmentSchema>, hl7Fields: HashTable<FieldSchema>, delimiters: Delimiter): string {
 	// build the segment object to display	
 	var segmentToDisplay: Segment = BuildSegmentObject(segment, hl7Schema, hl7Fields, delimiters);
 
@@ -53,7 +53,7 @@ export function DisplaySegmentAsTree(segment: string, hl7Schema: Object, hl7Fiel
 // @param {array} hl7Fields - An array containing the field descriptions
 //
 // @returns {Segment} - returns a string containing the segment fields formatted on a tree view
-function BuildSegmentObject(segment: string, hl7Schema: Object, hl7Fields: Object, delimiters: Delimiter): Segment {
+function BuildSegmentObject(segment: string, hl7Schema: HashTable<SegmentSchema>, hl7Fields: HashTable<FieldSchema>, delimiters: Delimiter): Segment {
 
  	// get the list of fields as an array. After saving the segment name, remove it from the array so it contains fields only (i.e. remove the item at index 0)
 	var segmentFieldArray: string[] = segment.split(delimiters.Field);

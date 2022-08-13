@@ -7,7 +7,7 @@
 
 // load modules
 import * as vscode from 'vscode';
-import { Delimiter, HashTable, Util } from './Util'; 
+import { Delimiter, HashTable, Util, SegmentSchema } from './Util'; 
 import { FindFieldResult } from './FindFieldResult';
 import { CursorManager } from './CursorManager';
 
@@ -27,7 +27,7 @@ export enum findNextReturnCode {
 // @param {object} CurrentDocument - an object referring to vscode.window.activeTextEditor.document
 // @param {object} HL7Schema - an object referring to the version of the HL7 schema used by the message
 export class FindField {
-	private _hl7Schema: object;
+	private _hl7Schema: HashTable<SegmentSchema>;
 	private _document: vscode.TextDocument | null;
 	private _locationArray: FindFieldResult[];
 	private _findResultsIndex: number;
@@ -35,7 +35,7 @@ export class FindField {
 	private _searchString: string;
 
 
-	constructor(CurrentDocument: vscode.TextDocument, HL7Schema: object) {
+	constructor(CurrentDocument: vscode.TextDocument, HL7Schema: HashTable<SegmentSchema>) {
 		this._hl7Schema = HL7Schema;
 		this._document = CurrentDocument;
 		this._locationArray = [];

@@ -13,6 +13,37 @@ export interface HashTable<T> {
 	[key: string]: T;
 }
 
+// Segment schema
+
+// interface defining Segments schema imported from JSON
+export interface SegmentSchema {
+    desc:   string;
+    fields: SegmentFields[];
+}
+export interface SegmentFields {
+    datatype: string;
+    desc:     string;
+    opt:      number;
+    rep:      number;
+    len:      number;
+    table?:   number;
+}
+
+// interface defining Fields schema imported from JSON
+export interface FieldSchema {
+    desc:      string;
+    subfields: FieldComponents[];
+}
+export interface FieldComponents {
+    datatype: string;
+    desc:     string;
+    opt:      number;
+    rep:      number;
+    len?:     number;
+    table?:   number;
+}
+
+
 //----------------------------------------------------
 // Class defining delimter strings used by a HL7 message
 export class Delimiter {
@@ -335,7 +366,7 @@ export abstract class Util {
 	// @param {object} hl7Schema - An object containing the HL7 schema corresponding to the version of the HL7 message
 	//
 	// @return {object} - a hashtable containing HL7 location strings for every field matching the description supplied by the fieldDescription parameter. Includes partial matches.
-	public static FindLocationFromDescription(fieldDescription: string, hl7Schema: object): HashTable<number[]> {
+	public static FindLocationFromDescription(fieldDescription: string, hl7Schema: HashTable<SegmentSchema>): HashTable<number[]> {
 
 		var locationHashtable: HashTable<number[]> = {};
 

@@ -6,7 +6,7 @@
 
 // load modules
 import * as vscode from 'vscode';
-import { Delimiter, HashTable, Util } from "./Util";
+import { Delimiter, HashTable, Util, SegmentSchema } from "./Util";
 
 // the list of fields to highlight
 var fieldSelectionList = [];
@@ -35,7 +35,7 @@ export class HighlightFields {
 	// @param {string} backgroundColor - The RGBA colour value identifying the background colour e.g. "rgba(0,255,0,0.3)". If this is not supplied, a default colour will be used.
 	//
 	// @returns {int} - returns the number of decorations applied
-	public ShowHighlights(itemLocation: string | null, hl7Schema: object, backgroundColor: string) {
+	public ShowHighlights(itemLocation: string | null, hl7Schema: HashTable<SegmentSchema>, backgroundColor: string) {
 		// return if no field location string provided
 		if (itemLocation === null) {
 			return HighlightFieldReturnCode.ERROR_NO_LOCATION_PROVIDED;

@@ -5,7 +5,7 @@
 	validate if the field data confirms to the correct data type. 
 */
 import { TextDocument } from 'vscode';
-import { Delimiter } from './Util'; 
+import { Delimiter, HashTable, SegmentSchema } from './Util'; 
 import { MissingRequiredFieldResult } from './CheckRequiredFieldsResult';
 
 
@@ -13,7 +13,7 @@ import { MissingRequiredFieldResult } from './CheckRequiredFieldsResult';
 // @param {object} hl7Schema - An object containing the HL7 schema corresponding to the version of the HL7 message
 // @param {vscode.TextDocument} Hl7Message - the vscode text document containing the HL7 message
 // @returns {MissingRequiredFieldResult[]} - returns an array of all required fields missing values 
-export function CheckAllFields(HL7Message: TextDocument, Hl7Schema: object) : MissingRequiredFieldResult[] {
+export function CheckAllFields(HL7Message: TextDocument, Hl7Schema: HashTable<SegmentSchema>) : MissingRequiredFieldResult[] {
 
 	var resultsToReturn: MissingRequiredFieldResult[] = [];
 	// parse the HL7 delimiter characters from the current message
@@ -57,7 +57,7 @@ export function CheckAllFields(HL7Message: TextDocument, Hl7Schema: object) : Mi
 // @param {object} hl7Schema - An object containing the HL7 schema corresponding to the version of the HL7 message
 //
 // @returns {number[]} - returns an array of indexes that require values (for the given segment) 
-function GetRequiredFields(SegmentName: string, Hl7Schema: object): number[] {
+function GetRequiredFields(SegmentName: string, Hl7Schema: HashTable<SegmentSchema>): number[] {
 	var fieldIndexListToReturn: number[] = [];
 	var segmentDef = Hl7Schema[SegmentName];
 	// undefined results will be returned if the segment is custom (or unknown, from a more recent HL7 specification)
