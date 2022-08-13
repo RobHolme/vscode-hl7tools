@@ -4,7 +4,7 @@ import { utils } from 'mocha';
 // You can import and use all API from the 'vscode' module
 // as well as import your extension to test it
 import * as vscode from 'vscode';
-import { Util, Delimiter } from '../../src/Util';
+import { Util, Delimiter } from '../../Util'
 
 
 
@@ -47,8 +47,10 @@ suite('vscode-hl7tools Extension Test Suite', () => {
 		});
 
 		test("IsHL7File()", function () {
-			assert.strictEqual(Util.IsHL7File(vscode.window.activeTextEditor.document), true);
-			// TO DO: add test for when the document is not a HL7 file and should return false
+			if (vscode.window.activeTextEditor){
+				assert.strictEqual(Util.IsHL7File(vscode.window.activeTextEditor.document), true);
+				// TO DO: add test for when the document is not a HL7 file and should return false
+			}
 		});
 
 		test("IsSegmentValid()", function () {
