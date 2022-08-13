@@ -8,7 +8,7 @@
 import * as fs from 'fs';
 import * as net from 'net';
 import * as tls from 'tls';
-import { SendHl7MessagePanel } from './webviewpanels/SendHl7MessagePanel';
+import { SendHl7MessagePanel } from './SendHl7MessageWebPanel';
 import { ExtensionPreferences } from './ExtensionPreferences';
 import { NetworkInterfaceBase } from 'os';
 
