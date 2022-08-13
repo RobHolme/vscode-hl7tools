@@ -58,7 +58,7 @@ export function SendMessage(Host: string, Port: number, HL7Message: string, Time
 		// patch CreateSecureContext to add in custom CAs
 		// based on the Monkey Patch discussed in https://medium.com/trabe/monkey-patching-tls-in-node-js-to-support-self-signed-certificates-with-custom-root-cas-25c7396dfd2a
 		const origCreateSecureContext = tls.createSecureContext;
-		tls.createSecureContext = function(options: tls.SecureContextOptions) {
+		(tls.createSecureContext as any) = function(options: tls.SecureContextOptions) { // type assertion as any to work around read only property compiler warning
 			const context = origCreateSecureContext(options);
 			var pem: string = "";
 			for (let i:number = 0; i < trustedCAList.length; i++) {
