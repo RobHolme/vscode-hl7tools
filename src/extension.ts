@@ -100,7 +100,7 @@ function LoadHL7Schema(): HashTable<SegmentSchema> | null {
 	}
 
 	// load the schema based on the HL7 version detected
-	var schema = require('./schema/' + hl7Version + '/segments');
+	var schema = require('../schema/' + hl7Version + '/segments.json');
 
 	// load custom segment schemas
 	if (preferences.CustomSegmentSchema != '') {
@@ -134,7 +134,7 @@ function LoadHL7Fields() {
 	}
 
 	// load the field descriptions based on the HL7 version detected
-	var hl7Fields = require('./schema/' + hl7Version + '/fields');
+	var hl7Fields = require('../schema/' + hl7Version + '/fields.json');
 	return hl7Fields;
 }
 
