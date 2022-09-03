@@ -1,4 +1,4 @@
-var fields_24 = {
+{
     "AD": {
         "desc": "Address",
         "subfields": [
@@ -2904,6 +2904,4 @@ var fields_24 = {
             }
         ]
     }
-};
-
-
+}

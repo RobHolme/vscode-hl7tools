@@ -1,4 +1,4 @@
-var segments_251 = {
+{
     "ABS": {
         "desc": "Abstract",
         "fields": [
@@ -15962,5 +15962,4 @@ var segments_251 = {
             }
         ]
     }
-};
-
+}

@@ -1,4 +1,4 @@
-var fields_21 = {
+{
     "AD": {
         "desc": "Address",
         "subfields": [
@@ -275,5 +275,5 @@ var fields_21 = {
         "desc": "Variable Datatype",
         "subfields": []
     }
-};
+}
 

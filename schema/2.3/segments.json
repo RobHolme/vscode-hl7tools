@@ -1,4 +1,4 @@
-let segments_23 = {
+{
     "ACC": {
         "desc": "Accident",
         "fields": [
@@ -11289,5 +11289,4 @@ let segments_23 = {
             }
         ]
     }
-};
-
+}

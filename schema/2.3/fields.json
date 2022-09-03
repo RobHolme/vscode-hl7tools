@@ -1,4 +1,4 @@
-let fields_23 = {
+{
     "AD": {
         "desc": "Address",
         "subfields": [
@@ -2506,5 +2506,4 @@ let fields_23 = {
             }
         ]
     }
-};
-
+}
