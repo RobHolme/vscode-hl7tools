@@ -222,5 +222,3 @@ export class SendHl7MessagePanel {
 	}
 
 }
-
-module.exports = SendHl7MessagePanel;
