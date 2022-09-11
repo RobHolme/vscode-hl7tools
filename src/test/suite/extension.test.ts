@@ -145,5 +145,8 @@ suite('vscode-hl7tools Extension Test Suite', () => {
 		});
 	});
 
+//GetAllSegmentNames
+//GetEOLCharacter
+//CreateNewDocument - open, getText = "", close document
 
 });
