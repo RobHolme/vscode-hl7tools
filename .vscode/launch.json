@@ -18,8 +18,8 @@
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [
-				"${workspaceRoot}/test/test.hl7",
-				"${workspaceRoot}/test/test2.hl7",
+				"${workspaceRoot}/src/test/test.hl7",
+				"${workspaceRoot}/src/test/test2.hl7",
 				"--extensionDevelopmentPath=${workspaceFolder}",
 				"--extensionTestsPath=${workspaceFolder}/out/test/suite/index"
 			],
