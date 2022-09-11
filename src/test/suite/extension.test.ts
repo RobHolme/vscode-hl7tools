@@ -110,37 +110,37 @@ suite('vscode-hl7tools Extension Test Suite', () => {
 		});
 
 		test("FindLocationFromDescription() v2.3.1 schema", function () {
-			var hl7Schema = require('../../../schema/2.3.1/segments.js');
+			var hl7Schema = require('../../../schema/2.3.1/segments.json');
 			assert.deepEqual(Util.FindLocationFromDescription("Patient Name", hl7Schema), { PID: [5] });
 		});
 
 		test("FindLocationFromDescription() v2.4 schema", function () {
-			var hl7Schema = require('../../../schema/2.4/segments.js');
+			var hl7Schema = require('../../../schema/2.4/segments.json');
 			assert.deepEqual(Util.FindLocationFromDescription("Patient Name", hl7Schema), { PID: [5] });
 		});
 
 		test("FindLocationFromDescription() v2.5 schema", function () {
-			var hl7Schema = require('../../../schema/2.5/segments.js');
+			var hl7Schema = require('../../../schema/2.5/segments.json');
 			assert.deepEqual(Util.FindLocationFromDescription("Patient Name", hl7Schema), { PID: [5] });
 		});
 
 		test("FindLocationFromDescription() v2.5.1 schema", function () {
-			var hl7Schema = require('../../../schema/2.5.1/segments.js');
+			var hl7Schema = require('../../../schema/2.5.1/segments.json');
 			assert.deepEqual(Util.FindLocationFromDescription("Patient Name", hl7Schema), { PID: [5] });
 		});
 
 		test("FindLocationFromDescription() v2.6 schema", function () {
-			var hl7Schema = require('../../../schema/2.6/segments.js');
+			var hl7Schema = require('../../../schema/2.6/segments.json');
 			assert.deepEqual(Util.FindLocationFromDescription("Patient Name", hl7Schema), { PID: [5] });
 		});
 
 		test("FindLocationFromDescription() v2.7 schema", function () {
-			var hl7Schema = require('../../../schema/2.7/segments.js');
+			var hl7Schema = require('../../../schema/2.7/segments.json');
 			assert.deepEqual(Util.FindLocationFromDescription("Patient Name", hl7Schema), { PID: [5] });
 		});
 
 		test("FindLocationFromDescription() v2.7.1 schema", function () {
-			var hl7Schema = require('../../../schema/2.7.1/segments.js');
+			var hl7Schema = require('../../../schema/2.7.1/segments.json');
 			assert.deepEqual(Util.FindLocationFromDescription("Patient Name", hl7Schema), { PID: [5] });
 		});
 	});
