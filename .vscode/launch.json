@@ -11,7 +11,8 @@
 			"runtimeExecutable": "${execPath}",
 			"args": [
 				"--extensionDevelopmentPath=${workspaceRoot}"
-			]
+			],
+			"preLaunchTask": "${defaultBuildTask}"
 		},
 		{
 			"name": "Launch Tests",
