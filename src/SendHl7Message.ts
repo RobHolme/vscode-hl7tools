@@ -10,7 +10,6 @@ import * as net from 'net';
 import * as tls from 'tls';
 import { SendHl7MessagePanel } from './SendHl7MessageWebPanel';
 import { ExtensionPreferences } from './ExtensionPreferences';
-import { NetworkInterfaceBase } from 'os';
 
 // MLLP framing codes
 const VT = String.fromCharCode(0x0b);
@@ -26,14 +25,16 @@ const CR = String.fromCharCode(0x0d);
 // @param {bool} UseTLS - if true connect using TLS
 // @param {} encoding
 // @param {object} webViewPanel - reference to webview panel object so that status update messages can be returned
-export function SendMessage(Host: string, Port: number, HL7Message: string, Timeout: number, UseTls: boolean, encoding: BufferEncoding, webViewPanel: SendHl7MessagePanel) {
+export function SendMessage(Host: string, Port: number, HL7Message: string, Timeout: number, UseTls: boolean, IgnoreCertError: boolean, encoding: BufferEncoding, webViewPanel: SendHl7MessagePanel) {
 
 	// default to 5 second timeout for TCP socket if not supplied as a parameter
 	Timeout = Timeout || 5000;
 
 	// Establish a TCP socket connection to the remote host, write the HL7 message to the socket. 
-
 	var preferences: ExtensionPreferences = new ExtensionPreferences();
+
+	// get the default cert warning setting
+	var certWarningSetting: string | undefined = process.env.NODE_TLS_REJECT_UNAUTHORIZED;
 
 	// replace any newlines added by the text area with CRs.
 	HL7Message = HL7Message.replace(new RegExp('\n', 'g'), String.fromCharCode(0x0d));
@@ -42,15 +43,14 @@ export function SendMessage(Host: string, Port: number, HL7Message: string, Time
 
 	// connect with TLS
 	if (UseTls) {
-		//		const tlsOptions = {
-		//			host: Host,
-		//			rejectUnauthorized: !ignoreCertError
-		//		}
+		
+		if (IgnoreCertError) {
+			process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+		}
 		const tlsOptions = {
 			host: Host,
-			rejectUnauthorized: true
+			rejectUnauthorized: !IgnoreCertError
 		}
-
 
 		// load custom trusted CAs defined in user preferences
 		const trustedCAList: string[] = preferences.TrustedCertificateAuthorities;
@@ -80,7 +80,6 @@ export function SendMessage(Host: string, Port: number, HL7Message: string, Time
 					});
 				}
 			}
-
 			return context;
 		};
 
@@ -113,6 +112,7 @@ export function SendMessage(Host: string, Port: number, HL7Message: string, Time
 	client.on('timeout', () => {
 		webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Connection to ' + Host + ':' + Port + ' has timed out waiting for a response. \r\n');
 		client.destroy();
+		process.env.NODE_TLS_REJECT_UNAUTHORIZED = certWarningSetting;
 	});
 
 	// error handler for refused connections (i.e. remote host unreachable.)
@@ -123,11 +123,13 @@ export function SendMessage(Host: string, Port: number, HL7Message: string, Time
 		else {
 			webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] An error occurred: ' + e.code + '\r\n');
 		}
+		process.env.NODE_TLS_REJECT_UNAUTHORIZED = certWarningSetting;
 	});
 
 	// error handler for sockets ended by remote endpoint.)
 	client.on('end', function (data: any) {
 		webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Socket closed by remote host. \r\n');
+		process.env.NODE_TLS_REJECT_UNAUTHORIZED = certWarningSetting;
 	});
 
 	// receive ACK, log to console 
@@ -149,6 +151,7 @@ export function SendMessage(Host: string, Port: number, HL7Message: string, Time
 			webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Connection to ' + Host + ':' + Port + ' has been closed \r\n');
 		}
 		webViewPanel.updateStatus('\r\n');
+		process.env.NODE_TLS_REJECT_UNAUTHORIZED = certWarningSetting;
 	});
 }
 

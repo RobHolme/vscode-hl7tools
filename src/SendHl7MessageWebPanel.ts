@@ -108,7 +108,7 @@ export class SendHl7MessagePanel {
 				var _port = document.getElementById("port").value;
 				var _tls = document.getElementById("useTls").checked;
 				var _encoding = document.getElementById("encoding").value;
-//				var _ignoreCerErr = document.getElementById("ignoreCertError").checked;
+			//	var _ignoreCerErr = document.getElementById("ignoreCertError").checked;
 				vscode.postMessage({
 					command: 'sendMessage',
 					hl7: _hl7MessageValue,
@@ -164,9 +164,9 @@ export class SendHl7MessagePanel {
 				}
 			});
 			
-//			// respond when the use TLS checkbox is changed - enable or disable the cert warning option
+			// respond when the use TLS checkbox is changed - enable or disable the cert warning option
 			function tlsCheckBoxChange(tlsCheckBox) {
-// DO NOTHING until option to ignore cert errors is implemented				
+// ENABLE IF IgnoreCertError checkbox added
 //				if (tlsCheckBox.checked) {
 //					document.getElementById("ignoreCertError").disabled = false;	
 //				}
@@ -199,7 +199,7 @@ export class SendHl7MessagePanel {
 					<option value="ascii">ASCII</option>
 				</select><br>
 				<label class=field for="useTls">Use TLS:</label><input type="checkbox" id="useTls" name="useTls"><br><br>
-<!--				<label class=field for="ignoreCertError">Ignore cert errors:</label><input type="checkbox" id="ignoreCertError" name="ignoreCertError"><br><br>  -->
+<!--				<label class=field for="ignoreCertError">Ignore cert errors (unsafe):</label><input type="checkbox" id="ignoreCertError" name="ignoreCertError"><br><br>  -->
   				<button id="btnSend">Send Message</button>&nbsp;&nbsp;&nbsp;
 				<button id="btnExit">Exit</button>
 				<br><br>

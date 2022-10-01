@@ -426,7 +426,7 @@ export function activate(context: vscode.ExtensionContext) {
 		SendHl7MessageWebView.panel.webview.onDidReceiveMessage(function (message) {
 			switch (message.command) {
 				case 'sendMessage':
-					SendMessage(message.host, message.port, message.hl7, tcpConnectionTimeout, message.tls, message.encoding, SendHl7MessageWebView);
+					SendMessage(message.host, message.port, message.hl7, tcpConnectionTimeout, message.tls, message.ignoreCertError, message.encoding, SendHl7MessageWebView);
 					return;
 				case 'exit':
 					SendHl7MessageWebView.panel.dispose();
