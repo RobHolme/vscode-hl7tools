@@ -37,7 +37,7 @@ export class HighlightFields {
 	// @returns {int} - returns the number of decorations applied
 	public ShowHighlights(itemLocation: string | null, hl7Schema: HashTable<SegmentSchema>, backgroundColor: string) {
 		// return if no field location string provided
-		if (itemLocation === null) {
+		if ((itemLocation === null) || (itemLocation === undefined)) {
 			return HighlightFieldReturnCode.ERROR_NO_LOCATION_PROVIDED;
 		}
 
