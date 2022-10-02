@@ -34,7 +34,7 @@ export function SendMessage(Host: string, Port: number, HL7Message: string, Time
 	var preferences: ExtensionPreferences = new ExtensionPreferences();
 
 	// get the default cert warning setting
-	var certWarningSetting: string | undefined = process.env.NODE_TLS_REJECT_UNAUTHORIZED;
+	//var certWarningSetting: string | undefined = process.env.NODE_TLS_REJECT_UNAUTHORIZED;
 
 	// replace any newlines added by the text area with CRs.
 	HL7Message = HL7Message.replace(new RegExp('\n', 'g'), String.fromCharCode(0x0d));
@@ -112,7 +112,7 @@ export function SendMessage(Host: string, Port: number, HL7Message: string, Time
 	client.on('timeout', () => {
 		webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Connection to ' + Host + ':' + Port + ' has timed out waiting for a response. \r\n');
 		client.destroy();
-		process.env.NODE_TLS_REJECT_UNAUTHORIZED = certWarningSetting;
+//		process.env.NODE_TLS_REJECT_UNAUTHORIZED = certWarningSetting;
 	});
 
 	// error handler for refused connections (i.e. remote host unreachable.)
@@ -122,14 +122,17 @@ export function SendMessage(Host: string, Port: number, HL7Message: string, Time
 		}
 		else {
 			webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] An error occurred: ' + e.code + '\r\n');
+			if (e.code == 'UNABLE_TO_VERIFY_LEAF_SIGNATURE') {
+				webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Self Signed Certificates not supported.\r\n');
+			}
 		}
-		process.env.NODE_TLS_REJECT_UNAUTHORIZED = certWarningSetting;
+//		process.env.NODE_TLS_REJECT_UNAUTHORIZED = certWarningSetting;
 	});
 
 	// error handler for sockets ended by remote endpoint.)
 	client.on('end', function (data: any) {
 		webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Socket closed by remote host. \r\n');
-		process.env.NODE_TLS_REJECT_UNAUTHORIZED = certWarningSetting;
+//		process.env.NODE_TLS_REJECT_UNAUTHORIZED = certWarningSetting;
 	});
 
 	// receive ACK, log to console 
@@ -151,7 +154,7 @@ export function SendMessage(Host: string, Port: number, HL7Message: string, Time
 			webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Connection to ' + Host + ':' + Port + ' has been closed \r\n');
 		}
 		webViewPanel.updateStatus('\r\n');
-		process.env.NODE_TLS_REJECT_UNAUTHORIZED = certWarningSetting;
+//		process.env.NODE_TLS_REJECT_UNAUTHORIZED = certWarningSetting;
 	});
 }
 
