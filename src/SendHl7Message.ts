@@ -44,12 +44,9 @@ export function SendMessage(Host: string, Port: number, HL7Message: string, Time
 	// connect with TLS
 	if (UseTls) {
 		
-		if (IgnoreCertError) {
-			process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-		}
 		const tlsOptions = {
 			host: Host,
-			rejectUnauthorized: !IgnoreCertError
+			rejectUnauthorized: true // connections fail if this is set to false (??)
 		}
 
 		// load custom trusted CAs defined in user preferences
@@ -112,10 +109,8 @@ export function SendMessage(Host: string, Port: number, HL7Message: string, Time
 	client.on('timeout', () => {
 		webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Connection to ' + Host + ':' + Port + ' has timed out waiting for a response. \r\n');
 		client.destroy();
-//		process.env.NODE_TLS_REJECT_UNAUTHORIZED = certWarningSetting;
 	});
 
-	// error handler for refused connections (i.e. remote host unreachable.)
 	client.on('error', function (e: any) {
 		if (e.code == 'ECONNREFUSED') {
 			webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Connection refused by ' + Host + ':' + Port + '\r\n');
@@ -126,13 +121,11 @@ export function SendMessage(Host: string, Port: number, HL7Message: string, Time
 				webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Self Signed Certificates not supported.\r\n');
 			}
 		}
-//		process.env.NODE_TLS_REJECT_UNAUTHORIZED = certWarningSetting;
 	});
 
 	// error handler for sockets ended by remote endpoint.)
 	client.on('end', function (data: any) {
 		webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Socket closed by remote host. \r\n');
-//		process.env.NODE_TLS_REJECT_UNAUTHORIZED = certWarningSetting;
 	});
 
 	// receive ACK, log to console 
@@ -154,7 +147,6 @@ export function SendMessage(Host: string, Port: number, HL7Message: string, Time
 			webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Connection to ' + Host + ':' + Port + ' has been closed \r\n');
 		}
 		webViewPanel.updateStatus('\r\n');
-//		process.env.NODE_TLS_REJECT_UNAUTHORIZED = certWarningSetting;
 	});
 }
 
