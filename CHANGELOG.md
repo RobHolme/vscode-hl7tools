@@ -175,3 +175,6 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 * Added basic validation to ensure favourites defined in user settings contain all required properties (invalid entries removed from favourites drop list)
 * Fixed error in onDidChangeTextDocument event
 * Any active field highlighting will be reapplied when the document text changes.
+
+## 2.0 (16/11/2022)
+* converted to TypeScript. No changes to functionality.
