@@ -655,7 +655,7 @@ export function activate(context: vscode.ExtensionContext) {
 			// include support for custom 'Z' segments (not in the schema).
 			// these are prone to false positives - e.g. a field with the name ZOE would still match the definition of a Z segment. 
 			// assuming there will always be a space in front to reduce false positives
-			regexString += "\sZ[A-Z]\\w\\|)";
+			regexString += "\\sZ[A-Z]\\w\\|)";
 			var segmentRegEx: RegExp = new RegExp(regexString, 'g');
 
 			// split the message into segments using the regex, then join elements back together with the EOL character separating segments.
