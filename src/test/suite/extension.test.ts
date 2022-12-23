@@ -151,6 +151,11 @@ suite('vscode-hl7tools Extension Test Suite', () => {
 			assert.deepEqual(Util.FindLocationFromDescription("Patient Name", hl7Schema), { PID: [5] });
 		});
 
+		test("FindLocationFromDescription() v2.8.2 schema", function () {
+			var hl7Schema = require('../../../schema/2.8.2/segments.json');
+			assert.deepEqual(Util.FindLocationFromDescription("Patient Name", hl7Schema), { PID: [5] });
+		});
+
 		// get all segment names from the message
 		test("GetAllSegmentNames()", function () {
 			if (vscode.window.activeTextEditor) {
