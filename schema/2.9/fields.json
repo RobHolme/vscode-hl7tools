@@ -1,0 +1,2069 @@
+{
+"SAD":{
+	"subfields": [
+		{
+			"datatype": "SAD.1",
+			"desc": "Street or Mailing Address"
+		},
+		{
+			"datatype": "SAD.2",
+			"desc": "Street Name"
+		},
+		{
+			"datatype": "SAD.3",
+			"desc": "Dwelling Number"
+		}
+	]
+},
+"VR":{
+	"subfields": [
+		{
+			"datatype": "VR.1",
+			"desc": "First Data Code Value"
+		},
+		{
+			"datatype": "VR.2",
+			"desc": "Last Data Code Value"
+		}
+	]
+},
+"PT":{
+	"subfields": [
+		{
+			"datatype": "PT.1",
+			"desc": "Processing ID"
+		},
+		{
+			"datatype": "PT.2",
+			"desc": "Processing Mode"
+		}
+	]
+},
+"FC":{
+	"subfields": [
+		{
+			"datatype": "FC.1",
+			"desc": "Financial Class Code"
+		},
+		{
+			"datatype": "FC.2",
+			"desc": "Effective Date"
+		}
+	]
+},
+"AD":{
+	"subfields": [
+		{
+			"datatype": "AD.1",
+			"desc": "Street Address"
+		},
+		{
+			"datatype": "AD.2",
+			"desc": "Other Designation"
+		},
+		{
+			"datatype": "AD.3",
+			"desc": "City"
+		},
+		{
+			"datatype": "AD.4",
+			"desc": "State or Province"
+		},
+		{
+			"datatype": "AD.5",
+			"desc": "Zip or Postal Code"
+		},
+		{
+			"datatype": "AD.6",
+			"desc": "Country"
+		},
+		{
+			"datatype": "AD.7",
+			"desc": "Address Type"
+		},
+		{
+			"datatype": "AD.8",
+			"desc": "Other Geographic Designation"
+		}
+	]
+},
+"SRT":{
+	"subfields": [
+		{
+			"datatype": "SRT.1",
+			"desc": "Sort-by Field"
+		},
+		{
+			"datatype": "SRT.2",
+			"desc": "Sequencing"
+		}
+	]
+},
+"escapeType":{
+	"subfields": []
+},
+"PL":{
+	"subfields": [
+		{
+			"datatype": "PL.1",
+			"desc": "Point of Care"
+		},
+		{
+			"datatype": "PL.2",
+			"desc": "Room"
+		},
+		{
+			"datatype": "PL.3",
+			"desc": "Bed"
+		},
+		{
+			"datatype": "PL.4",
+			"desc": "Facility"
+		},
+		{
+			"datatype": "PL.5",
+			"desc": "Location Status"
+		},
+		{
+			"datatype": "PL.6",
+			"desc": "Person Location Type"
+		},
+		{
+			"datatype": "PL.7",
+			"desc": "Building"
+		},
+		{
+			"datatype": "PL.8",
+			"desc": "Floor"
+		},
+		{
+			"datatype": "PL.9",
+			"desc": "Location Description"
+		},
+		{
+			"datatype": "PL.10",
+			"desc": "Comprehensive Location Identifier"
+		},
+		{
+			"datatype": "PL.11",
+			"desc": "Assigning Authority for Location"
+		}
+	]
+},
+"DT":{
+	"subfields": []
+},
+"DIN":{
+	"subfields": [
+		{
+			"datatype": "DIN.1",
+			"desc": "Date"
+		},
+		{
+			"datatype": "DIN.2",
+			"desc": "Institution Name"
+		}
+	]
+},
+"DLN":{
+	"subfields": [
+		{
+			"datatype": "DLN.1",
+			"desc": "Driver License Number"
+		},
+		{
+			"datatype": "DLN.2",
+			"desc": "Issuing State, Province, Country"
+		},
+		{
+			"datatype": "DLN.3",
+			"desc": "Expiration Date"
+		}
+	]
+},
+"HD":{
+	"subfields": [
+		{
+			"datatype": "HD.1",
+			"desc": "Namespace ID"
+		},
+		{
+			"datatype": "HD.2",
+			"desc": "Universal ID"
+		},
+		{
+			"datatype": "HD.3",
+			"desc": "Universal ID Type"
+		}
+	]
+},
+"EIP":{
+	"subfields": [
+		{
+			"datatype": "EIP.1",
+			"desc": "Placer Assigned Identifier"
+		},
+		{
+			"datatype": "EIP.2",
+			"desc": "Filler Assigned Identifier"
+		}
+	]
+},
+"QSC":{
+	"subfields": [
+		{
+			"datatype": "QSC.1",
+			"desc": "Segment Field Name"
+		},
+		{
+			"datatype": "QSC.2",
+			"desc": "Relational Operator"
+		},
+		{
+			"datatype": "QSC.3",
+			"desc": "Value"
+		},
+		{
+			"datatype": "QSC.4",
+			"desc": "Relational Conjunction"
+		}
+	]
+},
+"SNM":{
+	"subfields": []
+},
+"XON":{
+	"subfields": [
+		{
+			"datatype": "XON.1",
+			"desc": "Organization Name"
+		},
+		{
+			"datatype": "XON.2",
+			"desc": "Organization Name Type Code"
+		},
+		{
+			"datatype": "XON.6",
+			"desc": "Assigning Authority"
+		},
+		{
+			"datatype": "XON.7",
+			"desc": "Identifier Type Code"
+		},
+		{
+			"datatype": "XON.8",
+			"desc": "Assigning Facility"
+		},
+		{
+			"datatype": "XON.9",
+			"desc": "Name Representation Code"
+		},
+		{
+			"datatype": "XON.10",
+			"desc": "Organization Identifier"
+		}
+	]
+},
+"DTM":{
+	"subfields": []
+},
+"JCC":{
+	"subfields": [
+		{
+			"datatype": "JCC.1",
+			"desc": "Job Code"
+		},
+		{
+			"datatype": "JCC.2",
+			"desc": "Job Class"
+		},
+		{
+			"datatype": "JCC.3",
+			"desc": "Job Description Text"
+		}
+	]
+},
+"MA":{
+	"subfields": [
+		{
+			"datatype": "MA.1",
+			"desc": "Sample Y From Channel 1"
+		},
+		{
+			"datatype": "MA.2",
+			"desc": "Sample Y From Channel 2"
+		},
+		{
+			"datatype": "MA.3",
+			"desc": "Sample Y From Channel 3"
+		},
+		{
+			"datatype": "MA.4",
+			"desc": "Sample Y From Channel 4"
+		},
+		{
+			"datatype": "MA.5",
+			"desc": "xx"
+		}
+	]
+},
+"SCV":{
+	"subfields": [
+		{
+			"datatype": "SCV.1",
+			"desc": "Parameter Class"
+		},
+		{
+			"datatype": "SCV.2",
+			"desc": "Parameter Value"
+		}
+	]
+},
+"ED":{
+	"subfields": [
+		{
+			"datatype": "ED.1",
+			"desc": "Source Application"
+		},
+		{
+			"datatype": "ED.2",
+			"desc": "Type of Data"
+		},
+		{
+			"datatype": "ED.3",
+			"desc": "Data Subtype"
+		},
+		{
+			"datatype": "ED.4",
+			"desc": "Encoding"
+		},
+		{
+			"datatype": "ED.5",
+			"desc": "Data"
+		}
+	]
+},
+"SN":{
+	"subfields": [
+		{
+			"datatype": "SN.1",
+			"desc": "Comparator"
+		},
+		{
+			"datatype": "SN.2",
+			"desc": "Num1"
+		},
+		{
+			"datatype": "SN.3",
+			"desc": "Separator/Suffix"
+		},
+		{
+			"datatype": "SN.4",
+			"desc": "Num2"
+		}
+	]
+},
+"CD":{
+	"subfields": [
+		{
+			"datatype": "CD.1",
+			"desc": "Channel Identifier"
+		},
+		{
+			"datatype": "CD.2",
+			"desc": "Waveform Source"
+		},
+		{
+			"datatype": "CD.3",
+			"desc": "Channel Sensitivity and Units"
+		},
+		{
+			"datatype": "CD.4",
+			"desc": "Channel Calibration Parameters"
+		},
+		{
+			"datatype": "CD.5",
+			"desc": "Channel Sampling Frequency"
+		},
+		{
+			"datatype": "CD.6",
+			"desc": "Minimum and Maximum Data Values"
+		}
+	]
+},
+"ICD":{
+	"subfields": [
+		{
+			"datatype": "ICD.1",
+			"desc": "Certification Patient Type"
+		},
+		{
+			"datatype": "ICD.2",
+			"desc": "Certification Required"
+		},
+		{
+			"datatype": "ICD.3",
+			"desc": "Date/Time Certification Required"
+		}
+	]
+},
+"VID":{
+	"subfields": [
+		{
+			"datatype": "VID.1",
+			"desc": "Version ID"
+		},
+		{
+			"datatype": "VID.2",
+			"desc": "Internationalization Code"
+		},
+		{
+			"datatype": "VID.3",
+			"desc": "International Version ID"
+		}
+	]
+},
+"DDI":{
+	"subfields": [
+		{
+			"datatype": "DDI.1",
+			"desc": "Delay Days"
+		},
+		{
+			"datatype": "DDI.2",
+			"desc": "Monetary Amount"
+		},
+		{
+			"datatype": "DDI.3",
+			"desc": "Number of Days"
+		}
+	]
+},
+"RCD":{
+	"subfields": [
+		{
+			"datatype": "RCD.1",
+			"desc": "Segment Field Name"
+		},
+		{
+			"datatype": "RCD.2",
+			"desc": "HL7 Data Type"
+		},
+		{
+			"datatype": "RCD.3",
+			"desc": "Maximum Column Width"
+		}
+	]
+},
+"WVS":{
+	"subfields": [
+		{
+			"datatype": "WVS.1",
+			"desc": "Source One Name"
+		},
+		{
+			"datatype": "WVS.2",
+			"desc": "Source Two Name"
+		}
+	]
+},
+"MOC":{
+	"subfields": [
+		{
+			"datatype": "MOC.1",
+			"desc": "Monetary Amount"
+		},
+		{
+			"datatype": "MOC.2",
+			"desc": "Charge Code"
+		}
+	]
+},
+"XCN":{
+	"subfields": [
+		{
+			"datatype": "XCN.1",
+			"desc": "Person Identifier"
+		},
+		{
+			"datatype": "XCN.2",
+			"desc": "Family Name"
+		},
+		{
+			"datatype": "XCN.3",
+			"desc": "Given Name"
+		},
+		{
+			"datatype": "XCN.4",
+			"desc": "Second and Further Given Names or Initials Thereof"
+		},
+		{
+			"datatype": "XCN.5",
+			"desc": "Suffix (e.g., JR or III)"
+		},
+		{
+			"datatype": "XCN.6",
+			"desc": "Prefix (e.g., DR)"
+		},
+		{
+			"datatype": "XCN.8",
+			"desc": "Source Table"
+		},
+		{
+			"datatype": "XCN.9",
+			"desc": "Assigning Authority"
+		},
+		{
+			"datatype": "XCN.10",
+			"desc": "Name Type Code"
+		},
+		{
+			"datatype": "XCN.11",
+			"desc": "Identifier Check Digit"
+		},
+		{
+			"datatype": "XCN.12",
+			"desc": "Check Digit Scheme"
+		},
+		{
+			"datatype": "XCN.13",
+			"desc": "Identifier Type Code"
+		},
+		{
+			"datatype": "XCN.14",
+			"desc": "Assigning Facility"
+		},
+		{
+			"datatype": "XCN.15",
+			"desc": "Name Representation Code"
+		},
+		{
+			"datatype": "XCN.16",
+			"desc": "Name Context"
+		},
+		{
+			"datatype": "XCN.18",
+			"desc": "Name Assembly Order"
+		},
+		{
+			"datatype": "XCN.19",
+			"desc": "Effective Date"
+		},
+		{
+			"datatype": "XCN.20",
+			"desc": "Expiration Date"
+		},
+		{
+			"datatype": "XCN.21",
+			"desc": "Professional Suffix"
+		},
+		{
+			"datatype": "XCN.22",
+			"desc": "Assigning Jurisdiction"
+		},
+		{
+			"datatype": "XCN.23",
+			"desc": "Assigning Agency or Department"
+		},
+		{
+			"datatype": "XCN.24",
+			"desc": "Security Check "
+		},
+		{
+			"datatype": "XCN.25",
+			"desc": "Security Check Scheme"
+		}
+	]
+},
+"CQ":{
+	"subfields": [
+		{
+			"datatype": "CQ.1",
+			"desc": "Quantity"
+		},
+		{
+			"datatype": "CQ.2",
+			"desc": "Units"
+		}
+	]
+},
+"UVC":{
+	"subfields": [
+		{
+			"datatype": "UVC.1",
+			"desc": "Value Code"
+		},
+		{
+			"datatype": "UVC.2",
+			"desc": "Value Amount"
+		},
+		{
+			"datatype": "UVC.3",
+			"desc": "Non-Monetary Value Amount / Quantity"
+		},
+		{
+			"datatype": "UVC.4",
+			"desc": "Non-Monetary Value Amount / Units "
+		}
+	]
+},
+"PLN":{
+	"subfields": [
+		{
+			"datatype": "PLN.1",
+			"desc": "ID Number"
+		},
+		{
+			"datatype": "PLN.2",
+			"desc": "Type of ID Number"
+		},
+		{
+			"datatype": "PLN.3",
+			"desc": "State/other Qualifying Information"
+		},
+		{
+			"datatype": "PLN.4",
+			"desc": "Expiration Date"
+		}
+	]
+},
+"NA":{
+	"subfields": [
+		{
+			"datatype": "NA.1",
+			"desc": "Value1"
+		},
+		{
+			"datatype": "NA.2",
+			"desc": "Value2"
+		},
+		{
+			"datatype": "NA.3",
+			"desc": "Value3"
+		},
+		{
+			"datatype": "NA.4",
+			"desc": "Value4"
+		},
+		{
+			"datatype": "NA.5",
+			"desc": "xx"
+		}
+	]
+},
+"DLT":{
+	"subfields": [
+		{
+			"datatype": "DLT.1",
+			"desc": "Normal Range"
+		},
+		{
+			"datatype": "DLT.2",
+			"desc": "Numeric Threshold"
+		},
+		{
+			"datatype": "DLT.3",
+			"desc": "Change Computation"
+		},
+		{
+			"datatype": "DLT.4",
+			"desc": "Days Retained"
+		}
+	]
+},
+"RFR":{
+	"subfields": [
+		{
+			"datatype": "RFR.1",
+			"desc": "Numeric Range"
+		},
+		{
+			"datatype": "RFR.2",
+			"desc": "Administrative Sex"
+		},
+		{
+			"datatype": "RFR.3",
+			"desc": "Age Range"
+		},
+		{
+			"datatype": "RFR.4",
+			"desc": "Gestational Age Range"
+		},
+		{
+			"datatype": "RFR.5",
+			"desc": "Species"
+		},
+		{
+			"datatype": "RFR.6",
+			"desc": "Race/subspecies"
+		},
+		{
+			"datatype": "RFR.7",
+			"desc": "Conditions"
+		}
+	]
+},
+"TX":{
+	"subfields": []
+},
+"OSP":{
+	"subfields": [
+		{
+			"datatype": "OSP.1",
+			"desc": "Occurrence Span Code"
+		},
+		{
+			"datatype": "OSP.2",
+			"desc": "Occurrence Span Start Date"
+		},
+		{
+			"datatype": "OSP.3",
+			"desc": "Occurrence Span Stop Date"
+		}
+	]
+},
+"IS":{
+	"subfields": []
+},
+"CF":{
+	"subfields": [
+		{
+			"datatype": "CF.1",
+			"desc": "Identifier"
+		},
+		{
+			"datatype": "CF.2",
+			"desc": "Formatted Text"
+		},
+		{
+			"datatype": "CF.3",
+			"desc": "Name of Coding System"
+		},
+		{
+			"datatype": "CF.4",
+			"desc": "Alternate Identifier"
+		},
+		{
+			"datatype": "CF.5",
+			"desc": "Alternate Formatted Text"
+		},
+		{
+			"datatype": "CF.6",
+			"desc": "Name of Alternate Coding System"
+		},
+		{
+			"datatype": "CF.7",
+			"desc": "Coding System Version ID"
+		},
+		{
+			"datatype": "CF.8",
+			"desc": "Alternate Coding System Version ID"
+		},
+		{
+			"datatype": "CF.9",
+			"desc": "Original Text"
+		},
+		{
+			"datatype": "CF.10",
+			"desc": "Second Alternate Identifier"
+		},
+		{
+			"datatype": "CF.11",
+			"desc": "Second Alternate Formatted Text"
+		},
+		{
+			"datatype": "CF.12",
+			"desc": "Name of Second Alternate Coding System"
+		},
+		{
+			"datatype": "CF.13",
+			"desc": "Second Alternate Coding System Version ID"
+		},
+		{
+			"datatype": "CF.14",
+			"desc": "Coding System OID"
+		},
+		{
+			"datatype": "CF.15",
+			"desc": "Value Set OID"
+		},
+		{
+			"datatype": "CF.16",
+			"desc": "Value Set Version ID"
+		},
+		{
+			"datatype": "CF.17",
+			"desc": "Alternate Coding System OID"
+		},
+		{
+			"datatype": "CF.18",
+			"desc": "Alternate Value Set OID"
+		},
+		{
+			"datatype": "CF.19",
+			"desc": "Alternate Value Set Version ID"
+		},
+		{
+			"datatype": "CF.20",
+			"desc": "Second Alternate Coding System OID"
+		},
+		{
+			"datatype": "CF.21",
+			"desc": "Second Alternate Value Set OID"
+		},
+		{
+			"datatype": "CF.22",
+			"desc": "Second Alternate Value Set Version ID"
+		}
+	]
+},
+"ID":{
+	"subfields": []
+},
+"RP":{
+	"subfields": [
+		{
+			"datatype": "RP.1",
+			"desc": "Pointer"
+		},
+		{
+			"datatype": "RP.2",
+			"desc": "Application ID"
+		},
+		{
+			"datatype": "RP.3",
+			"desc": "Type of Data"
+		},
+		{
+			"datatype": "RP.4",
+			"desc": "Subtype"
+		}
+	]
+},
+"CCP":{
+	"subfields": [
+		{
+			"datatype": "CCP.1",
+			"desc": "Channel Calibration Sensitivity Correction Factor"
+		},
+		{
+			"datatype": "CCP.2",
+			"desc": "Channel Calibration Baseline"
+		},
+		{
+			"datatype": "CCP.3",
+			"desc": "Channel Calibration Time Skew"
+		}
+	]
+},
+"QIP":{
+	"subfields": [
+		{
+			"datatype": "QIP.1",
+			"desc": "Segment Field Name"
+		},
+		{
+			"datatype": "QIP.2",
+			"desc": "Values"
+		}
+	]
+},
+"MSG":{
+	"subfields": [
+		{
+			"datatype": "MSG.1",
+			"desc": "Message Code"
+		},
+		{
+			"datatype": "MSG.2",
+			"desc": "Trigger Event"
+		},
+		{
+			"datatype": "MSG.3",
+			"desc": "Message Structure"
+		}
+	]
+},
+"FN":{
+	"subfields": [
+		{
+			"datatype": "FN.1",
+			"desc": "Surname"
+		},
+		{
+			"datatype": "FN.2",
+			"desc": "Own Surname Prefix"
+		},
+		{
+			"datatype": "FN.3",
+			"desc": "Own Surname"
+		},
+		{
+			"datatype": "FN.4",
+			"desc": "Surname Prefix from Partner/Spouse"
+		},
+		{
+			"datatype": "FN.5",
+			"desc": "Surname from Partner/Spouse"
+		}
+	]
+},
+"SI":{
+	"subfields": []
+},
+"SPD":{
+	"subfields": [
+		{
+			"datatype": "SPD.1",
+			"desc": "Specialty Name"
+		},
+		{
+			"datatype": "SPD.2",
+			"desc": "Governing Board"
+		},
+		{
+			"datatype": "SPD.3",
+			"desc": "Eligible or Certified"
+		},
+		{
+			"datatype": "SPD.4",
+			"desc": "Date of Certification"
+		}
+	]
+},
+"MOP":{
+	"subfields": [
+		{
+			"datatype": "MOP.1",
+			"desc": "Money or Percentage Indicator"
+		},
+		{
+			"datatype": "MOP.2",
+			"desc": "Money or Percentage Quantity"
+		},
+		{
+			"datatype": "MOP.3",
+			"desc": "Monetary Denomination"
+		}
+	]
+},
+"CNE":{
+	"subfields": [
+		{
+			"datatype": "CNE.1",
+			"desc": "Identifier"
+		},
+		{
+			"datatype": "CNE.2",
+			"desc": "Text"
+		},
+		{
+			"datatype": "CNE.3",
+			"desc": "Name of Coding System"
+		},
+		{
+			"datatype": "CNE.4",
+			"desc": "Alternate Identifier"
+		},
+		{
+			"datatype": "CNE.5",
+			"desc": "Alternate Text"
+		},
+		{
+			"datatype": "CNE.6",
+			"desc": "Name of Alternate Coding System"
+		},
+		{
+			"datatype": "CNE.7",
+			"desc": "Coding System Version ID"
+		},
+		{
+			"datatype": "CNE.8",
+			"desc": "Alternate Coding System Version ID"
+		},
+		{
+			"datatype": "CNE.9",
+			"desc": "Original Text"
+		},
+		{
+			"datatype": "CNE.10",
+			"desc": "Second Alternate Identifier"
+		},
+		{
+			"datatype": "CNE.11",
+			"desc": "Second Alternate Text"
+		},
+		{
+			"datatype": "CNE.12",
+			"desc": "Name of Second Alternate Coding System"
+		},
+		{
+			"datatype": "CNE.13",
+			"desc": "Second Alternate Coding System Version ID"
+		},
+		{
+			"datatype": "CNE.14",
+			"desc": "Coding System OID"
+		},
+		{
+			"datatype": "CNE.15",
+			"desc": "Value Set OID"
+		},
+		{
+			"datatype": "CNE.16",
+			"desc": "Value Set Version ID"
+		},
+		{
+			"datatype": "CNE.17",
+			"desc": "Alternate Coding System OID"
+		},
+		{
+			"datatype": "CNE.18",
+			"desc": "Alternate Value Set OID"
+		},
+		{
+			"datatype": "CNE.19",
+			"desc": "Alternate Value Set Version ID"
+		},
+		{
+			"datatype": "CNE.20",
+			"desc": "Second Alternate Coding System OID"
+		},
+		{
+			"datatype": "CNE.21",
+			"desc": "Second Alternate Value Set OID"
+		},
+		{
+			"datatype": "CNE.22",
+			"desc": "Second Alternate Value Set Version ID"
+		}
+	]
+},
+"OG":{
+	"subfields": [
+		{
+			"datatype": "OG.1",
+			"desc": "Original Sub-Identifier"
+		},
+		{
+			"datatype": "OG.2",
+			"desc": "Group"
+		},
+		{
+			"datatype": "OG.3",
+			"desc": "Sequence"
+		},
+		{
+			"datatype": "OG.4",
+			"desc": "Identifier"
+		}
+	]
+},
+"CNN":{
+	"subfields": [
+		{
+			"datatype": "CNN.1",
+			"desc": "ID Number"
+		},
+		{
+			"datatype": "CNN.2",
+			"desc": "Family Name"
+		},
+		{
+			"datatype": "CNN.3",
+			"desc": "Given Name"
+		},
+		{
+			"datatype": "CNN.4",
+			"desc": "Second and Further Given Names or Initials Thereof"
+		},
+		{
+			"datatype": "CNN.5",
+			"desc": "Suffix (e.g., JR or III)"
+		},
+		{
+			"datatype": "CNN.6",
+			"desc": "Prefix (e.g., DR)"
+		},
+		{
+			"datatype": "CNN.7",
+			"desc": "Degree (e.g., MD)"
+		},
+		{
+			"datatype": "CNN.8",
+			"desc": "Source Table"
+		},
+		{
+			"datatype": "CNN.9",
+			"desc": "Assigning Authority - Namespace ID"
+		},
+		{
+			"datatype": "CNN.10",
+			"desc": "Assigning Authority - Universal ID"
+		},
+		{
+			"datatype": "CNN.11",
+			"desc": "Assigning Authority - Universal ID Type"
+		}
+	]
+},
+"CCD":{
+	"subfields": [
+		{
+			"datatype": "CCD.1",
+			"desc": "Invocation Event "
+		},
+		{
+			"datatype": "CCD.2",
+			"desc": "Date/time"
+		}
+	]
+},
+"XTN":{
+	"subfields": [
+		{
+			"datatype": "XTN.2",
+			"desc": "Telecommunication Use Code"
+		},
+		{
+			"datatype": "XTN.3",
+			"desc": "Telecommunication Equipment Type"
+		},
+		{
+			"datatype": "XTN.4",
+			"desc": "Communication Address"
+		},
+		{
+			"datatype": "XTN.5",
+			"desc": "Country Code"
+		},
+		{
+			"datatype": "XTN.6",
+			"desc": "Area/City Code"
+		},
+		{
+			"datatype": "XTN.7",
+			"desc": "Local Number"
+		},
+		{
+			"datatype": "XTN.8",
+			"desc": "Extension"
+		},
+		{
+			"datatype": "XTN.9",
+			"desc": "Any Text"
+		},
+		{
+			"datatype": "XTN.10",
+			"desc": "Extension Prefix"
+		},
+		{
+			"datatype": "XTN.11",
+			"desc": "Speed Dial Code"
+		},
+		{
+			"datatype": "XTN.12",
+			"desc": "Unformatted Telephone Number "
+		},
+		{
+			"datatype": "XTN.13",
+			"desc": "Effective Start Date"
+		},
+		{
+			"datatype": "XTN.14",
+			"desc": "Expiration Date"
+		},
+		{
+			"datatype": "XTN.15",
+			"desc": "Expiration Reason"
+		},
+		{
+			"datatype": "XTN.16",
+			"desc": "Protection Code"
+		},
+		{
+			"datatype": "XTN.17",
+			"desc": "Shared Telecommunication Identifier"
+		},
+		{
+			"datatype": "XTN.18",
+			"desc": "Preference Order"
+		}
+	]
+},
+"GTS":{
+	"subfields": []
+},
+"NM":{
+	"subfields": []
+},
+"VH":{
+	"subfields": [
+		{
+			"datatype": "VH.1",
+			"desc": "Start Day Range"
+		},
+		{
+			"datatype": "VH.2",
+			"desc": "End Day Range"
+		},
+		{
+			"datatype": "VH.3",
+			"desc": "Start Hour Range"
+		},
+		{
+			"datatype": "VH.4",
+			"desc": "End Hour Range"
+		}
+	]
+},
+"NR":{
+	"subfields": [
+		{
+			"datatype": "NR.1",
+			"desc": "Low Value"
+		},
+		{
+			"datatype": "NR.2",
+			"desc": "High Value"
+		}
+	]
+},
+"ERL":{
+	"subfields": [
+		{
+			"datatype": "ERL.1",
+			"desc": "Segment ID"
+		},
+		{
+			"datatype": "ERL.2",
+			"desc": "Segment Sequence"
+		},
+		{
+			"datatype": "ERL.3",
+			"desc": "Field Position"
+		},
+		{
+			"datatype": "ERL.4",
+			"desc": "Field Repetition"
+		},
+		{
+			"datatype": "ERL.5",
+			"desc": "Component Number"
+		},
+		{
+			"datatype": "ERL.6",
+			"desc": "Sub-Component Number"
+		}
+	]
+},
+"PRL":{
+	"subfields": [
+		{
+			"datatype": "PRL.1",
+			"desc": "Parent Observation Identifier"
+		},
+		{
+			"datatype": "PRL.2",
+			"desc": "Parent Observation Sub-identifier"
+		},
+		{
+			"datatype": "PRL.3",
+			"desc": "Parent Observation Value Descriptor"
+		}
+	]
+},
+"RMC":{
+	"subfields": [
+		{
+			"datatype": "RMC.1",
+			"desc": "Room Type"
+		},
+		{
+			"datatype": "RMC.2",
+			"desc": "Amount Type"
+		},
+		{
+			"datatype": "RMC.4",
+			"desc": "Money or Percentage"
+		}
+	]
+},
+"TM":{
+	"subfields": []
+},
+"RPT":{
+	"subfields": [
+		{
+			"datatype": "RPT.1",
+			"desc": "Repeat Pattern Code"
+		},
+		{
+			"datatype": "RPT.2",
+			"desc": "Calendar Alignment"
+		},
+		{
+			"datatype": "RPT.3",
+			"desc": "Phase Range Begin Value"
+		},
+		{
+			"datatype": "RPT.4",
+			"desc": "Phase Range End Value"
+		},
+		{
+			"datatype": "RPT.5",
+			"desc": "Period Quantity"
+		},
+		{
+			"datatype": "RPT.6",
+			"desc": "Period Units"
+		},
+		{
+			"datatype": "RPT.7",
+			"desc": "Institution Specified Time"
+		},
+		{
+			"datatype": "RPT.8",
+			"desc": "Event"
+		},
+		{
+			"datatype": "RPT.9",
+			"desc": "Event Offset Quantity"
+		},
+		{
+			"datatype": "RPT.10",
+			"desc": "Event Offset Units"
+		},
+		{
+			"datatype": "RPT.11",
+			"desc": "General Timing Specification"
+		}
+	]
+},
+"PTA":{
+	"subfields": [
+		{
+			"datatype": "PTA.1",
+			"desc": "Policy Type"
+		},
+		{
+			"datatype": "PTA.2",
+			"desc": "Amount Class"
+		},
+		{
+			"datatype": "PTA.4",
+			"desc": "Money or Percentage"
+		}
+	]
+},
+"CWE":{
+	"subfields": [
+		{
+			"datatype": "CWE.1",
+			"desc": "Identifier"
+		},
+		{
+			"datatype": "CWE.2",
+			"desc": "Text"
+		},
+		{
+			"datatype": "CWE.3",
+			"desc": "Name of Coding System"
+		},
+		{
+			"datatype": "CWE.4",
+			"desc": "Alternate Identifier"
+		},
+		{
+			"datatype": "CWE.5",
+			"desc": "Alternate Text"
+		},
+		{
+			"datatype": "CWE.6",
+			"desc": "Name of Alternate Coding System"
+		},
+		{
+			"datatype": "CWE.7",
+			"desc": "Coding System Version ID"
+		},
+		{
+			"datatype": "CWE.8",
+			"desc": "Alternate Coding System Version ID"
+		},
+		{
+			"datatype": "CWE.9",
+			"desc": "Original Text"
+		},
+		{
+			"datatype": "CWE.10",
+			"desc": "Second Alternate Identifier"
+		},
+		{
+			"datatype": "CWE.11",
+			"desc": "Second Alternate Text"
+		},
+		{
+			"datatype": "CWE.12",
+			"desc": "Name of Second Alternate Coding System"
+		},
+		{
+			"datatype": "CWE.13",
+			"desc": "Second Alternate Coding System Version ID"
+		},
+		{
+			"datatype": "CWE.14",
+			"desc": "Coding System OID"
+		},
+		{
+			"datatype": "CWE.15",
+			"desc": "Value Set OID"
+		},
+		{
+			"datatype": "CWE.16",
+			"desc": "Value Set Version ID"
+		},
+		{
+			"datatype": "CWE.17",
+			"desc": "Alternate Coding System OID"
+		},
+		{
+			"datatype": "CWE.18",
+			"desc": "Alternate Value Set OID"
+		},
+		{
+			"datatype": "CWE.19",
+			"desc": "Alternate Value Set Version ID"
+		},
+		{
+			"datatype": "CWE.20",
+			"desc": "Second Alternate Coding System OID"
+		},
+		{
+			"datatype": "CWE.21",
+			"desc": "Second Alternate Value Set OID"
+		},
+		{
+			"datatype": "CWE.22",
+			"desc": "Second Alternate Value Set Version ID"
+		}
+	]
+},
+"XPN":{
+	"subfields": [
+		{
+			"datatype": "XPN.1",
+			"desc": "Family Name"
+		},
+		{
+			"datatype": "XPN.2",
+			"desc": "Given Name"
+		},
+		{
+			"datatype": "XPN.3",
+			"desc": "Second and Further Given Names or Initials Thereof"
+		},
+		{
+			"datatype": "XPN.4",
+			"desc": "Suffix (e.g., JR or III)"
+		},
+		{
+			"datatype": "XPN.5",
+			"desc": "Prefix (e.g., DR)"
+		},
+		{
+			"datatype": "XPN.7",
+			"desc": "Name Type Code"
+		},
+		{
+			"datatype": "XPN.8",
+			"desc": "Name Representation Code"
+		},
+		{
+			"datatype": "XPN.9",
+			"desc": "Name Context"
+		},
+		{
+			"datatype": "XPN.11",
+			"desc": "Name Assembly Order"
+		},
+		{
+			"datatype": "XPN.12",
+			"desc": "Effective Date"
+		},
+		{
+			"datatype": "XPN.13",
+			"desc": "Expiration Date"
+		},
+		{
+			"datatype": "XPN.14",
+			"desc": "Professional Suffix"
+		},
+		{
+			"datatype": "XPN.15",
+			"desc": "Called By"
+		}
+	]
+},
+"DR":{
+	"subfields": [
+		{
+			"datatype": "DR.1",
+			"desc": "Range Start Date/Time"
+		},
+		{
+			"datatype": "DR.2",
+			"desc": "Range End Date/Time"
+		}
+	]
+},
+"NDL":{
+	"subfields": [
+		{
+			"datatype": "NDL.1",
+			"desc": "Name"
+		},
+		{
+			"datatype": "NDL.2",
+			"desc": "Start Date/Time"
+		},
+		{
+			"datatype": "NDL.3",
+			"desc": "End Date/Time"
+		},
+		{
+			"datatype": "NDL.4",
+			"desc": "Point of Care "
+		},
+		{
+			"datatype": "NDL.5",
+			"desc": "Room "
+		},
+		{
+			"datatype": "NDL.6",
+			"desc": "Bed"
+		},
+		{
+			"datatype": "NDL.7",
+			"desc": "Facility"
+		},
+		{
+			"datatype": "NDL.8",
+			"desc": "Location Status "
+		},
+		{
+			"datatype": "NDL.9",
+			"desc": "Patient Location Type"
+		},
+		{
+			"datatype": "NDL.10",
+			"desc": "Building "
+		},
+		{
+			"datatype": "NDL.11",
+			"desc": "Floor"
+		}
+	]
+},
+"OCD":{
+	"subfields": [
+		{
+			"datatype": "OCD.1",
+			"desc": "Occurrence Code"
+		},
+		{
+			"datatype": "OCD.2",
+			"desc": "Occurrence Date"
+		}
+	]
+},
+"PIP":{
+	"subfields": [
+		{
+			"datatype": "PIP.1",
+			"desc": "Privilege"
+		},
+		{
+			"datatype": "PIP.2",
+			"desc": "Privilege Class"
+		},
+		{
+			"datatype": "PIP.3",
+			"desc": "Expiration Date"
+		},
+		{
+			"datatype": "PIP.4",
+			"desc": "Activation Date"
+		},
+		{
+			"datatype": "PIP.5",
+			"desc": "Facility"
+		}
+	]
+},
+"CX":{
+	"subfields": [
+		{
+			"datatype": "CX.1",
+			"desc": "ID Number"
+		},
+		{
+			"datatype": "CX.2",
+			"desc": "Identifier Check Digit"
+		},
+		{
+			"datatype": "CX.3",
+			"desc": "Check Digit Scheme "
+		},
+		{
+			"datatype": "CX.4",
+			"desc": "Assigning Authority"
+		},
+		{
+			"datatype": "CX.5",
+			"desc": "Identifier Type Code"
+		},
+		{
+			"datatype": "CX.6",
+			"desc": "Assigning Facility"
+		},
+		{
+			"datatype": "CX.7",
+			"desc": "Effective Date"
+		},
+		{
+			"datatype": "CX.8",
+			"desc": "Expiration Date"
+		},
+		{
+			"datatype": "CX.9",
+			"desc": "Assigning Jurisdiction"
+		},
+		{
+			"datatype": "CX.10",
+			"desc": "Assigning Agency or Department"
+		},
+		{
+			"datatype": "CX.11",
+			"desc": "Security Check"
+		},
+		{
+			"datatype": "CX.12",
+			"desc": "Security Check Scheme"
+		}
+	]
+},
+"PPN":{
+	"subfields": [
+		{
+			"datatype": "PPN.1",
+			"desc": "Person Identifier"
+		},
+		{
+			"datatype": "PPN.2",
+			"desc": "Family Name"
+		},
+		{
+			"datatype": "PPN.3",
+			"desc": "Given Name"
+		},
+		{
+			"datatype": "PPN.4",
+			"desc": "Second and Further Given Names or Initials Thereof"
+		},
+		{
+			"datatype": "PPN.5",
+			"desc": "Suffix (e.g., JR or III)"
+		},
+		{
+			"datatype": "PPN.6",
+			"desc": "Prefix (e.g., DR)"
+		},
+		{
+			"datatype": "PPN.9",
+			"desc": "Assigning Authority"
+		},
+		{
+			"datatype": "PPN.10",
+			"desc": "Name Type Code"
+		},
+		{
+			"datatype": "PPN.11",
+			"desc": "Identifier Check Digit"
+		},
+		{
+			"datatype": "PPN.12",
+			"desc": "Check Digit Scheme "
+		},
+		{
+			"datatype": "PPN.13",
+			"desc": "Identifier Type Code"
+		},
+		{
+			"datatype": "PPN.14",
+			"desc": "Assigning Facility"
+		},
+		{
+			"datatype": "PPN.15",
+			"desc": "Date/Time Action Performed"
+		},
+		{
+			"datatype": "PPN.16",
+			"desc": "Name Representation Code"
+		},
+		{
+			"datatype": "PPN.17",
+			"desc": "Name Context"
+		},
+		{
+			"datatype": "PPN.19",
+			"desc": "Name Assembly Order"
+		},
+		{
+			"datatype": "PPN.20",
+			"desc": "Effective Date"
+		},
+		{
+			"datatype": "PPN.21",
+			"desc": "Expiration Date"
+		},
+		{
+			"datatype": "PPN.22",
+			"desc": "Professional Suffix"
+		},
+		{
+			"datatype": "PPN.23",
+			"desc": "Assigning Jurisdiction"
+		},
+		{
+			"datatype": "PPN.24",
+			"desc": "Assigning Agency or Department"
+		},
+		{
+			"datatype": "PPN.25",
+			"desc": "Security Check "
+		},
+		{
+			"datatype": "PPN.26",
+			"desc": "Security Check Scheme"
+		}
+	]
+},
+"AUI":{
+	"subfields": [
+		{
+			"datatype": "AUI.1",
+			"desc": "Authorization Number"
+		},
+		{
+			"datatype": "AUI.2",
+			"desc": "Date"
+		},
+		{
+			"datatype": "AUI.3",
+			"desc": "Source"
+		}
+	]
+},
+"XAD":{
+	"subfields": [
+		{
+			"datatype": "XAD.1",
+			"desc": "Street Address"
+		},
+		{
+			"datatype": "XAD.2",
+			"desc": "Other Designation"
+		},
+		{
+			"datatype": "XAD.3",
+			"desc": "City"
+		},
+		{
+			"datatype": "XAD.4",
+			"desc": "State or Province"
+		},
+		{
+			"datatype": "XAD.5",
+			"desc": "Zip or Postal Code"
+		},
+		{
+			"datatype": "XAD.6",
+			"desc": "Country"
+		},
+		{
+			"datatype": "XAD.7",
+			"desc": "Address Type"
+		},
+		{
+			"datatype": "XAD.8",
+			"desc": "Other Geographic Designation"
+		},
+		{
+			"datatype": "XAD.9",
+			"desc": "County/Parish Code"
+		},
+		{
+			"datatype": "XAD.10",
+			"desc": "Census Tract"
+		},
+		{
+			"datatype": "XAD.11",
+			"desc": "Address Representation Code"
+		},
+		{
+			"datatype": "XAD.13",
+			"desc": "Effective Date"
+		},
+		{
+			"datatype": "XAD.14",
+			"desc": "Expiration Date"
+		},
+		{
+			"datatype": "XAD.15",
+			"desc": "Expiration Reason"
+		},
+		{
+			"datatype": "XAD.16",
+			"desc": "Temporary Indicator"
+		},
+		{
+			"datatype": "XAD.17",
+			"desc": "Bad Address Indicator"
+		},
+		{
+			"datatype": "XAD.18",
+			"desc": "Address Usage"
+		},
+		{
+			"datatype": "XAD.19",
+			"desc": "Addressee"
+		},
+		{
+			"datatype": "XAD.20",
+			"desc": "Comment"
+		},
+		{
+			"datatype": "XAD.21",
+			"desc": "Preference Order"
+		},
+		{
+			"datatype": "XAD.22",
+			"desc": "Protection Code"
+		},
+		{
+			"datatype": "XAD.23",
+			"desc": "Address Identifier"
+		}
+	]
+},
+"EI":{
+	"subfields": [
+		{
+			"datatype": "EI.1",
+			"desc": "Entity Identifier"
+		},
+		{
+			"datatype": "EI.2",
+			"desc": "Namespace ID"
+		},
+		{
+			"datatype": "EI.3",
+			"desc": "Universal ID"
+		},
+		{
+			"datatype": "EI.4",
+			"desc": "Universal ID Type"
+		}
+	]
+},
+"DLD":{
+	"subfields": [
+		{
+			"datatype": "DLD.1",
+			"desc": "Discharge to Location"
+		},
+		{
+			"datatype": "DLD.2",
+			"desc": "Effective Date"
+		}
+	]
+},
+"CSU":{
+	"subfields": [
+		{
+			"datatype": "CSU.1",
+			"desc": "Channel Sensitivity"
+		},
+		{
+			"datatype": "CSU.2",
+			"desc": "Unit of Measure Identifier"
+		},
+		{
+			"datatype": "CSU.3",
+			"desc": "Unit of Measure Description"
+		},
+		{
+			"datatype": "CSU.4",
+			"desc": "Unit of Measure Coding System"
+		},
+		{
+			"datatype": "CSU.5",
+			"desc": "Alternate Unit of Measure Identifier"
+		},
+		{
+			"datatype": "CSU.6",
+			"desc": "Alternate Unit of Measure Description"
+		},
+		{
+			"datatype": "CSU.7",
+			"desc": "Alternate Unit of Measure Coding System"
+		},
+		{
+			"datatype": "CSU.8",
+			"desc": "Unit of Measure Coding System Version ID"
+		},
+		{
+			"datatype": "CSU.9",
+			"desc": "Alternate Unit of Measure Coding System Version ID"
+		},
+		{
+			"datatype": "CSU.10",
+			"desc": "Original Text"
+		},
+		{
+			"datatype": "CSU.11",
+			"desc": "Second Alternate Unit of Measure Identifier"
+		},
+		{
+			"datatype": "CSU.12",
+			"desc": "Second Alternate Unit of Measure Text"
+		},
+		{
+			"datatype": "CSU.13",
+			"desc": "Name of Second Alternate Unit of Measure Coding Sy"
+		},
+		{
+			"datatype": "CSU.14",
+			"desc": "Second Alternate Unit of Measure Coding System Ver"
+		},
+		{
+			"datatype": "CSU.15",
+			"desc": "Unit of Measure Coding System OID"
+		},
+		{
+			"datatype": "CSU.16",
+			"desc": "Unit of Measure Value Set OID"
+		},
+		{
+			"datatype": "CSU.17",
+			"desc": "Unit of Measure Value Set Version ID"
+		},
+		{
+			"datatype": "CSU.18",
+			"desc": "Alternate Unit of Measure Coding System OID"
+		},
+		{
+			"datatype": "CSU.19",
+			"desc": "Alternate Unit of Measure Value Set OID"
+		},
+		{
+			"datatype": "CSU.20",
+			"desc": "Alternate Unit of Measure Value Set Version ID"
+		},
+		{
+			"datatype": "CSU.21",
+			"desc": "Second Alternate Unit of Measure Coding System OID"
+		},
+		{
+			"datatype": "CSU.22",
+			"desc": "Second Alternate Unit of Measure Value Set OID"
+		},
+		{
+			"datatype": "CSU.23",
+			"desc": "Second Alternate Unit of Measure Value Set Vers.ID"
+		}
+	]
+},
+"FT":{
+	"subfields": []
+},
+"RI":{
+	"subfields": [
+		{
+			"datatype": "RI.1",
+			"desc": "Repeat Pattern"
+		},
+		{
+			"datatype": "RI.2",
+			"desc": "Explicit Time Interval"
+		}
+	]
+},
+"ST":{
+	"subfields": []
+},
+"CP":{
+	"subfields": [
+		{
+			"datatype": "CP.1",
+			"desc": "Price"
+		},
+		{
+			"datatype": "CP.2",
+			"desc": "Price Type"
+		},
+		{
+			"datatype": "CP.3",
+			"desc": "From Value"
+		},
+		{
+			"datatype": "CP.4",
+			"desc": "To Value"
+		},
+		{
+			"datatype": "CP.5",
+			"desc": "Range Units"
+		},
+		{
+			"datatype": "CP.6",
+			"desc": "Range Type"
+		}
+	]
+},
+"WVI":{
+	"subfields": [
+		{
+			"datatype": "WVI.1",
+			"desc": "Channel Number"
+		},
+		{
+			"datatype": "WVI.2",
+			"desc": "Channel Name "
+		}
+	]
+},
+"DTN":{
+	"subfields": [
+		{
+			"datatype": "DTN.1",
+			"desc": "Day Type"
+		},
+		{
+			"datatype": "DTN.2",
+			"desc": "Number of Days"
+		}
+	]
+},
+"MO":{
+	"subfields": [
+		{
+			"datatype": "MO.1",
+			"desc": "Quantity"
+		},
+		{
+			"datatype": "MO.2",
+			"desc": "Denomination"
+		}
+	]
+}
+}
