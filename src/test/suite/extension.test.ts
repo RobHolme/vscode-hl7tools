@@ -150,9 +150,18 @@ suite('vscode-hl7tools Extension Test Suite', () => {
 			var hl7Schema = require('../../../schema/2.7.1/segments.json');
 			assert.deepEqual(Util.FindLocationFromDescription("Patient Name", hl7Schema), { PID: [5] });
 		});
+		test("FindLocationFromDescription() v2.8.1 schema", function () {
+			var hl7Schema = require('../../../schema/2.8.1/segments.json');
+			assert.deepEqual(Util.FindLocationFromDescription("Patient Name", hl7Schema), { PID: [5] });
+		});
 
 		test("FindLocationFromDescription() v2.8.2 schema", function () {
 			var hl7Schema = require('../../../schema/2.8.2/segments.json');
+			assert.deepEqual(Util.FindLocationFromDescription("Patient Name", hl7Schema), { PID: [5] });
+		});
+
+		test("FindLocationFromDescription() v2.9 schema", function () {
+			var hl7Schema = require('../../../schema/2.9/segments.json');
 			assert.deepEqual(Util.FindLocationFromDescription("Patient Name", hl7Schema), { PID: [5] });
 		});
 
