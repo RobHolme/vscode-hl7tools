@@ -1797,19 +1797,19 @@
 			},
 			{
 				"datatype": "CQ",
-				"desc": "Collection Volume *",
+				"desc": "Collection Volume",
 				"opt": 1,
 				"rep": 1
 			},
 			{
 				"datatype": "XCN",
-				"desc": "Collector Identifier *",
+				"desc": "Collector Identifier",
 				"opt": 1,
 				"rep": 0
 			},
 			{
 				"datatype": "ID",
-				"desc": "Specimen Action Code *",
+				"desc": "Specimen Action Code",
 				"opt": 1,
 				"rep": 1,
 				"table": "HL70065"
@@ -1866,25 +1866,25 @@
 			},
 			{
 				"datatype": "ST",
-				"desc": "Filler Field 1 +",
+				"desc": "Filler Field 1",
 				"opt": 1,
 				"rep": 1
 			},
 			{
 				"datatype": "ST",
-				"desc": "Filler Field 2 +",
+				"desc": "Filler Field 2",
 				"opt": 1,
 				"rep": 1
 			},
 			{
 				"datatype": "DTM",
-				"desc": "Results Rpt/Status Chng - Date/Time +",
+				"desc": "Results Rpt/Status Chng - Date/Time",
 				"opt": 1,
 				"rep": 1
 			},
 			{
 				"datatype": "MOC",
-				"desc": "Charge To Practice +",
+				"desc": "Charge To Practice",
 				"opt": 1,
 				"rep": 1
 			},
@@ -1897,14 +1897,14 @@
 			},
 			{
 				"datatype": "ID",
-				"desc": "Result Status +",
+				"desc": "Result Status",
 				"opt": 1,
 				"rep": 1,
 				"table": "HL70123"
 			},
 			{
 				"datatype": "PRL",
-				"desc": "Parent Result +",
+				"desc": "Parent Result",
 				"opt": 1,
 				"rep": 1
 			},
@@ -1942,50 +1942,50 @@
 			},
 			{
 				"datatype": "NDL",
-				"desc": "Principal Result Interpreter +",
+				"desc": "Principal Result Interpreter",
 				"opt": 1,
 				"rep": 1
 			},
 			{
 				"datatype": "NDL",
-				"desc": "Assistant Result Interpreter +",
+				"desc": "Assistant Result Interpreter",
 				"opt": 1,
 				"rep": 0
 			},
 			{
 				"datatype": "NDL",
-				"desc": "Technician +",
+				"desc": "Technician",
 				"opt": 1,
 				"rep": 0
 			},
 			{
 				"datatype": "NDL",
-				"desc": "Transcriptionist +",
+				"desc": "Transcriptionist",
 				"opt": 1,
 				"rep": 0
 			},
 			{
 				"datatype": "DTM",
-				"desc": "Scheduled Date/Time +",
+				"desc": "Scheduled Date/Time",
 				"opt": 1,
 				"rep": 1
 			},
 			{
 				"datatype": "NM",
-				"desc": "Number Of Sample Containers *",
+				"desc": "Number Of Sample Containers",
 				"opt": 1,
 				"rep": 1
 			},
 			{
 				"datatype": "CWE",
-				"desc": "Transport Logistics Of Collected Sample *",
+				"desc": "Transport Logistics Of Collected Sample",
 				"opt": 1,
 				"rep": 0,
 				"table": "HL79999"
 			},
 			{
 				"datatype": "CWE",
-				"desc": "Collector's Comment *",
+				"desc": "Collector's Comment",
 				"opt": 1,
 				"rep": 0,
 				"table": "HL79999"
@@ -2209,7 +2209,7 @@
 			},
 			{
 				"datatype": "DTM",
-				"desc": "Specimen Received Date/Time *",
+				"desc": "Specimen Received Date/Time",
 				"opt": 1,
 				"rep": 1
 			},
@@ -3277,7 +3277,7 @@
 			},
 			{
 				"datatype": "CP",
-				"desc": "Total Amount Professional Part + Technical Part",
+				"desc": "Total Amount Professional Part Technical Part",
 				"opt": 1,
 				"rep": 1
 			},
@@ -5223,7 +5223,7 @@
 		]
 	},
 	"APR": {
-		"desc": "Appointment Preferences ",
+		"desc": "Appointment Preferences",
 		"fields": [
 			{
 				"datatype": "SCV",
@@ -5415,7 +5415,7 @@
 		]
 	},
 	"BTS": {
-		"desc": "Batch Traile",
+		"desc": "Batch Trailer",
 		"fields": [
 			{
 				"datatype": "ST",
@@ -6969,7 +6969,7 @@
 		]
 	},
 	"BUI": {
-		"desc": "Blood Unit Informatio",
+		"desc": "Blood Unit Information",
 		"fields": [
 			{
 				"datatype": "SI",
@@ -7969,7 +7969,7 @@
 		]
 	},
 	"GOL": {
-		"desc": "Goal Detail ",
+		"desc": "Goal Detail",
 		"fields": [
 			{
 				"datatype": "ID",
@@ -11531,7 +11531,7 @@
 		]
 	},
 	"EVN": {
-		"desc": "Event Type ",
+		"desc": "Event Type",
 		"fields": [
 			{
                 "datatype": "ID",
@@ -14035,7 +14035,7 @@
 		]
 	},
 	"OM5": {
-		"desc": "Observation Batteries (Sets) ",
+		"desc": "Observation Batteries (Sets)",
 		"fields": [
 			{
 				"datatype": "NM",
@@ -15128,7 +15128,7 @@
 			},
 			{
 				"datatype": "XCN",
-				"desc": "Ordering Provider's Dea Number",
+				"desc": "Ordering Provider's DEA Number",
 				"opt": 1,
 				"rep": 0
 			},
@@ -16906,7 +16906,7 @@
 		]
 	},
 	"VND": {
-		"desc": "Purchasing Vendo",
+		"desc": "Purchasing Vendor",
 		"fields": [
 			{
 				"datatype": "SI",

@@ -466,7 +466,6 @@
 		]
 	},
 	"TX": {
-		"desc": "Text Data",
 		"subfields": []
 	},
 	"RCD": {
