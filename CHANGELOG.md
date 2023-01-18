@@ -178,3 +178,6 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 
 ## 2.0 (16/11/2022)
 * converted to TypeScript. No changes to functionality.
+
+## 2.0.1 (18/01/2023)
+* Fixed issue with missing segment terminator in MSA segment when ACKs are returned
