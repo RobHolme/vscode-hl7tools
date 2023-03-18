@@ -181,3 +181,6 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 
 ## 2.0.1 (18/01/2023)
 * Fixed issue with missing segment terminator in MSA segment when ACKs are returned
+
+## 2.0.2 (18/03/2023)
+* Fixed issuer where starting the HL7 listener failed if a document wasn't open in the editor.
