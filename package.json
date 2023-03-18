@@ -307,22 +307,21 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.69.0",
 		"@types/glob": "^7.2.0",
 		"@types/mocha": "^9.1.1",
 		"@types/node": "16.x",
+		"@types/vscode": "^1.69.0",
 		"@typescript-eslint/eslint-plugin": "^5.31.0",
 		"@typescript-eslint/parser": "^5.31.0",
+		"@vscode/test-electron": "^2.1.5",
 		"eslint": "^8.20.0",
 		"glob": "^8.0.3",
 		"mocha": "^10.0.0",
-		"typescript": "^4.7.4",
-		"@vscode/test-electron": "^2.1.5"
+		"typescript": "^4.7.4"
 	},
 	"__metadata": {
 		"id": "b919e7cc-6fa1-454b-ab7f-216ed8d48f19",
 		"publisherId": "be56bacd-8aad-4010-8775-e3f3abf3f41d",
 		"publisherDisplayName": "Rob Holme"
-	},
-	"dependencies": {}
+	}
 }
