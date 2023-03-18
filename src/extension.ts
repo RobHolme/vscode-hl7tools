@@ -152,7 +152,6 @@ export function activate(context: vscode.ExtensionContext) {
 	if (activeEditor !== undefined) {
 		if (!Util.IsHL7File(activeEditor.document)) {
 			statusbarHL7Version.hide();
-			return;
 		}
 		else {
 			// apply the hover descriptions for each field
@@ -257,7 +256,7 @@ export function activate(context: vscode.ExtensionContext) {
 		currentItemLocation = null;
 		var hl7Schema: HashTable<SegmentSchema> | null = LoadHL7Schema();
 		if (hl7Schema != null) {
-			FieldHighlights.ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour); 
+			FieldHighlights.ShowHighlights(currentItemLocation, hl7Schema, preferences.HighlightBackgroundColour);
 		}
 		else {
 			console.log("Failed to load HL7 schema in hl7tools.ClearHighlightedFields");
@@ -398,6 +397,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 		var activeEditor = vscode.window.activeTextEditor;
 		if (!activeEditor) {
+			console.log("No document open, nothing to send. Exiting 'hl7tools.SendMessage'");
 			return;
 		}
 
@@ -444,10 +444,6 @@ export function activate(context: vscode.ExtensionContext) {
 	// This function receives messages from a remote host via TCP. Messages displayed in the editor as new documents.
 	var StartListenerCommand = vscode.commands.registerCommand('hl7tools.StartListener', function () {
 		console.log("Starting Listener");
-		var activeEditor = vscode.window.activeTextEditor;
-		if (!activeEditor) {
-			return;
-		}
 
 		var listenerPromise = vscode.window.showInputBox({ prompt: "Enter the TCP port to listen on for messages", value: preferences.DefaultListenerPort });
 		listenerPromise.then(function (listenerPort) {
