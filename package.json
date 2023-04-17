@@ -261,6 +261,19 @@
 					"default": true,
 					"description": "Send a ACK in response to messages received (HL7 Tools: Start Message Listener)."
 				},
+				"hl7tools.AckCode": {
+					"type": "string",
+					"default": "CA",
+					"enum": [
+						"AA",
+						"AE",
+						"AR",
+						"CA",
+						"CE",
+						"CR"
+					],
+					"description": "Value to use in MSA-1 of the ACK message when receiving a hl7 message."
+				},
 				"hl7tools.MaxLinesForFieldDescriptions": {
 					"type": "number",
 					"default": 200,
@@ -317,7 +330,7 @@
 		"eslint": "^8.20.0",
 		"glob": "^8.0.3",
 		"mocha": "^10.0.0",
-		"typescript": "^4.7.4"
+		"typescript": "^4.9.5"
 	},
 	"__metadata": {
 		"id": "b919e7cc-6fa1-454b-ab7f-216ed8d48f19",
