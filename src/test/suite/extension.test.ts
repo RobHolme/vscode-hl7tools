@@ -554,6 +554,9 @@ suite('vscode-hl7tools Extension Test Suite', () => {
 		test("SocketEncodingPreference", function() {
 			assert.strictEqual(preferences.SocketEncodingPreference, "utf8");
 		});
+		test("AckCode", function() {
+			assert.strictEqual(preferences.AckCode, "CA");
+		});
 	});
 
 });
