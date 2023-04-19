@@ -118,6 +118,8 @@ User preferences applicable to this function include:
 `// Send a ACK in response to messages received (HL7 Tools: Start Message Listener).`  
 `"hl7tools.SendACK": true`  
 
+`// Send a specific ACK Code (MSA-1) in the response ("AA"|"AE"|"AR"|"CA"|"CE"|"CR"). Defaults to "CA" `  
+`"hl7tools.AckCode": "AA"`  
 
 ### Display segment fields
 This function lists all fields from the currently selected segment in a hierarchial list. If a field contains components they will be displayed beneath the parent field. Any repeating field values are included.
@@ -204,4 +206,4 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 * the HL7 segment descriptions (segment.js) was extracted from http://github.com/fernandojsg/hl7-dictionary. 
 * Thanks to https://github.com/sherwanikhans for assistance on the 'Add Linebreak To Segments' command.
 * Workaround to search all open files sourced from https://github.com/atishay/vscode-allautocomplete.
-
+* User preference to specify the MSA-1 values in ACK messages was contributed by @jacobMedisoft (https://github.com/jacobMedisoft/)
