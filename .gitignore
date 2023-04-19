@@ -1,5 +1,6 @@
 # ignore user preferences file generated when testing
 .vscode/settings.json
+package-lock.json
 node_modules/
 Thumbs.db
 # ignore compiled (transpiled?) .js and .map files 
