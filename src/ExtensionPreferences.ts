@@ -59,6 +59,10 @@ export class ExtensionPreferences {
 		return this._config['SendACK'];
 	}
 
+	get AckCode() {
+		return this._config['AckCode'];
+	}
+
 	get SocketEncodingPreference() {
 		// select the socket encoding defined in the preferences
 		switch (this._config['SocketEncoding']) {

@@ -30,7 +30,7 @@ function GenerateAckFromMessage(HL7Message: string): string {
 	var delimiters: Delimiter = new Delimiter();
 	delimiters.ParseDelimitersFromMessage(HL7Message);
 	var ackMessage: string = "";
-
+	var preferences: ExtensionPreferences = new ExtensionPreferences();
 	// confirm the message received starts with a MSH segment.
 	// TO DO: add support for batch mode messages that start with FHS, BHS, BTS, or FTS segments. Also query field & component separator instead of assuming '|' & '^'. 
 	var hl7HeaderRegex: RegExp = new RegExp("^MSH\\" + delimiters.Field, "i");
@@ -43,7 +43,7 @@ function GenerateAckFromMessage(HL7Message: string): string {
 		if (mshFields.length < 12) {
 		}
 		else {
-			ackMessage = VT + "MSH" + delimiters.Field + delimiters.Component + delimiters.Repeat + delimiters.Escape + delimiters.SubComponent + delimiters.Field + "vscode-hl7tools" + delimiters.Field + mshFields[5] + delimiters.Field + mshFields[2] + delimiters.Field + mshFields[3] + delimiters.Field + messageTimestamp + delimiters.Field + delimiters.Field + "ACK" + delimiters.Component + mshFields[8].split(delimiters.Component)[1] + delimiters.Field + mshFields[9] + delimiters.Field + mshFields[10] + delimiters.Field + mshFields[11] + CR + "MSA" + delimiters.Field + "CA" + delimiters.Field + mshFields[9] + CR + FS + CR;
+			ackMessage = VT + "MSH" + delimiters.Field + delimiters.Component + delimiters.Repeat + delimiters.Escape + delimiters.SubComponent + delimiters.Field + "vscode-hl7tools" + delimiters.Field + mshFields[5] + delimiters.Field + mshFields[2] + delimiters.Field + mshFields[3] + delimiters.Field + messageTimestamp + delimiters.Field + delimiters.Field + "ACK" + delimiters.Component + mshFields[8].split(delimiters.Component)[1] + delimiters.Field + mshFields[9] + delimiters.Field + mshFields[10] + delimiters.Field + mshFields[11] + CR + "MSA" + delimiters.Field + preferences.AckCode + delimiters.Field + mshFields[9] + CR + FS + CR;
 		}
 	}
 	return ackMessage;
