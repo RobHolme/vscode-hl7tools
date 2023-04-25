@@ -624,16 +624,46 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 	context.subscriptions.push(FindNextFieldCommand);
 
+	//-------------------------------------------------------------------------------------------
+	// Register a document formatter for HL7 languages. Only applies the AddLineBreakToSegments function
+	// https://code.visualstudio.com/blogs/2016/11/15/formatters-best-practices
+	vscode.languages.registerDocumentFormattingEditProvider('hl7', {
+		provideDocumentFormattingEdits(document: vscode.TextDocument): vscode.TextEdit[] {
+			var formattedMessage :string | null = FormatLineBreaks(document);
+			var returnMessage = formattedMessage as any as vscode.TextEdit[];
+			return returnMessage;
+		}
+	  });
+
 
 	//-------------------------------------------------------------------------------------------
 	// add line breaks between segments (if they are not present)
 	function AddLinebreaksToSegments() {
+		
 		var activeEditor: vscode.TextEditor | undefined = vscode.window.activeTextEditor;
 		if (activeEditor === undefined) {
 			return;
 		}
+		var currentDoc: vscode.TextDocument = activeEditor.document
 
-		var currentDoc: vscode.TextDocument = activeEditor.document;
+		var formattedMessage :string | null = FormatLineBreaks(currentDoc);
+		if (formattedMessage === null) {
+			return;
+		}
+		else {
+			// replace current document text with reformatted text
+			var start: vscode.Position = new vscode.Position(0, 0);
+			var end: vscode.Position = currentDoc.positionAt(currentDoc.getText().length);
+			activeEditor.edit(editHelper => {
+				editHelper.replace(new vscode.Range(start, end), formattedMessage!);
+			});
+		}
+		
+	}
+
+	//-------------------------------------------------------------------------------------------
+	// Returns the formatted message with any missing line breaks added
+	function FormatLineBreaks(currentDoc: vscode.TextDocument):string | null {
 		var hl7Message: string = currentDoc.getText();
 		// get the EOL character from the current document
 		var endOfLineChar: string = Util.GetEOLCharacter(currentDoc);
@@ -659,20 +689,14 @@ export function activate(context: vscode.ExtensionContext) {
 			var newMessage: string = segments.join(endOfLineChar);
 
 			// remove any extra line breaks (if the file contains some segments delimited correctly)
-			newMessage = newMessage.replace(/(\r\n|\n|\r){2}/gm, endOfLineChar);
+			return newMessage.replace(/(\r\n|\n|\r){2}/gm, endOfLineChar);
 
-			// replace current document text with reformatted text
-			var start: vscode.Position = new vscode.Position(0, 0);
-			var end: vscode.Position = currentDoc.positionAt(hl7Message.length);
-			activeEditor.edit(editHelper => {
-				editHelper.replace(new vscode.Range(start, end), newMessage);
-			});
 		}
 		else {
 			console.log("Failed to load HL7 schema in AddLinebreaksToSegments");
+			return null;
 		}
 	}
-
 
 	//-------------------------------------------------------------------------------------------
 	// apply descriptions to each field as a hover decoration (tooltip)
