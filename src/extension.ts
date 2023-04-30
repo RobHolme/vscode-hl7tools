@@ -630,14 +630,16 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.languages.registerDocumentFormattingEditProvider('hl7', {
 		provideDocumentFormattingEdits(document: vscode.TextDocument): vscode.TextEdit[] {
 			var formattedMessage :string | null = FormatLineBreaks(document);
-			var returnMessage = formattedMessage as any as vscode.TextEdit[];
-			return returnMessage;
+			var start: vscode.Position = new vscode.Position(0, 0);
+			var end: vscode.Position = document.positionAt(document.getText().length);
+			return [vscode.TextEdit.replace(new vscode.Range(start, end), formattedMessage!)];
 		}
 	  });
 
 
 	//-------------------------------------------------------------------------------------------
-	// add line breaks between segments (if they are not present)
+	// Add line breaks between segments (if they are not present)
+	// Preferred implementation is to use the document formatter (above), this is left in place as a legacy to continue support as a separate command.
 	function AddLinebreaksToSegments() {
 		
 		var activeEditor: vscode.TextEditor | undefined = vscode.window.activeTextEditor;
@@ -662,7 +664,7 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
 	//-------------------------------------------------------------------------------------------
-	// Returns the formatted message with any missing line breaks added
+	// Returns the formatted message with any missing line breaks added. Likewise empty lines (too many line breaks) are removed.
 	function FormatLineBreaks(currentDoc: vscode.TextDocument):string | null {
 		var hl7Message: string = currentDoc.getText();
 		// get the EOL character from the current document
@@ -689,7 +691,7 @@ export function activate(context: vscode.ExtensionContext) {
 			var newMessage: string = segments.join(endOfLineChar);
 
 			// remove any extra line breaks (if the file contains some segments delimited correctly)
-			return newMessage.replace(/(\r\n|\n|\r){2}/gm, endOfLineChar);
+			return newMessage.replace(/(\r\n|\n|\r)+/gm, endOfLineChar);
 
 		}
 		else {
