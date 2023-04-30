@@ -161,6 +161,8 @@ To activate this command every time a file is the active file in the editor, set
 `// Apply the command 'Add Linebreak to Segments' every time a file is active in the editor`  
 `"hl7tools.AddLinebreakOnActivation": true`  
 
+> Note: This is now implemented as a document formatter for HL7 files to align with vscode recommended practices. This still works as a separate function, but the recommended approach is to use the 'Format Document' function. 
+
 ### Extract fields from all open files
 This command extracts values for a specified field from all open files.
 

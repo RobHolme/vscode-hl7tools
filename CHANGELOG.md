@@ -187,3 +187,6 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 
 ## 2.0.3 (19/04/2023)
 * Preference added to specify an MSA-1 value to return in ACK messages (Recieve HL7 Message function). Defaults to "CA". Thanks @jacobMedisoft for implementing this.
+
+## 2.0.4 (30/04/2023)
+* Implemented a document formatter for HL7 files. This add linebreaks between segments if not present, and removes multiple linebreaks (i.e. blank lines)
