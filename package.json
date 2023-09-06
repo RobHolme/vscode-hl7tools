@@ -76,6 +76,11 @@
 				"when": "editorLangId == hl7"
 			},
 			{
+				"command": "hl7tools.SendMultipleMessages",
+				"key": "ctrl+alt+g",
+				"when": "editorLangId == hl7"
+			},
+			{
 				"command": "hl7tools.StartListener",
 				"key": "ctrl+alt+l",
 				"when": "editorLangId == hl7"
@@ -144,6 +149,10 @@
 			{
 				"command": "hl7tools.SendMessage",
 				"title": "HL7 Tools: Send Message"
+			},
+			{
+				"command": "hl7tools.SendMultipleMessages",
+				"title": "HL7 Tools: Send Multiple Messages"
 			},
 			{
 				"command": "hl7tools.StartListener",
