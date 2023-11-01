@@ -14,7 +14,7 @@ const VT: string = String.fromCharCode(0x0b);
 const FS: string = String.fromCharCode(0x1c);
 const CR: string = String.fromCharCode(0x0d);
 
-var listenerStarted: boolean = false;
+export var listenerStarted: boolean = false;
 var server: net.Server;
 var hl7Message: string = "";
 
@@ -106,7 +106,6 @@ export function StartListener(Port: number): void {
 		socket.addListener("end", function () {
 			socket.end();
 		});
-
 	});
 
 	// listen on specified port on all available interfaces
@@ -120,6 +119,12 @@ export function StartListener(Port: number): void {
 			listenerStarted = false;
 		}
 	});
+
+	setTimeout(() => {
+		if (listenerStarted) {
+			vscode.window.showInformationMessage(`The HL7 TCP listener has started on port: ${Port}.`);
+		}
+	}, 100);
 }
 
 //----------------------------------------------------

@@ -8,6 +8,14 @@
 
 import * as vscode from 'vscode';
 
+interface Favorites {
+	// eslint-disable-next-line @typescript-eslint/naming-convention
+	Description: string,
+	// eslint-disable-next-line @typescript-eslint/naming-convention
+	Hostname: string,
+	// eslint-disable-next-line @typescript-eslint/naming-convention
+	Port: string,
+}
 export class SendHl7MessagePanel {
 	// private fields
 	private _panel: vscode.WebviewPanel;
@@ -18,16 +26,17 @@ export class SendHl7MessagePanel {
 	// constructor
 	constructor(extensionUri: vscode.Uri) {
 		this._extensionUri = extensionUri;
-		this._panel = vscode.window.createWebviewPanel("SendHL7Message", "Send HL7 Message", vscode.ViewColumn.Two, {
+		this._panel = vscode.window.createWebviewPanel("SendHL7Message", "Send HL7 Message", vscode.ViewColumn.Active, {
 			enableScripts: true
 		});
 	}
 
 	// render the panel with a supplied HL7 Message
 	public render(hl7Message: string): void {
+		console.log('SendHl7MessagePanel.render');
 		this._hl7Message = hl7Message;
 		if (this._panel) {
-			this._panel.reveal(vscode.ViewColumn.Two);
+			this._panel.reveal(vscode.ViewColumn.Active);
 		}
 		this._panel.webview.html = this.getHtmlForWebview(this._panel.webview, this._extensionUri);
 	}
@@ -48,6 +57,14 @@ export class SendHl7MessagePanel {
 		this._panel.webview.postMessage({
 			command: 'status',
 			statusMessage: statusMessage
+		});
+	}
+
+	public updateListenerStatus(listenerStarted: boolean) {
+		console.log('updateListenerStatus', listenerStarted);
+		this._panel.webview.postMessage({
+			command: 'listener',
+			status: listenerStarted
 		});
 	}
 
@@ -98,6 +115,7 @@ export class SendHl7MessagePanel {
 				document.getElementById("btnExit").addEventListener('click', function callEventhandler() {exit()});
 				document.getElementById("favourites").addEventListener('change', function callEventhandler() {applyFavourite()});
 				document.getElementById("useTls").addEventListener('change', function callEventhandler() {tlsCheckBoxChange()});
+				document.getElementById('btnListener').addEventListener('click', function callEventhandler() {toggleListener()});
 			});
 
 			// post the message content back to vscode to send. 
@@ -142,6 +160,33 @@ export class SendHl7MessagePanel {
 				}
 			}
 
+			function toggleListener() {
+				vscode.postMessage({
+					command: 'toggleListener'
+				})
+			}
+
+			function renderListenerStatus(listenerStatus) {
+				console.log('renderListenerStatus', listenerStatus);
+				document.getElementById("btnListener").innerText = (listenerStatus ? 'Stop' : 'Start') + ' Listener';;
+			}
+
+			function renderFavourites(favouriteList) {
+				const favouritesDropList = document.getElementById("favourites");
+				console.log('renderFavourites', favouritesDropList, favouriteList);
+				favouritesDropList[0].innerHTML = "Select from favourites list, or enter details below";
+				favouritesDropList.disabled = false;
+				for (i=0;i < favouriteList.length; i++) {
+					var option = document.createElement('option');
+					option.text = favouriteList[i].Description;
+					// option value doesn't support objects, so need to convert the JSON object to a string, convert back to JSON on retrieval
+					option.value = JSON.stringify(favouriteList[i]);
+					favouritesDropList.add(option,i);
+				}
+				document.getElementById("favourites").selectedIndex = 0
+				applyFavourite()
+			}
+
 			// Handle messages sent to the webview
 			window.addEventListener('message', event => {
 			const message = event.data; 
@@ -149,17 +194,11 @@ export class SendHl7MessagePanel {
 				case 'status':
 					document.getElementById("result").value += message.statusMessage;
 					break;
+				case 'listener':
+					this.renderListenerStatus(message.status);
+					break;
 				case 'setFavourites':
-					const favouritesDropList = document.getElementById("favourites");
-					favouritesDropList[0].innerHTML = "Select from favourites list, or enter details below";
-					favouritesDropList.disabled = false;
-					for (i=0;i < message.favouriteList.length; i++) {
-						var option = document.createElement('option');
-						option.text = message.favouriteList[i].Description;
-						// option value doesn't support objects, so need to convert the JSON object to a string, convert back to JSON on retrieval
-						option.value = JSON.stringify(message.favouriteList[i]);
-						favouritesDropList.add(option,i);
-					}
+					this.renderFavourites(message.favouriteList);
 					break;
 				}
 			});
@@ -180,13 +219,14 @@ export class SendHl7MessagePanel {
 			window.onload=function(){
 			//	document.getElementById("ignoreCertError").disabled = true;				
 				document.getElementById("encoding").value = "${encodingPreference}";
+				vscode.postMessage({command: 'refresh'})
 			};
 			
 			</script>
 
 			Send the HL7 message to the following remote host:<br><br>
 				<label class=field for="favourites">Favourites:</label>
-				<select class=select-50 name="favourites" id="favourites" disabled=true">
+				<select class=select-50 name="favourites" id="favourites" disabled="true">
 					<option value="" disabled selected hidden>no favourites found in extension preferences</option>
 				</select><br>
   				<label class=field for="hostname">Hostname or IP:</label><input type="text" class=textbox-50 id="hostname" name="hostname"><br>
@@ -201,12 +241,13 @@ export class SendHl7MessagePanel {
 				<label class=field for="useTls">Use TLS:</label><input type="checkbox" id="useTls" name="useTls"><br><br>
 <!--				<label class=field for="ignoreCertError">Ignore cert errors (unsafe):</label><input type="checkbox" id="ignoreCertError" name="ignoreCertError"><br><br>  -->
   				<button id="btnSend">Send Message</button>&nbsp;&nbsp;&nbsp;
-				<button id="btnExit">Exit</button>
+				<button id="btnExit">Exit</button>&nbsp;&nbsp;&nbsp;
+				<button id="btnListener">Start Listener</button>&nbsp;&nbsp;&nbsp;
 				<br><br>
 				<label class=field for="hl7Message">Message: </label>
 				<textarea name="hl7Message" id="hl7Message" wrap='off' rows="15">${this._hl7Message}</textarea><br><br>
 				<label for="result">Result: </label>
-				<textarea name="result" id="result" wrap='off' rows="6"></textarea><br><br>
+				<textarea name="result" id="result" wrap='off' rows="10"></textarea><br><br>
 		</body>
 		</html>`;
 	}

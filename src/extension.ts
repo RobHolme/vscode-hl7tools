@@ -13,7 +13,7 @@ import { HighlightFields, HighlightFieldReturnCode } from './HighlightField';
 import { DisplaySegmentAsTree } from './FieldTreeView';
 import { MaskAllIdentifiers } from './MaskIdentifiers';
 import { SendMessage } from './SendHl7Message'
-import { StartListener, StopListener } from './TCPListener';
+import { listenerStarted, StartListener, StopListener } from './TCPListener';
 import { CheckAllFields } from './CheckRequiredFields';
 import { MissingRequiredFieldResult } from './CheckRequiredFieldsResult';
 import { FindField, findNextReturnCode } from './FindField';
@@ -420,16 +420,32 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 		SendHl7MessageWebView.render(hl7Message);
 		// add any favourites from the user preferences to the webpanel's dropdown list
-		SendHl7MessageWebView.updateFavourites(preferences.FavouriteRemoteHosts);
+		// SendHl7MessageWebView.updateFavourites(preferences.FavouriteRemoteHosts);
+		// SendHl7MessageWebView.updateListenerStatus(listenerStarted);
 
 		// handle messages from the webview
 		SendHl7MessageWebView.panel.webview.onDidReceiveMessage(function (message) {
+			console.log('SendHl7MessageWebView.onDidReceiveMessage', message);
 			switch (message.command) {
 				case 'sendMessage':
 					SendMessage(message.host, message.port, message.hl7, tcpConnectionTimeout, message.tls, message.ignoreCertError, message.encoding, SendHl7MessageWebView);
 					return;
 				case 'exit':
 					SendHl7MessageWebView.panel.dispose();
+					return;
+				case 'refresh':
+					SendHl7MessageWebView.updateFavourites(preferences.FavouriteRemoteHosts);
+					SendHl7MessageWebView.updateListenerStatus(listenerStarted);
+					return;
+				case 'toggleListener':
+					if (listenerStarted) {
+						StopListener();
+					} else {
+						StartListener(preferences.DefaultListenerPort);
+					}
+					setTimeout(() => {
+						SendHl7MessageWebView.updateListenerStatus(listenerStarted);
+					}, 100);
 					return;
 			}
 		},
@@ -440,17 +456,33 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(SendMessageCommand);
 
+	vscode.languages.registerCodeLensProvider('hl7', {
+		provideCodeLenses(
+			document: vscode.TextDocument,
+			token: vscode.CancellationToken
+		  ): vscode.ProviderResult<vscode.CodeLens[]> {
+			return [new vscode.CodeLens(new vscode.Range(0, 0, 0, 3), {
+				title: `Send Message`,
+				command: "hl7tools.SendMessage",
+				arguments: [],
+			})];
+		}
+	});
+
 	//-------------------------------------------------------------------------------------------
 	// This function receives messages from a remote host via TCP. Messages displayed in the editor as new documents.
-	var StartListenerCommand = vscode.commands.registerCommand('hl7tools.StartListener', function () {
+	var StartListenerCommand = vscode.commands.registerCommand('hl7tools.StartListener', function (listenerPort) {
 		console.log("Starting Listener");
-
-		var listenerPromise = vscode.window.showInputBox({ prompt: "Enter the TCP port to listen on for messages", value: preferences.DefaultListenerPort });
-		listenerPromise.then(function (listenerPort) {
-			if (listenerPort) {
-				StartListener(parseInt(listenerPort, 10));
-			}
-		});
+		if (listenerPort) {
+			StartListener(parseInt(listenerPort, 10));
+		} else {
+			var listenerPromise = vscode.window.showInputBox({ prompt: "Enter the TCP port to listen on for messages", value: preferences.DefaultListenerPort });
+			listenerPromise.then(function (listenerPort) {
+				if (listenerPort) {
+					StartListener(parseInt(listenerPort, 10));
+				}
+			});
+		}
 	});
 
 	context.subscriptions.push(StartListenerCommand);
@@ -805,6 +837,13 @@ export function activate(context: vscode.ExtensionContext) {
 		currentHoverDecoration = hoverDecorationType;
 	}
 
+	context.subscriptions.push(
+		vscode.workspace.onDidChangeConfiguration(async ({ affectsConfiguration }) => {
+			if (affectsConfiguration("hl7tools")) {
+				preferences = new ExtensionPreferences();
+			}
+		})
+	);
 }
 
 // this method is called when your extension is deactivated
