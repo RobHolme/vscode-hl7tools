@@ -190,3 +190,16 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 
 ## 2.0.4 (30/04/2023)
 * Implemented a document formatter for HL7 files. This add linebreaks between segments if not present, and removes multiple linebreaks (i.e. blank lines)
+
+## 2.0.5 
+* rolled back, not released.
+
+## 2.0.6 (12/11/2023)
+merged pull request from Dmitry Maslennikov (https://github.com/daimor). 
+* Easy send message, added CodeLense, to fast open send message view
+* Checks for updates in VSCode settings, no need to reload VSCode
+* SendMessage View updates:
+  * Start/Stop Listener right from the view 
+  * when loses focus and returns back keeps form filled
+  * will update the list of favorites if it was updated in settings
+  * autofill the first favorite server
