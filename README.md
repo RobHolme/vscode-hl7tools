@@ -205,7 +205,8 @@ You can submit your issues and feature requests on the GitHub [issues page](http
 
 ## Credits
 * The HL7 syntax highlighting was sourced from https://github.com/craighurley/sublime-hl7-syntax
-* the HL7 segment descriptions (segment.js) was extracted from http://github.com/fernandojsg/hl7-dictionary. 
+* The HL7 segment descriptions (segment.js) was extracted from http://github.com/fernandojsg/hl7-dictionary. 
 * Thanks to https://github.com/sherwanikhans for assistance on the 'Add Linebreak To Segments' command.
 * Workaround to search all open files sourced from https://github.com/atishay/vscode-allautocomplete.
-* User preference to specify the MSA-1 values in ACK messages was contributed by @jacobMedisoft (https://github.com/jacobMedisoft/)
+* User preference to specify the MSA-1 values in ACK messages was contributed by jacobMedisoft (https://github.com/jacobMedisoft/)
+* Improvements to SendMessage View contributed by Dmitry Maslennikov (https://github.com/daimor)
