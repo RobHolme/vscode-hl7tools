@@ -175,15 +175,15 @@ export function SendMultipleMessages(Host: string, Port: number, HL7Message: str
 	delimiters.ParseDelimitersFromMessage(HL7Message);
 
 	var mshRegEx: RegExp = new RegExp("^MSH\\" + delimiters.Field, "gim");
-	var split: string[] = HL7Message.split(mshRegEx);
+	var allMessages: string[] = HL7Message.split(mshRegEx);
 
 	// loop through all matches, discarding anything before the first match (i.e batch header segments, or empty strings if MSH is the first segment) 
-	for (var i = 1; i < split.length; i++) {
-		var newMessage = "MSH" + delimiters.Field + split[i];
-		split[i] = newMessage;
+	for (var i = 1; i < allMessages.length; i++) {
+		var newMessage = "MSH" + delimiters.Field + allMessages[i];
+		allMessages[i] = newMessage;
 
 		// replace any newlines added by the text area with CRs.
-		split[i] = split[i].replace(new RegExp('\n', 'g'), String.fromCharCode(0x0d));
+		allMessages[i] = allMessages[i].replace(new RegExp('\n', 'g'), String.fromCharCode(0x0d));
 	}
 
 	var client: any;
@@ -233,9 +233,11 @@ export function SendMultipleMessages(Host: string, Port: number, HL7Message: str
 		client = tls.connect(Port, tlsOptions, function () {
 			// check for certificate validation errors
 			if (client.authorized) {
-				webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Connected to ' + Host + ':' + Port + ' using TLS \r\n');
-				client.write((VT + HL7Message + FS + CR), encoding);
-				webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Message number ' + j +  ' sent \r\n'); 
+				allMessages.forEach(message => {
+					webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Connected to ' + Host + ':' + Port + ' using TLS \r\n');
+					client.write((VT + message + FS + CR), encoding);
+					webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Message number ' + j +  ' sent \r\n'); 
+				});
 			}
 			else {
 				webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] TLS connection to ' + Host + ':' + Port + ' failed \r\n');
@@ -249,9 +251,11 @@ export function SendMultipleMessages(Host: string, Port: number, HL7Message: str
 		client.setTimeout(Timeout);
 		client.setEncoding(encoding);
 		client.connect(Port, Host, async function () {
-			webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Connected to ' + Host + ':' + Port + '\r\n');
-			client.write((VT + split[0] + FS + CR), encoding);
-			webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Message number ' + j +  ' sent \r\n'); 
+			allMessages.forEach(message => {
+				webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Connected to ' + Host + ':' + Port + '\r\n');
+				client.write((VT + message + FS + CR), encoding);
+				webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Message number ' + j +  ' sent \r\n'); 
+			});
 		});
 	}
 
@@ -287,11 +291,11 @@ export function SendMultipleMessages(Host: string, Port: number, HL7Message: str
 		Ack = Ack.replace(FS + CR, "");
 		webViewPanel.updateStatus(Ack + '\r\n');
 		j++
-		if (j>=split.length){
+		if (j>=allMessages.length){
 			client.destroy();
 		}
 		else{
-			client.write((VT + split[j] + FS + CR), encoding);
+		//	client.write((VT + split[j] + FS + CR), encoding);
 			webViewPanel.updateStatus('[' + new Date().toLocaleTimeString() + '] Message number ' + j +  ' sent \r\n');
 		}
 	});
