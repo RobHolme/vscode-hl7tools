@@ -35,7 +35,7 @@ By default only the first 200 segments of each message will include hover descri
 
 __Custom Segment Support__
  
- Support for custom 'Z' segments can be included by providing a custom schema definition. The custom schema file must follow the same format as the default segment schemas included in this extension ([extension folder]\\schema\2.x\segments.js). Each segment fields requires values for "datatype", "desc", and "opt" fields. Set the value of the 'CustomSegmentSchema' user preference to reference the file containing the custom segment schema (full path and file name). e.g.
+ Support for custom 'Z' segments can be included by providing a custom schema definition. The custom schema file must follow the same format as the default segment schemas included in this extension ([extension folder]\\schema\2.x\segments.json). Each segment fields requires values for "datatype", "desc", and "opt" fields. Set the value of the 'CustomSegmentSchema' user preference to reference the file containing the custom segment schema (full path and file name). e.g.
 
 `"hl7tools.CustomSegmentSchema": c:\schemas\CustomSchema.js`  
 
