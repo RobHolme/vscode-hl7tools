@@ -37,7 +37,7 @@ __Custom Segment Support__
  
  Support for custom 'Z' segments can be included by providing a custom schema definition. The custom schema file must follow the same format as the default segment schemas included in this extension ([extension folder]\\schema\2.x\segments.json). Each segment fields requires values for "datatype", "desc", and "opt" fields. Set the value of the 'CustomSegmentSchema' user preference to reference the file containing the custom segment schema (full path and file name). e.g.
 
-`"hl7tools.CustomSegmentSchema": c:\schemas\CustomSchema.js`  
+`"hl7tools.CustomSegmentSchema": c:\schemas\CustomSchema.json`  
 
 The custom schema should not modify segments defined in the HL7 v2.x specification, this is intended for 'Z' segment definitions only. It is assumed all custom segments will use standard data types.
 
