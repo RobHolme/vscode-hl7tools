@@ -542,7 +542,7 @@
         ]
     },
     "CM_MOC": {
-        "desc": "Charge To Practise",
+        "desc": "Charge To Practice",
         "subfields": [
             {
                 "datatype": "ST",
@@ -605,7 +605,7 @@
         ]
     },
     "CM_OCD": {
-        "desc": "Occurence",
+        "desc": "Occurrence",
         "subfields": [
             {
                 "datatype": "ID",
@@ -622,7 +622,7 @@
         ]
     },
     "CM_OSP": {
-        "desc": "Occurence Span",
+        "desc": "Occurrence Span",
         "subfields": [
             {
                 "datatype": "ID",
@@ -749,7 +749,7 @@
             },
             {
                 "datatype": "ID",
-                "desc": "Pre-certication Required",
+                "desc": "Pre-certification Required",
                 "opt": 1,
                 "rep": 1
             },
@@ -841,7 +841,7 @@
             },
             {
                 "datatype": "ST",
-                "desc": "State/other Qualifiying Info",
+                "desc": "State/other Qualifying Info",
                 "opt": 1,
                 "rep": 1
             }
@@ -987,7 +987,7 @@
             },
             {
                 "datatype": "ST",
-                "desc": "Explicit Time Intevall",
+                "desc": "Explicit Time Interval",
                 "opt": 1,
                 "rep": 1
             }
@@ -1108,7 +1108,7 @@
             },
             {
                 "datatype": "ST",
-                "desc": "Last Data Code Calue",
+                "desc": "Last Data Code Value",
                 "opt": 1,
                 "rep": 1
             }
