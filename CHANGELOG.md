@@ -195,7 +195,7 @@ All notable changes to the "hl7tools" extension will be documented in this file.
 * rolled back, not released.
 
 ## 2.0.6 (12/11/2023)
-merged pull request from Dmitry Maslennikov (https://github.com/daimor). 
+Merged pull request from Dmitry Maslennikov (https://github.com/daimor). 
 * Easy send message, added CodeLense, to fast open send message view
 * Checks for updates in VSCode settings, no need to reload VSCode
 * SendMessage View updates:
@@ -203,3 +203,7 @@ merged pull request from Dmitry Maslennikov (https://github.com/daimor).
   * when loses focus and returns back keeps form filled
   * will update the list of favorites if it was updated in settings
   * autofill the first favorite server
+
+## 2.0.7 (07/08/2024)
+Merged pull request from https://github.com/Tim-Hennig to fix issues with additional components in v2.2 'CN' data type.
+Fixes typos in descriptions of v2.2, v2.3 data types.
