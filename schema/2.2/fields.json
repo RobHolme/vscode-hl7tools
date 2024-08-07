@@ -1164,36 +1164,6 @@
                 "desc": "Source Table Id",
                 "opt": 1,
                 "rep": 1
-            },
-            {
-                "datatype": "AD",
-                "desc": "Adresse",
-                "opt": 1,
-                "rep": 1
-            },
-            {
-                "datatype": "TN",
-                "desc": "Telefon",
-                "opt": 1,
-                "rep": 1
-            },
-            {
-                "datatype": "TN",
-                "desc": "Faxnummer",
-                "opt": 1,
-                "rep": 1
-            },
-            {
-                "datatype": "TN",
-                "desc": "Online-Nummer",
-                "opt": 1,
-                "rep": 1
-            },
-            {
-                "datatype": "ST",
-                "desc": "E-Mail",
-                "opt": 1,
-                "rep": 1
             }
         ]
     },
