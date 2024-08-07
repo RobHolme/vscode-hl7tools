@@ -628,7 +628,7 @@
         ]
     },
     "CM_MOC": {
-        "desc": "Charge To Practise",
+        "desc": "Charge To Practice",
         "subfields": [
             {
                 "datatype": "MO",
@@ -733,7 +733,7 @@
         ]
     },
     "CM_OCD": {
-        "desc": "Occurence",
+        "desc": "Occurrence",
         "subfields": [
             {
                 "datatype": "CE",
@@ -821,7 +821,7 @@
         ]
     },
     "CM_OSP": {
-        "desc": "Occurence Span",
+        "desc": "Occurrence Span",
         "subfields": [
             {
                 "datatype": "CE",
@@ -860,7 +860,7 @@
             },
             {
                 "datatype": "TS",
-                "desc": "Pre-certification Windwow",
+                "desc": "Pre-certification Window",
                 "opt": 1,
                 "rep": 1
             }
@@ -1215,7 +1215,7 @@
             },
             {
                 "datatype": "ST",
-                "desc": "Last Data Code Calue",
+                "desc": "Last Data Code Value",
                 "opt": 1,
                 "rep": 1
             }
