@@ -330,7 +330,7 @@
 		"eslint": "^8.20.0",
 		"glob": "^8.0.3",
 		"mocha": "^10.0.0",
-		"typescript": "^4.9.5"
+		"typescript": "^7.0.2"
 	},
 	"__metadata": {
 		"id": "b919e7cc-6fa1-454b-ab7f-216ed8d48f19",
