@@ -329,7 +329,7 @@
 		"@vscode/test-electron": "^2.1.5",
 		"eslint": "^8.20.0",
 		"glob": "^8.0.3",
-		"mocha": "^10.0.0",
+		"mocha": "^11.8.0",
 		"typescript": "^7.0.2"
 	},
 	"__metadata": {
