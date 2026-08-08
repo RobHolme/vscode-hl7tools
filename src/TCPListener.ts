@@ -20,12 +20,6 @@ var hl7Message: string = "";
 
 
 //----------------------------------------------------
-// Escape a string so it can be safely used as a literal within a RegExp
-function escapeRegExp(literal: string): string {
-	return literal.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-//----------------------------------------------------
 // Generate an ack message from the message header received.
 // Assuming standard segment delimiter is used '|'.
 // @param {string} Message - the HL7 message triggering the ACK.
@@ -39,7 +33,7 @@ function GenerateAckFromMessage(HL7Message: string): string {
 	var preferences: ExtensionPreferences = new ExtensionPreferences();
 	// confirm the message received starts with a MSH segment.
 	// TO DO: add support for batch mode messages that start with FHS, BHS, BTS, or FTS segments. Also query field & component separator instead of assuming '|' & '^'. 
-	var hl7HeaderRegex: RegExp = new RegExp("^MSH" + escapeRegExp(delimiters.Field), "i");
+	var hl7HeaderRegex: RegExp = new RegExp("^MSH" + Util.escapeRegExp(delimiters.Field), "i");
 	if (hl7HeaderRegex.test(HL7Message)) {
 		var mshFields: string[] = HL7Message.split(delimiters.Field);
 		// check length of MSH segment

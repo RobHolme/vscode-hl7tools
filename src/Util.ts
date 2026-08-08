@@ -477,6 +477,12 @@ export abstract class Util {
 		});
 	}
 
+	//----------------------------------------------------
+	// Escape a string so it can be safely used as a literal within a RegExp
+	public static escapeRegExp(literal: string): string {
+		return literal.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+	}
+
 }
 
 
