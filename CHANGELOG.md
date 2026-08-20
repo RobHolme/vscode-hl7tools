@@ -207,3 +207,6 @@ Merged pull request from Dmitry Maslennikov (https://github.com/daimor).
 ## 2.0.7 (07/08/2024)
 Merged pull request from https://github.com/Tim-Hennig to fix issues with additional components in v2.2 'CN' data type.
 Fixes typos in descriptions of v2.2, v2.3 data types.
+
+## 2.0.8 (20/08/2026)
+Fixed issue that prevented the 'Clear Highlighted Fields' command from running.
