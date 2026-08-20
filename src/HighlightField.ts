@@ -36,11 +36,7 @@ export class HighlightFields {
 	//
 	// @returns {int} - returns the number of decorations applied
 	public ShowHighlights(itemLocation: string | null, hl7Schema: HashTable<SegmentSchema>, backgroundColor: string) {
-		// return if no field location string provided
-		if ((itemLocation === null) || (itemLocation === undefined)) {
-			return HighlightFieldReturnCode.ERROR_NO_LOCATION_PROVIDED;
-		}
-
+		
 		// the default background colour for highlighted items (if not otherwise specified)
 		const defaultBackgroundColour: string = 'rgba(0,255,0,0.3)';
 
@@ -61,6 +57,11 @@ export class HighlightFields {
 				this._currentDecoration.dispose();
 			}
 			fieldSelectionList = [];
+		}
+
+		// return if no field location string provided. This will be triggered when clearing the highlights, or if the user has not provided a field location to highlight.
+		if ((itemLocation === null) || (itemLocation === undefined)) {
+			return HighlightFieldReturnCode.ERROR_NO_LOCATION_PROVIDED;
 		}
 
 		// return if no location provided by the user, or no active editor
