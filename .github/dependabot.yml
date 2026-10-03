@@ -9,3 +9,6 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "@types/node" # Ignore major updates for node only. Still accept minor and pacth releases.
+        update-types: ["version-update:semver-major"]
